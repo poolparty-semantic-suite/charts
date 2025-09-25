@@ -1,0 +1,10 @@
+#
+# Official Helm chart for the Graphwise Platform
+#
+apiVersion: v2
+name: graphwise-platform
+description: The Graphwise Platform
+type: application
+version: 0.1.0-alpha
+appVersion: 1.0.0-alpha
+kubeVersion: ^1.26.0-0
