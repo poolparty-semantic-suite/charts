@@ -2,5 +2,8 @@ dependencies:
 - name: graphdb
   repository: https://maven.ontotext.com/repository/helm-public/
   version: 12.1.1
-digest: sha256:dfd341a3902a5c64ef29cbbda34e7d4883765da400bbd5289606550ce2f5ec4e
-generated: "2025-09-29T16:21:53.552308967+03:00"
+- name: poolparty
+  repository: file://../poolparty
+  version: 0.1.0
+digest: sha256:fcec4606aa4692a68716f1d0d92ee8ac37b455a2eb618ccb0889d07fe3044125
+generated: "2025-10-09T09:20:38.138703563+03:00"

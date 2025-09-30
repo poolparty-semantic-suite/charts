@@ -12,6 +12,7 @@
 charts/
 values_overrides.yaml
 template_output.yaml
+output.yaml
 *.tgz
 
 # Sensitive files

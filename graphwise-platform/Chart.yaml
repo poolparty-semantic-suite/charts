@@ -14,3 +14,9 @@ dependencies:
     version: 12.1.1
     repository: https://maven.ontotext.com/repository/helm-public/
     condition: graphdb.enabled
+
+  # PoolParty
+  - name: poolparty
+    version: 0.1.0
+    repository: file://../poolparty
+    condition: poolparty.enabled
