@@ -1,0 +1,22 @@
+#
+# Official Helm chart for PoolParty.
+#
+apiVersion: v2
+name: poolparty
+description: PoolParty is a semantic middleware, it tackles the ever-growing problems associated with unstructured data, language ambiguity, and data silos.
+type: application
+version: 0.1.0
+appVersion: 10.0.0
+kubeVersion: ^1.26.0-0
+home: https://www.poolparty.biz/
+icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+maintainers:
+  - name: Graphwise
+    email: dnd@graphwise.ai
+sources:
+  - https://github.com/poolparty-semantic-suite/charts
+keywords:
+  - graphwise
+  - poolparty
+  - graphdb
+  - semantic

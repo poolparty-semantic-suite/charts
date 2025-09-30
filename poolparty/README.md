@@ -1,0 +1,419 @@
+# Helm Chart for PoolParty
+
+<!-- [![CI](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml/badge.svg)](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml) -->
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square)
+![AppVersion: 10.0.0](https://img.shields.io/badge/AppVersion-10.0.0-informational?style=flat-square)
+
+<!--
+TODO: Add ArtifactHub badge when ready
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/ontotext)](https://artifacthub.io/packages/helm/ontotext/graphdb)
+-->
+
+Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty](https://www.poolparty.biz/)!
+This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
+
+## Quickstart
+
+```shell
+helm repo add graphwize https://maven.ontotext.com/repository/helm-public/
+helm install poolparty graphwize/poolparty #TODO
+```
+
+## About PoolParty
+
+<p align="center">
+  <a href="https://www.poolparty.biz/">
+    <picture>
+      <img src="https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg" alt="PoolParty logo" title="PoolParty">
+    </picture>
+  </a>
+</p>
+
+The PoolParty Semantic Suite is a comprehensive middleware software. It includes browser-based taxonomy management,
+thesaurus management, linked data frontend, ontology management, corpus management, extractor and a semantic middleware configurator.
+
+<!--
+TODO: Info about the basic Helm chart features ?
+## Features
+-->
+
+## Prerequisites
+
+* Kubernetes v1.26+
+* Helm v3.8+
+
+### Getting Started
+
+If this is your first time installing a Helm chart, you should read the following introductions before continuing:
+
+- Docker https://docs.docker.com/get-started/
+- Kubernetes concepts https://kubernetes.io/docs/concepts/
+- Helm https://helm.sh/docs/intro/quickstart/
+
+After getting familiar with the above, you need to install the following binaries on your machine:
+
+- Install Helm 3: https://helm.sh/docs/intro/install/
+- Install `kubectl`: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
+Next, you would need access to a Kubernetes cluster. You can set up a local one or use one of the cloud providers, e.g.:
+
+* Minikube https://minikube.sigs.k8s.io/docs/
+* kind https://kind.sigs.k8s.io/
+* Amazon EKS https://aws.amazon.com/eks/
+* Azure AKS https://azure.microsoft.com/en-us/products/kubernetes-service
+* Google GKE https://cloud.google.com/kubernetes-engine
+
+### PoolParty License
+
+To use PoolParty, you need a license.
+If you have a PoolParty license, create a Secret object with a `poolparty.key` data entry:
+
+```shell
+kubectl create secret generic poolparty-license --from-file poolparty.key=poolparty.key
+```
+
+Then add the secret name to the values.yaml file under the `license.existingSecret` configuration.
+
+**Note**: Secret names can differ from the given examples in the [values.yaml](values.yaml), but their configurations
+should be updated to refer to the correct ones. Note that the licenses can be set for all node instances. Please setup
+correctly according to the licensing agreements.
+
+## Install
+
+### Version Compatibility
+
+The next table highlights the version mapping between the Helm chart and the deployed PoolParty.
+
+| Helm chart version | PoolParty version |
+|--------------------|-------------------|
+| 0.1.x              | 10.x.x            |
+
+### Install from Repository
+
+TODO: we need to decide what will be used as charts registry - GitHub or Ontotext Nexus
+      Is it going to stay `ontotext` or are we going with `graphwise`? There are several places that must be updated, if it is `graphwise`.
+
+1. Add PoolParty repository
+
+    ```shell
+    helm repo add ontotext https://maven.ontotext.com/repository/helm-public/
+    ```
+
+2. Install PoolParty
+
+    ```shell
+    helm install poolparty ontotext/poolparty
+    ```
+
+3. Upgrade PoolParty deployment
+
+   ```shell
+   helm upgrade --install poolparty ontotext/poolparty
+   ```
+
+See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty deployment.
+
+### Provenance
+
+TODO: double-check this one
+
+Helm can verify the origin and integrity of the Helm chart by:
+
+1. Importing the public GnuPG key for PoolParty Helm:
+
+    ```shell
+    gpg --keyserver keyserver.ubuntu.com --recv-keys 8E1B45AF8157DB82
+    # Helm uses the legacy gpg format
+    gpg --export > ~/.gnupg/pubring.gpg
+    ```
+
+2. Running `helm install` with the `--verify` flag, i.e.:
+
+    ```shell
+    helm install --verify poolparty ontotext/poolparty
+    ```
+
+**Note**: The verification works only when installing from a local tar.gz or when installing from the repository.
+
+Check the official documentation for more information https://helm.sh/docs/topics/provenance/
+
+### Uninstall
+
+To remove the deployed PoolParty, use:
+
+```shell
+helm uninstall poolparty
+```
+
+**Note**: It is important to note that this will not remove any data, so the next time it is installed, the data will be
+          loaded by its components.
+
+## Upgrading
+
+The Helm chart follows [Semantic Versioning v2](https://semver.org/) so any breaking changes will be rolled out only in
+MAJOR versions of the chart.
+
+Please, always check out the migration guides in [UPGRADE.md](UPGRADE.md), before switching to another major version of
+the Helm chart.
+
+## Configuration
+
+Every component and resource is configured with sensible defaults in [values.yaml](values.yaml).
+Make sure you read it thoroughly, understand each property and the impact of changing any one of them.
+
+Helm allows you to override values from [values.yaml](values.yaml) in several ways.
+See https://helm.sh/docs/chart_template_guide/values_files/.
+
+* Using a separate values.yaml with overrides:
+
+  ```shell
+  helm install poolparty ontotext/poolparty -f overrides.yaml
+  ```
+
+* Overriding specific values:
+
+  ```shell
+  helm install poolparty ontotext/poolparty --set security.enabled=true
+  ```
+
+### Provisioning Additional Properties and Settings
+
+TODO: extend when we finalize the configurations settings and how they will be provisioned
+
+Most of PoolParty's properties can be passed through `configuration.properties` or `configuration.javaArguments`.
+The `configuration` section holds subsections for some of the specific and external components, required by PoolParty.
+
+PoolParty uses Logback to configure logging using the `logback.xml` file.
+The file can be provisioned before PoolParty's startup with the `configuration.logback.existingConfigmap` configuration.
+
+See TODO reference
+
+See TODO reference
+
+### Networking
+
+By default, PoolParty's Helm chart comes with a default Ingress.
+The Ingress can be disabled by switching `ingress.enabled` to false.
+
+### Cloud Deployments Specifics
+
+Some cloud Kubernetes clusters have some specifics that should be noted. Here are some useful tips on some cloud K8s
+clusters:
+
+##### Microsoft Azure
+
+We recommend not to use the Microsoft Azure storage of type `azurefile`. The write speeds of this storage type when used
+in a Kubernetes cluster is not good enough for PoolParty, and we recommend against using it in production environments.
+
+See https://github.com/Azure/AKS/issues/223
+
+### Deployment
+
+Some important properties to update according to your deployment are:
+
+* `configuration.externalUrl` - Configures the address at which the Ingress controller and PoolParty are accessible.
+
+### Resources
+
+Each component is defined with default resource limits that are sufficient to deploy the chart and use it with small
+sets of data. However, for production deployments it is obligatory to revise these resource limits and tune them for
+your environment. You should consider common requirements like amount of data, users, expected traffic.
+
+Look for `<component>.resources` blocks in [values.yaml](values.yaml). During Helm's template rendering, these YAML
+blocks are inserted in the Kubernetes pod configurations as pod resource limits. Most resource configuration blocks are
+referring to official documentations.
+
+See the Kubernetes documentation
+[Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
+about defining resource limits.
+
+## Examples
+
+Checkout the [examples/](examples) folder in this repository.
+
+## Values
+
+<!--
+IMPORTANT: This is generated by helm-docs, do not attempt modifying it on hand as it will be automatically generated.
+-->
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| annotations | object | `{}` |  |
+| args | list | `[]` |  |
+| automountServiceAccountToken | bool | `false` |  |
+| command | list | `[]` |  |
+| configuration.defaultJavaArguments | string | `"-XX:MaxRAMPercentage=85"` |  |
+| configuration.externalUrl | string | `"http://poolparty.127.0.0.1.nip.io"` |  |
+| configuration.javaArguments | string | `""` |  |
+| configuration.logback.configmapKey | string | `"logback.xml"` |  |
+| configuration.logback.existingConfigmap | string | `""` |  |
+| configuration.properties.POOLPARTY_GRAPHDB_PASSWORD | string | `"root"` |  |
+| configuration.properties.POOLPARTY_GRAPHDB_URL | string | `"http://graphdb:7200"` |  |
+| configuration.properties.POOLPARTY_GRAPHDB_USERNAME | string | `"admin"` |  |
+| configuration.properties.POOLPARTY_INDEX_TYPE | string | `"elasticsearch"` |  |
+| configuration.properties.POOLPARTY_INDEX_URL | string | `"http://elasticsearch:9200"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_CLIENTID | string | `"admin-cli"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_CLIENTSECRET | string | `"nPFFgUeLbmzjd28IObJEkkMtvd4TzvdF"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_PASSWORD | string | `"admin"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_REALM | string | `"master"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_USERNAME | string | `"poolparty_auth_admin"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL | string | `"http://keycloak:8080/auth"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_CLIENTID | string | `"ppt"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET | string | `"yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_ENABLEBASICAUTH | bool | `true` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_PRINCIPALATTRIBUTE | string | `"preferred_username"` |  |
+| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_REALM | string | `"poolparty"` |  |
+| configuration.properties._POOLPARTY_ENCRYPTION_PASSWORD | string | `"6wFdqOjvxuyeDvh1ENTm"` |  |
+| configuration.propertiesOverrides.existingConfigmap | string | `""` |  |
+| configuration.propertiesOverrides.existingSecret | string | `""` |  |
+| containerPorts.http | int | `8081` |  |
+| dnsConfig | object | `{}` |  |
+| dnsPolicy | string | `""` |  |
+| extraContainerPorts | object | `{}` |  |
+| extraContainers | list | `[]` |  |
+| extraEnv | list | `[]` |  |
+| extraEnvFrom | list | `[]` |  |
+| extraInitContainers | list | `[]` |  |
+| extraObjects | list | `[]` |  |
+| extraVolumeClaimTemplates | list | `[]` |  |
+| extraVolumeMounts | list | `[]` |  |
+| extraVolumes | list | `[]` |  |
+| fullnameOverride | string | `""` |  |
+| global.clusterDomain | string | `"cluster.local"` |  |
+| global.imagePullSecrets | list | `[]` |  |
+| global.imageRegistry | string | `""` |  |
+| image.digest | string | `""` |  |
+| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.pullSecrets | list | `[]` |  |
+| image.registry | string | `"docker.io"` |  |
+| image.repository | string | `"ontotext/poolparty"` |  |
+| image.tag | string | `""` |  |
+| ingress.annotations | object | `{}` |  |
+| ingress.className | string | `""` |  |
+| ingress.enabled | bool | `true` |  |
+| ingress.extraHosts | list | `[]` |  |
+| ingress.extraTLS | list | `[]` |  |
+| ingress.host | string | `""` |  |
+| ingress.labels | object | `{}` |  |
+| ingress.path | string | `""` |  |
+| ingress.pathType | string | `"Prefix"` |  |
+| ingress.tls.enabled | bool | `false` |  |
+| ingress.tls.secretName | string | `""` |  |
+| initContainerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
+| initContainerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| initContainerSecurityContext.readOnlyRootFilesystem | bool | `true` |  |
+| initContainerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
+| labels | object | `{}` |  |
+| license.existingSecret | string | `""` |  |
+| license.licenseFilename | string | `"poolparty.key"` |  |
+| license.optional | bool | `false` |  |
+| license.readOnly | bool | `true` |  |
+| livenessProbe.httpGet.path | string | `"/PoolParty/health/liveness"` |  |
+| livenessProbe.httpGet.port | string | `"http"` |  |
+| livenessProbe.initialDelaySeconds | int | `60` |  |
+| livenessProbe.periodSeconds | int | `10` |  |
+| livenessProbe.timeoutSeconds | int | `5` |  |
+| nameOverride | string | `""` |  |
+| namespaceOverride | string | `""` |  |
+| nodeSelector | object | `{}` |  |
+| persistence.emptyDir.sizeLimit | string | `"1Gi"` |  |
+| persistence.enabled | bool | `true` |  |
+| persistence.volumeClaimRetentionPolicy | object | `{}` |  |
+| persistence.volumeClaimTemplate.annotations | object | `{}` |  |
+| persistence.volumeClaimTemplate.labels | object | `{}` |  |
+| persistence.volumeClaimTemplate.name | string | `"storage"` |  |
+| persistence.volumeClaimTemplate.spec.accessModes[0] | string | `"ReadWriteOnce"` |  |
+| persistence.volumeClaimTemplate.spec.resources.requests.storage | string | `"5Gi"` |  |
+| podAnnotations | object | `{}` |  |
+| podAntiAffinity.enabled | bool | `true` |  |
+| podAntiAffinity.preset | string | `"soft"` |  |
+| podAntiAffinity.topology | string | `"kubernetes.io/hostname"` |  |
+| podLabels | object | `{}` |  |
+| podManagementPolicy | string | `"Parallel"` |  |
+| podSecurityContext.fsGroup | int | `1001` |  |
+| podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` |  |
+| podSecurityContext.runAsGroup | int | `1001` |  |
+| podSecurityContext.runAsNonRoot | bool | `true` |  |
+| podSecurityContext.runAsUser | int | `1001` |  |
+| podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
+| priorityClassName | string | `""` |  |
+| readinessProbe.httpGet.path | string | `"/PoolParty/health/readiness"` |  |
+| readinessProbe.httpGet.port | string | `"http"` |  |
+| readinessProbe.periodSeconds | int | `10` |  |
+| readinessProbe.timeoutSeconds | int | `5` |  |
+| resources.limits.memory | string | `"8Gi"` |  |
+| resources.requests.cpu | string | `"500m"` |  |
+| resources.requests.memory | string | `"8Gi"` |  |
+| revisionHistoryLimit | int | `10` |  |
+| schedulerName | string | `""` |  |
+| securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| securityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| securityContext.readOnlyRootFilesystem | bool | `true` |  |
+| securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
+| service.annotations | object | `{}` |  |
+| service.enabled | bool | `true` |  |
+| service.externalIPs | list | `[]` |  |
+| service.externalTrafficPolicy | string | `""` |  |
+| service.extraPorts | list | `[]` |  |
+| service.healthCheckNodePort | string | `""` |  |
+| service.labels | object | `{}` |  |
+| service.loadBalancerClass | string | `""` |  |
+| service.loadBalancerSourceRanges | list | `[]` |  |
+| service.nodePort | string | `""` |  |
+| service.ports.http | int | `8081` |  |
+| service.type | string | `"ClusterIP"` |  |
+| serviceAccount.annotations | object | `{}` |  |
+| serviceAccount.create | bool | `false` |  |
+| serviceAccount.name | string | `""` |  |
+| startupProbe.failureThreshold | int | `300` |  |
+| startupProbe.httpGet.path | string | `"/PoolParty/health/startup"` |  |
+| startupProbe.httpGet.port | string | `"http"` |  |
+| startupProbe.periodSeconds | int | `3` |  |
+| startupProbe.timeoutSeconds | int | `1` |  |
+| tempVolume.emptyDir.sizeLimit | string | `"128Mi"` |  |
+| tempVolume.enabled | bool | `true` |  |
+| terminationGracePeriodSeconds | int | `120` |  |
+| tolerations | list | `[]` |  |
+| topologySpreadConstraints | list | `[]` |  |
+| updateStrategy.type | string | `"RollingUpdate"` |  |
+
+## Troubleshooting
+
+**Helm install hangs**
+
+If there is no output after `helm install`, it is likely that a hook cannot execute.
+Check their logs with `kubectl logs`.
+
+Another reason could be that the default timeout of 5 minutes for Helm `install` or `upgrade` is not enough.
+You can increase the timeout by adding `--timeout 10m` (or more) to the Helm command.
+
+**Connection issues**
+
+If connections time out or the pods cannot resolve each other, it is likely that the Kubernetes DNS is broken. This is a
+common issue with Minikube between system restarts or when inappropriate Minikube driver is used. Please refer to
+[Debugging DNS Resolution](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/).
+
+**Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
+
+When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty instances across
+multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These issues
+are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need to
+adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
+["CSI Driver and Volume Snapshots"](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/) section,
+specifically in the "Multi-Node Clusters" chapter.
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Graphwise | <dnd@graphwise.ai> |  |
+
+## Contributing
+
+If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
+
+## License
+
+This code is released under the Apache 2.0 License. See [LICENSE](LICENSE) for more details.

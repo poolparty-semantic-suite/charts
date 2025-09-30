@@ -8,3 +8,19 @@ graphdb:
   # Commercial license is required for using GraphDB version >= 11.
   license:
     existingSecret: ""
+
+#################################################################
+#                                                               #
+# PoolParty configuration overrides.                            #
+#                                                               #
+# For more information please visit: TODO                       #
+# Or refer to the Official Helm Chart in the current repository #
+#################################################################
+
+poolparty:
+  # Toggles the deployment of PoolParty.
+  enabled: true
+
+  license:
+    # The name of the Secret providing the license.
+    existingSecret: ""
