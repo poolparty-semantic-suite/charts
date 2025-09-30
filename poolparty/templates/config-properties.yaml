@@ -1,0 +1,57 @@
+{{- if not .Values.configuration.propertiesOverrides.existingConfigmap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "poolparty.fullname.configmap.properties" . }}
+  namespace: {{ include "poolparty.namespace" . }}
+  labels:
+    {{- include "poolparty.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  ##### License Settings #####
+  {{- if .Values.license.existingSecret }}
+  poolparty.license: {{ .Values.license.mountPath | trimSuffix "/" }}/{{ .Values.license.licenseFilename }}
+  {{- end }}
+
+  ##### Server Settings #####
+  poolparty.server.address: {{ .Values.configuration.externalUrl }}
+  poolparty.server.port: {{ .Values.service.ports.http }}
+
+  ##### Encryption Settings #####
+  encryption.password: {{ randAlphaNum 20 }}
+
+  ##### GraphDB Settings #####
+  poolparty.graphdb.url: {{ join "," (required "GraphDB URL is required. At least one value should be defined." .Values.configuration.graphdb.url) }}
+  poolparty.graphdb.username: {{ .Values.configuration.graphdb.username }}
+  poolparty.graphdb.password: {{ .Values.configuration.graphdb.password }}
+
+  ##### Keycloak Settings #####
+  poolparty.keycloak.authUrl: {{ required "An URL to the Keycloak instance is required." .Values.configuration.keycloak.url }}
+
+  poolparty.keycloak.admin.realm: {{ .Values.configuration.keycloak.admin.realm }}
+  poolparty.keycloak.admin.username: {{ .Values.configuration.keycloak.admin.username }}
+  poolparty.keycloak.admin.password: {{ .Values.configuration.keycloak.admin.password }}
+  poolparty.keycloak.admin.clientId: {{ .Values.configuration.keycloak.admin.clientId }}
+  poolparty.keycloak.admin.clientSecret: {{ .Values.configuration.keycloak.admin.clientSecret }}
+
+  poolparty.keycloak.login.realm: {{ .Values.configuration.keycloak.login.realm }}
+  poolparty.keycloak.login.clientId: {{ .Values.configuration.keycloak.login.clientId }}
+  poolparty.keycloak.login.clientSecret: {{ .Values.configuration.keycloak.login.clientSecret }}
+  poolparty.keycloak.login.principalAttribute: {{ .Values.configuration.keycloak.login.principalAttribute }}
+  poolparty.keycloak.login.enableBasicAuth: {{ .Values.configuration.keycloak.login.enableBasicAuth }}
+
+  ##### Index Settings #####
+  poolparty.index.type: {{ .Values.configuration.index.type | upper }}
+  poolparty.index.url: {{ required "An URL to the Index instance is required." .Values.configuration.index.url }}
+
+  ##### Additional property overrides #####
+  {{- range $key, $val := .Values.configuration.properties -}}
+    {{- if ne $val nil }}
+      {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ }}
+    {{- end }}
+  {{- end -}}
+
+{{ end }}
