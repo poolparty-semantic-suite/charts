@@ -9,6 +9,7 @@
 .settings
 
 # Helm
+charts/
 values_overrides.yaml
 template_output.yaml
 *.tgz
@@ -18,6 +19,3 @@ template_output.yaml
 *.key
 *.gpg
 *.pgp
-
-# chart dependencies
-charts/
