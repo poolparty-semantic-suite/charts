@@ -1,0 +1,6 @@
+dependencies:
+- name: graphdb
+  repository: https://maven.ontotext.com/repository/helm-public/
+  version: 12.1.1
+digest: sha256:dfd341a3902a5c64ef29cbbda34e7d4883765da400bbd5289606550ce2f5ec4e
+generated: "2025-09-29T16:21:53.552308967+03:00"

@@ -1,0 +1,10 @@
+# GraphDB configuration overrides
+#
+# For a full list of available GraphDB configurations, consult the GraphDB helm chart: https://github.com/Ontotext-AD/graphdb-helm/
+graphdb:
+  # Enable or disable the deployment of GraphDB
+  enabled: true
+
+  # Commercial license is required for using GraphDB version >= 11.
+  license:
+    existingSecret: ""
