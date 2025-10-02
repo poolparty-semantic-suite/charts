@@ -1,0 +1,9 @@
+# Keycloak Operator configuration overrides
+keycloak-operator:
+# Enable or disable the deployment of the Keycloak Operator
+  enabled: true
+
+# CNPG Operator configuration overrides
+cloudnative-pg:
+# Enable or disable the deployment of the CNPG
+  enabled: true

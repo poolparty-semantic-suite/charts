@@ -1,0 +1,7 @@
+apiVersion: v2
+name: keycloak-operator
+description: Keycloak Operator
+type: application
+version: 1.0.0
+appVersion: "25.0.6"
+kubeVersion: ^1.26.0-0
