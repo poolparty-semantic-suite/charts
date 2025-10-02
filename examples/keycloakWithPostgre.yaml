@@ -1,0 +1,62 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+spec:
+  instances: 1
+  image: docker.io/ontotext/poolparty-keycloak:2.1.1
+  startOptimized: false
+  resources:
+    requests:
+      cpu: 1200m
+      memory: 896Mi
+    limits:
+      memory: 3Gi
+  hostname:
+    hostname: keycloak.127.0.0.1.nip.io
+  http:
+    httpEnabled: true
+    tlsSecret: keycloak-tls
+  db:
+    vendor: postgres
+    usernameSecret:
+      name: postgre-db-secret
+      key: username
+    passwordSecret:
+      name: postgre-db-secret
+      key: password
+    host: postgre-db-rw
+    database: keycloak
+    port: 5432
+  unsupported:
+    podTemplate:
+      spec:
+        containers:
+          - name: keycloak
+            args: ["start", "--import-realm"]
+            env:
+              - name: POOLPARTY_SUPER_ADMIN_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: pp-secret
+                    key: password
+              - name: POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: pp-secret
+                    key: clientSecret
+              - name: KEYCLOAK_ADMIN
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-initial-admin
+                    key: username
+              - name: KEYCLOAK_ADMIN_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-initial-admin
+                    key: password
+  ingress:
+    enabled: true
+    className: nginx
+  proxy:
+    headers: xforwarded

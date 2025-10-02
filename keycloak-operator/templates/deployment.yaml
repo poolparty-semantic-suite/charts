@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "keycloak-operator.fullname" . }}
+  namespace: {{ include "keycloak-operator.namespace" . }}
+  labels:
+    {{- include "keycloak-operator.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    {{- toYaml .Values.deployment.strategy | nindent 4 }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  progressDeadlineSeconds: {{ .Values.deployment.progressDeadlineSeconds }}
+  selector:
+    matchLabels:
+      {{- include "keycloak-operator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "keycloak-operator.labels" . | nindent 8 }}
+          {{- with .Values.deployment.podLabels }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
+      {{- with .Values.deployment.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      serviceAccountName: {{ include "keycloak-operator.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.deployment.automountServiceAccountToken }}
+      {{- if .Values.deployment.schedulerName }}
+      schedulerName: {{ .Values.deployment.schedulerName }}
+      {{- end }}
+      {{- with .Values.deployment.dnsConfig }}
+      dnsConfig: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy }}
+      {{- end }}
+      {{- if .Values.deployment.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      {{- if or .Values.global.imagePullSecrets .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- include "keycloak-operator.combinedImagePullSecrets" . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: tmp
+          emptyDir: { }
+      {{- with .Values.extraVolumes }}
+      {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.extraInitContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ include "keycloak-operator.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.deployment.containerPorts.http }}
+              protocol: TCP
+          {{- with .Values.extraContainerPorts }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+          {{- tpl (toYaml .) $ | nindent 12 }}
+          {{- end }}
+          env:
+            - name: KUBERNETES_NAMESPACE
+              value: {{ include "keycloak-operator.namespace" . }}
+            - name: RELATED_IMAGE_KEYCLOAK
+              value: {{ include "keycloak-operator.image" . }}
+          {{- with .Values.extraEnv }}
+          {{- tpl (toYaml .) $ | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          {{- with .Values.extraVolumeMounts }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+
