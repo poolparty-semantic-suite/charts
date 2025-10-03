@@ -1,0 +1,21 @@
+----------------------------------------------------------------------------------------------------
+.______     ______     ______    __      .______      ___      .______     .___________.____    ____
+|   _  \   /  __  \   /  __  \  |  |     |   _  \    /   \     |   _  \    |           |\   \  /   /
+|  |_)  | |  |  |  | |  |  |  | |  |     |  |_)  |  /  ^  \    |  |_)  |   `---|  |----` \   \/   /
+|   ___/  |  |  |  | |  |  |  | |  |     |   ___/  /  /_\  \   |      /        |  |       \_    _/
+|  |      |  `--'  | |  `--'  | |  `----.|  |     /  _____  \  |  |\  \----.   |  |         |  |
+| _|       \______/   \______/  |_______|| _|    /__/     \__\ | _| `._____|   |__|         |__|
+----------------------------------------------------------------------------------------------------
+
+Chart version: {{ .Chart.Version }}
+PoolParty version: {{ coalesce .Values.image.tag .Chart.AppVersion }}
+PoolParty URL: {{ include "poolparty.external-url" . }}
+
+** Please be patient while the chart is being deployed and services are available **
+You can check their status with kubectl --namespace {{ include "poolparty.namespace" . }} get pods
+
+{{- include "poolparty.notes.warnings" . }}
+
+----------------------------------------------------------------------------------------------------
+For more information on running PoolParty, visit https://help.poolparty.biz/
+----------------------------------------------------------------------------------------------------

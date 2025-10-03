@@ -1,0 +1,26 @@
+# This YAML defines a ConfigMap and a Secret objects for a Kubernetes cluster.
+# - ConfigMap "custom-poolparty-properties" stores non-sensitive properties, which will be passed to the PoolParty as environment variables.
+# - Secret "custom-poolparty-secret-properties" stores a sensitive properties, which have to be encoded. They are also passed to the PoolParty as environment variables.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-poolparty-properties
+data:
+  poolparty.graphdb.url: "https://graphdb.custom-domain.com/"
+  poolparty.keycloak.authUrl: "https://keycloak.custom-domain.com/auth"
+  poolparty.index.type: "elasticsearch"
+  poolparty.index.url: "https://elastic.custom-domain.com/"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: custom-poolparty-secret-properties
+data:
+  poolparty.graphdb.username: <base64-encoded secret>
+  poolparty.graphdb.password: <base64-encoded secret>
+  poolparty.keycloak.admin.username: <base64-encoded secret>
+  poolparty.keycloak.admin.password: <base64-encoded secret>
+  poolparty.keycloak.admin.clientId: <base64-encoded secret>
+  poolparty.keycloak.admin.clientSecret: <base64-encoded secret>
