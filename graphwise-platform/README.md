@@ -36,13 +36,13 @@ helm upgrade --install --namespace graphwise-platform --create-namespace graphwi
 
 ## Compatibility Matrix
 
-| Component              | Version |
-|------------------------|---------|
-| PoolParty              | v10.0   |
-| Keycloak Operator      | v25.0.6 |
-| CloudNativePG Operator | v1.27.0 |
-| GraphDB                | 11.1.1  |
-| Elasticsearch          | -       |
+| Component     | Version |
+|---------------|---------|
+| PoolParty     | v10.0   |
+| Keycloak      | v25.0.6 |
+| PostgreSQL    | >=v17.5 |
+| GraphDB       | 11.1.1  | // Clarify compatibility
+| Elasticsearch | -       | // Clarify compatibility
 
 #### Keycloak
 
