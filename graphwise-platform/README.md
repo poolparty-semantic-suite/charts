@@ -4,11 +4,11 @@ The current chart is an umbrella for the services and applications that are part
 
 It provides resources for deploying:
 
+- PoolParty
 - GraphDB
 - Elasticsearch
 - Keycloak
 - PostgreSQL
-- PoolParty
 
 ## Package
 
@@ -34,6 +34,16 @@ helm upgrade --install --namespace graphwise-platform --create-namespace graphwi
 
 ### Configuring Services
 
+## Compatibility Matrix
+
+| Component              | Version |
+|------------------------|---------|
+| PoolParty              | v10.0   |
+| Keycloak Operator      | v25.0.6 |
+| CloudNativePG Operator | v1.27.0 |
+| GraphDB                | 11.1.1  |
+| Elasticsearch          | -       |
+
 #### Keycloak
 
 ##### Using the Keycloak Operator Helm Chart
@@ -43,12 +53,7 @@ This chart sets up the Keycloak Operator at a version compatible with our custom
 
 ###### Prerequisites
 
-Enable the Keycloak Operator deployment in the chart values:
-
-```yaml
-keycloak-operator:
-  enabled: true
-```
+- Enable the Keycloak Operator deployment in the chart values
 
 You also need to create the following secrets:
 
@@ -60,7 +65,7 @@ metadata:
   name: keycloak-initial-admin
 type: Opaque
 stringData:
-  username: poolparty_auth_admin # must be 'poolparty_auth_admin'
+  username: poolparty_auth_admin
   password: admin
 ```
 
@@ -92,7 +97,7 @@ data:
 ##### Keycloak-Only Deployment
 
 1. Install the Graphwise Platform umbrella chart.
-2. Apply the [Keycloak CR](./../examples/keycloak.yaml).
+2. Apply the [Keycloak CR](examples/keycloak.yaml).
 
 At this point, Keycloak should be running with the in-cluster H2 database (not recommended for production).
 
@@ -129,8 +134,8 @@ At this point, Keycloak should be running with the in-cluster H2 database (not r
    ```
 
 4. Install the umbrella chart — this will deploy both the Keycloak Operator and CNPG.
-5. Apply the [PostgreSQL CR](./../examples/postgre.yaml).
-6. Once Postgres is ready, apply your [Keycloak CR](./../examples/keycloakWithPostgre.yaml) configured to use Postgres.
+5. Apply the [PostgreSQL CR](examples/postgre.yaml).
+6. Once Postgres is ready, apply your [Keycloak CR](examples/keycloakWithPostgre.yaml) configured to use Postgres.
 
 ##### Standalone Keycloak Deployment
 
@@ -138,7 +143,7 @@ If you don’t want to run the Keycloak Operator and CNPG via our Umbrella Chart
 your app instances.
 
 ###### IMPORTANT
-**In this case you must use our custom PoolParty-Keycloak image, which includes custom themes and extensions:**
+**In this case you must use our custom PoolParty-Keycloak image, which includes required extensions:**
 
 👉 [ontotext/poolparty-keycloak on Docker Hub](https://hub.docker.com/r/ontotext/poolparty-keycloak)
 
@@ -162,14 +167,3 @@ See [values.yaml](values.yaml).
 ```bash
 helm uninstall --namespace graphwise-platform graphwise-platform
 ```
-
-
-
-
-
-
-
-
-
-
-

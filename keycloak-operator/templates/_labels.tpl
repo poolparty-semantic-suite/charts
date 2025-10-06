@@ -38,8 +38,8 @@ helm.sh/chart: {{ include "keycloak-operator.chart" . }}
 {{ include "keycloak-operator.selectorLabels" . }}
 app.kubernetes.io/version: {{ coalesce .Values.image.tag .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/component: operator
-app.kubernetes.io/part-of: keycloak
+app.kubernetes.io/component: keycloak-operator
+app.kubernetes.io/part-of: graphwise-platform
 {{- if .Values.labels }}
 {{ tpl (toYaml .Values.labels) . }}
 {{- end }}
