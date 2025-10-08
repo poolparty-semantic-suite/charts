@@ -108,11 +108,11 @@ image:
 replicas: 1
 
 ##########################
-# CRDs Configurations #
+# RBAC Configurations #
 ##########################
 
-crds:
-  # Specifies whether the CRDs should be created when installing the chart.
+rbac:
+  # Specifies whether RBAC resources should be created when installing the chart.
   create: true
 
 #############################
@@ -120,7 +120,6 @@ crds:
 #############################
 
 deployment:
-
   # The deployment strategy to use to replace existing pods with new ones.
   strategy:
     # Type of deployment. Can be "Recreate" or "RollingUpdate".

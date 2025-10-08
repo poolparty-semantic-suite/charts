@@ -1,8 +1,9 @@
+{{- if .Values.rbac.create }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: keycloak-operator-clusterrole
+  name: {{ include "keycloak-operator.fullname" . }}-keycloak-operator-clusterrole
   labels:
     {{- include "keycloak-operator.labels" . | nindent 4 }}
   {{- with .Values.annotations }}
@@ -20,7 +21,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: keycloakrealmimportcontroller-cluster-role
+  name: {{ include "keycloak-operator.fullname" . }}-keycloakrealmimportcontroller-cluster-role
   labels:
     {{- include "keycloak-operator.labels" . | nindent 4 }}
   {{- with .Values.annotations }}
@@ -58,7 +59,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: keycloakcontroller-cluster-role
+  name: {{ include "keycloak-operator.fullname" . }}-keycloakcontroller-cluster-role
   labels:
     {{- include "keycloak-operator.labels" . | nindent 4 }}
   {{- with .Values.annotations }}
@@ -139,4 +140,4 @@ rules:
       - delete
       - create
       - patch
-
+{{- end }}
