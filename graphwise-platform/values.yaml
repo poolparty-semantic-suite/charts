@@ -1,10 +1,40 @@
-# GraphDB configuration overrides
-#
-# For a full list of available GraphDB configurations, consult the GraphDB helm chart: https://github.com/Ontotext-AD/graphdb-helm/
+################################################################################
+#                                                                              #
+#            Official Helm Chart for the Graphwise Platform                    #
+#                                                                              #
+# The chart is an umbrella for all components included the Graphwise Platform. #
+#                                                                              #
+# To override single property use --set                                        #
+# To override multiple, provide another values-override.yaml with the -f flag  #
+# See https://helm.sh/docs/chart_template_guide/values_files/                  #
+################################################################################
+
+
+################################################################################
+#                                                                              #
+# GraphDB configuration overrides.                                             #
+#                                                                              #
+# For a full list of available GraphDB configurations,                         #
+# consult the GraphDB Helm Chart: https://github.com/Ontotext-AD/graphdb-helm/ #
+################################################################################
+
 graphdb:
   # Enable or disable the deployment of GraphDB
   enabled: true
 
   # Commercial license is required for using GraphDB version >= 11.
   license:
+    # The name of the secret providing the license.
     existingSecret: ""
+
+######################################################################################################################
+#                                                                                                                    #
+# Elasticsearch Operator configuration overrides.                                                                    #
+#                                                                                                                    #
+# For more information visit: https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s/install-using-helm-chart #
+# Or refer to: https://github.com/elastic/cloud-on-k8s/tree/main/deploy/eck-operator                                 #
+######################################################################################################################
+
+eck-operator:
+  # Toggles the installation of the Elasticsearch Operator.
+  enabled: true

@@ -2,5 +2,8 @@ dependencies:
 - name: graphdb
   repository: https://maven.ontotext.com/repository/helm-public/
   version: 12.1.1
-digest: sha256:dfd341a3902a5c64ef29cbbda34e7d4883765da400bbd5289606550ce2f5ec4e
-generated: "2025-09-29T16:21:53.552308967+03:00"
+- name: eck-operator
+  repository: https://helm.elastic.co
+  version: 3.1.0
+digest: sha256:3c6db0b422843e5843e137c54935be287ca2a6bdc4994852a28ad085b4608039
+generated: "2025-10-08T09:09:42.11256283+03:00"

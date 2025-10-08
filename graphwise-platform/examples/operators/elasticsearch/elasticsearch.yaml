@@ -1,0 +1,52 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: graphwise-platform
+spec:
+  version: 8.17.6
+  image: docker.io/ontotext/poolparty-elasticsearch:8.17.6
+  nodeSets:
+    - name: master
+      count: 1
+      config:
+        node.roles: ["master"]
+      podTemplate:
+        spec:
+          # Refer to https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s/virtual-memory#k8s_using_an_init_container_to_set_virtual_memory
+          initContainers:
+            - name: master-sysctl
+              securityContext:
+                privileged: true
+                runAsUser: 0
+              command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            storageClassName: standard
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 10Gi
+    - name: data-nodes
+      count: 2
+      config:
+        node.roles: ["data"]
+      podTemplate:
+        spec:
+          # Refer to https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s/virtual-memory#k8s_using_an_init_container_to_set_virtual_memory
+          initContainers:
+            - name: data-nodes-sysctl
+              securityContext:
+                privileged: true
+                runAsUser: 0
+              command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            storageClassName: standard
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 10Gi

@@ -1,0 +1,13 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: graphwise-platform
+spec:
+  version: 8.17.6
+  image: docker.io/ontotext/poolparty-elasticsearch:8.17.6
+  nodeSets:
+  - name: master
+    count: 1
+    config:
+      node.store.allow_mmap: false
+      xpack.security.enabled: false
