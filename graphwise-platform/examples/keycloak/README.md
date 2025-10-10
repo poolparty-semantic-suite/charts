@@ -1,77 +1,55 @@
-# Keycloak Deployment Guide
+# Keycloak Deployment Example
 
 ## Overview
-Keycloak is the identity and access management (IAM) solution required by PoolParty.
-It serves as the authentication provider, managing users, roles, and tokens used across PoolParty components.
+This example provides a minimal Keycloak setup intended for development or testing environments.
+It lets you start quickly without production-level scaling or security configurations.
 
-PoolParty uses a **customized Keycloak image** that includes Ontotext-specific extensions and realm configuration.
-This ensures that all necessary integration points between Keycloak and PoolParty are available out of the box.
+The provided [`resources.yaml`](./resources.yaml) file includes:
+- A StatefulSet that runs Keycloak
+- A Service exposing it on HTTP and HTTPS
+- All required Secrets
 
-## Important Requirement
 
-In **all** PoolParty deployments you **must** use our custom PoolParty-Keycloak image, which includes required extensions:
+## Prerequisites
+Before deploying, open the `resources.yaml` file and set your credentials and secrets in the following resources:
 
-👉 **[ontotext/poolparty-keycloak on Docker Hub](https://hub.docker.com/r/ontotext/poolparty-keycloak)**
+| Secret Name | Purpose | Notes |
+|--------------|----------|-------|
+| `keycloak-initial-admin` | Admin username and password | Used for the initial Keycloak login |
+| `pp-secret` | PoolParty secret | Required for PoolParty integration |
+| `keycloak-tls` | TLS certificate and private key | Must include valid `.crt` and `.key` entries |
 
-## Example Setup (Development / Testing)
+> Default values are preconfigured for testing, but credentials and secrets **should be replaced** before any real use.
 
-A minimal Keycloak setup is provided for local or non-production testing.
-It’s designed to let you start quickly, not for scaling or secure production use.
 
-### Prerequisites
-Before you deploy Keycloak, make sure you have:
 
-- The following [secrets](./secrets) created:
-  - `keycloak-initial-admin` — admin username & password
-  - `pp-secret` — PoolParty integration secret
-  - `keycloak-tls` — TLS certificate and private key for HTTPS
+## Deployment
 
-Example:
-```bash
-kubectl apply -f secrets/
-```
-
-## Deployment Steps
-
-### **Step 1: Deploy the Service**
-Apply the service definition to expose Keycloak inside the cluster:
+### 1. Apply the resources
+Deploy all components with:
 
 ```bash
-kubectl apply -f service.yaml
+kubectl apply -f resources.yaml
 ```
 
-This creates a `ClusterIP` service (`keycloak-service`) that routes traffic to the Keycloak pod.
+This will create:
+- A `ClusterIP` Service named `keycloak-service` for routing HTTP and HTTPS traffic
+- A StatefulSet running a single Keycloak instance (`replicas: 1`)
+- Mounts for TLS certificates from the `keycloak-tls` Secret
+- Environment variables sourced from the provided Secrets for admin and PoolParty integration
+- Exposed ports:
+  - 8080 → HTTP
+  - 8443 → HTTPS
 
----
+## Accessing the Keycloak UI
 
-### **Step 2: Deploy the StatefulSet**
-Apply the StatefulSet manifest to start Keycloak:
-
-```bash
-kubectl apply -f statefulset.yaml
-```
-
-This will:
-- Start one Keycloak instance (`replicas: 1`)
-- Mount TLS certificates from `keycloak-tls` secret
-- Use the PoolParty-specific admin credentials and client secret
-- Expose HTTPS on port 8443 and HTTP on 8080
-
----
-
-### Step 3: Access the Keycloak UI
-
-Since no Ingress is configured in this example, you can use port-forwarding to access the Keycloak admin console locally:
+Since this example doesn’t configure an Ingress, use port-forwarding to reach the admin console:
 
 ```bash
 kubectl port-forward statefulset/keycloak 8443:8443 -n keycloak
 ```
 
 Then open your browser and visit:
-
 👉 [https://keycloak.127.0.0.1.nip.io:8443](https://keycloak.127.0.0.1.nip.io:8443)
 
-If you’re using a self-signed certificate, your browser will show a warning — you can safely proceed for local testing.
-
-
-
+If you’re using a self-signed certificate, your browser may warn about the connection — you can safely proceed for local testing.
