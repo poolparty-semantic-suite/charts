@@ -1,8 +1,0 @@
-# Overrides the default ConfigMap with the custom ConfigMap and Serret.
-# Note that you need to provide all of the required configuration properties in the new objects!
-configuration:
-  propertiesOverrides:
-    # The name of the predefined ConfigMap object, which is used as environment variables source.
-    existingConfigmap: custom-poolparty-properties
-    # The name of the predefined Secret object, which is used as additional environment variables source.
-    existingSecret: custom-poolparty-secret-properties

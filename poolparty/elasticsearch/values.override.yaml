@@ -1,8 +1,0 @@
-# Example of the Elasticsearch properties that should be provided to the PoolParty when using the current example.
-# Note: the password is provided as direct property for the example, however it recommended to use Secret instead.
-poolparty:
-  configuration:
-    properties:
-      POOLPARTY_ELASTIC: http://elasticsearch:9200
-      POOLPARTY_ELASTIC_USERNAME: elastic
-      POOLPARTY_ELASTIC_PASSWORD: my-elastic-pass
