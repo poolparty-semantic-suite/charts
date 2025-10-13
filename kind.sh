@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+#
+# Helper script to create a local Kubernetes cluster using Kind.
+# The script will create a single node Kind cluster and map ports 80 and 443 and install ingress-nginx. Optionally,
+# it will create secrets for the poolparty and graphdb license.
+#
+# The following environment variables are supported:
+# KIND_CLUSTER_NAME: change the cluster name, default kind.
+# GRAPHDB_LICENSE: path a graphdb license file, that will be used for the graphdb license secret (optional)
+# POOLPARTY_LICENSE: path a poolparty license file, that will be used for the poolparty license secret (optional)
+#
+
 set -eu
 
 cat <<EOF | kind create cluster --name "${KIND_CLUSTER_NAME:-kind}" --config=-
