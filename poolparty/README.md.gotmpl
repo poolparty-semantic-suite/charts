@@ -70,7 +70,7 @@ Elasticsearch instance at version 8.x is required. Additionally, the instance ne
 [MAT](https://www.elastic.co/docs/reference/elasticsearch/plugins/mapper-annotated-text) plugin installed.
 
 The [elasticsearch.yaml](examples/dependencies/elasticsearch.yaml) file provides a minimal example to install an
-Elasticsearch instance in you cluster. This example uses the Graphwise provided image that has the MAT plugin
+Elasticsearch instance in your cluster. This example uses a Graphwise provided image that has the MAT plugin
 pre-installed.
 
 Install this example with:
@@ -90,7 +90,7 @@ integration smoother, as well as a parameterized Keycloak realm json file, that 
 used by PoolParty.
 
 The [keycloak.yaml](examples/dependencies/keycloak.yaml) file provides a minimal example to install a
-Keycloak instance in you cluster. This example uses the Graphwise provided image that has extensions pre-installed.
+Keycloak instance in your cluster. This example uses a Graphwise provided image that has extensions pre-installed.
 
 > [!NOTE]
 > The Keycloak address needs to be resolvable from the your browser and from within the cluster. The easiest way to do
@@ -135,7 +135,7 @@ With all dependencies in place, PoolParty can be installed.
       --set license.existingSecret=poolparty-license \
       --set configuration.properties.POOLPARTY_GRAPHDB_URL=http://graphdb.default.svc.cluster.local:7200 \
       --set configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL=http://$KEYCLOAK_FQDN/auth \
-      --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local \
+      --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
       poolparty-semantic-suite/poolparty
     ```
 
@@ -155,7 +155,7 @@ helm uninstall poolparty
 
 ## Configuration
 
-Most configuration properties have default values, but as shown in the example above, the URLs the PoolParty
+Most configuration properties have default values, but as shown in the example above, the URLs to the PoolParty
 dependencies must be provided, along with the name of the secret containing the PoolParty license.
 If you don't want to specify these on the command line, you can create a file name `values_overrides.yaml` with the
 following content:
