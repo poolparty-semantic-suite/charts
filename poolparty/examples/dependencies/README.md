@@ -23,5 +23,5 @@ PoolParty realm.
 If the image is started with the `--import-realm` flag, and the master realm hasn't been provisioned yet, Keycloak will
 import the PoolParty realm.
 
-The json file has environment variable placeholders that are used to provide different values various secrets and names.
+The json file has environment variable placeholders that are used to provide different values, various secrets and names.
 Check the example yaml file for the available variables.
