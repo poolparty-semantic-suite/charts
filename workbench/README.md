@@ -1,16 +1,16 @@
-# Helm Chart for PoolParty
+# Helm Chart for PoolParty Workbench
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square)
 ![AppVersion: 10.0.1](https://img.shields.io/badge/AppVersion-10.0.1-informational?style=flat-square)
 
-Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty](https://www.poolparty.biz/)!
+TODO: we need info here
+Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty Workbench](https://www.poolparty.biz/)!
 This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
 
-# About PoolParty
+# About PoolParty Workbench
 
-The PoolParty Semantic Suite is a comprehensive middleware software. It includes browser-based taxonomy management,
-thesaurus management, linked data frontend, ontology management, corpus management, extractor and a semantic middleware configurator.
+TODO: ?????
 
 # Versioning
 
@@ -20,12 +20,12 @@ MAJOR versions of the chart.
 Please, always check out the migration guides in [UPGRADE.md](UPGRADE.md), before switching to another major version of
 the Helm chart.
 
-The chart has it's own version and it's not the same as the version of PoolParty.
-The table bellow highlights the version mapping between the Helm chart and PoolParty.
+The chart has it's own version and it's not the same as the version of PoolParty Workbench application.
+The table bellow highlights the version mapping between the Helm chart and PoolParty Workbench.
 
-| Helm chart version | PoolParty version |
-|--------------------|-------------------|
-| 0.1.x              | 10.x.x            |
+| Helm chart version | PoolParty Workbench version |
+|--------------------|-----------------------------|
+| 0.1.x              | 2.3.x                       |
 
 # Prerequisites
 
@@ -37,117 +37,54 @@ The table bellow highlights the version mapping between the Helm chart and PoolP
 
 ## Dependencies
 
-PoolParty depends on several services than need to be installed before PoolParty.
+PoolParty Workbench requires running PoolParty, to which it will connect and basically extend. For more details about
+PoolParty installation, please check the `/poolparty` directory and the [README.md](../poolparty/README.md) file there.
 
-### GraphDB
+## PoolParty Workbench
 
-PoolParty requires at least version 11.1 of GraphDB. To install it, consult the chart for
-[GraphDB](https://github.com/Ontotext-AD/graphdb-helm).
+With all dependencies in place, the Workbench can be installed.
 
-The basic steps to install GraphDB using the official Helm chart are:
-1. Create a secret with the GraphDB license
-    ```shell
-    kubectl create secret generic --from-file graphdb.license=/path/to/graphdb.license
-    ```
-2. Add the Helm repository
-    ```shell
-    helm repo add ontotext https://maven.ontotext.com/repository/helm-public/
-    helm repo update
-    ```
-3. Install GraphDB
-    ```shell
-    helm install graphdb ontotext/graphdb
-    ```
-
-### Elasticsearch
-
-Elasticsearch instance at version 8.x is required. Additionally, the instance needs to have the
-[MAT](https://www.elastic.co/docs/reference/elasticsearch/plugins/mapper-annotated-text) plugin installed.
-
-The [elasticsearch.yaml](examples/dependencies/elasticsearch.yaml) file provides a minimal example to install an
-Elasticsearch instance in your cluster. This example uses a Graphwise provided image that has the MAT plugin
-pre-installed.
-
-Install this example with:
-```shell
-kubectl apply --filename examples/dependencies/elasticsearch.yaml
-```
-
-> [!CAUTION]
-> This example is for development and evaluation purposes only. Consult the official
-> [Elasticsearch documentation](https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s) for deploying a
-> production grade instance in Kubernetes.
-
-### Keycloak
-
-PoolParty uses a custom image for Keycloak. This image includes Graphwise developed extensions, that make their
-integration smoother, as well as a parameterized Keycloak realm json file, that is used when initializing the realm
-used by PoolParty.
-
-The [keycloak.yaml](examples/dependencies/keycloak.yaml) file provides a minimal example to install a
-Keycloak instance in your cluster. This example uses a Graphwise provided image that has extensions pre-installed.
-
+TODO: to be seen...
 > [!NOTE]
-> The Keycloak address needs to be resolvable from the your browser and from within the cluster. The easiest way to do
-> this is to use a service like [nip.io](https://nip.io/), which encodes the IP address for the A record in the FQDN.
-
-Install this example, first determine the IP address of your host machine, and:
-```shell
-export KEYCLOAK_FQDN="keycloak.[your ip address].nip.io"
-sed "s/[KEYCLOAK_FQDN]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | \
-  kubectl apply --filename -
-```
-
-> [!CAUTION]
-> This example is for development and evaluation purposes only. Consult the official Keycloak Kubernetes getting started
-> [guide](https://www.keycloak.org/getting-started/getting-started-kube) and the
-> [Keycloak Operator](https://www.keycloak.org/guides#operator) documentation for deploying a production grade
-> instance in Kubernetes.
-
-## PoolParty
-
-With all dependencies in place, PoolParty can be installed.
-
-> [!NOTE]
-> PoolParty requires a license. You need to obtain a license file before installing.
+> PoolParty Workbench requires a license. You need to obtain a license file before installing.
 
 1. Create a secret for the PoolParty license
+
     ```shell
     kubectl create secret generic poolparty-license --from-file poolparty.key=/path/to/poolparty.key
     ```
 
-2. Add the PoolParty Helm repository
+2. Add the PoolParty Workbench Helm repository
 
     ```shell
     helm repo add poolparty-semantic-suite https://poolparty-semantic-suite.github.io/charts
     helm repo update
     ```
 
-3. Install PoolParty
+3. Install PoolParty Workbench
 
     ```shell
-    helm install poolparty \
+    helm install poolparty-workbench \
       --set license.existingSecret=poolparty-license \
-      --set configuration.properties.POOLPARTY_GRAPHDB_URL=http://graphdb.default.svc.cluster.local:7200 \
-      --set configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL=http://$KEYCLOAK_FQDN/auth \
-      --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
-      poolparty-semantic-suite/poolparty
+      poolparty-semantic-suite/poolparty-workbench
     ```
 
-See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty deployment.
+See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty Workbench
+deployment.
 
 ### Uninstall
 
-To remove the deployed PoolParty, use:
+To remove the deployed PoolParty Workbench, use:
 
 ```shell
-helm uninstall poolparty
+helm uninstall poolparty-workbench
 ```
 
 > [!NOTE]
 > It is important to note that this will not remove any data, so the next time it is installed, the data will be
 > loaded by its components.
 
+TODO: Revision once we have Docker image
 ## Configuration
 
 Most configuration properties have default values, but as shown in the example above, the URLs to the PoolParty
@@ -158,40 +95,42 @@ following content:
 ```yaml
 configuration:
   properties:
-    POOLPARTY_KEYCLOAK_AUTHURL: http://keycloak.example.com/auth
-    POOLPARTY_GRAPHDB_URL: http://graphdb.example.com:7200
-    POOLPARTY_INDEX_URL: http://elasticsearch.example.com:9200
+    .....
 ```
 
 The install with:
 ```shell
-helm install poolparty poolparty-semantic-suite/poolparty -f values_overrides.yaml
+helm install poolparty-workbench poolparty-semantic-suite/poolparty-workbench -f values_overrides.yaml
 ```
 
 ### Provisioning Additional Properties and Settings
 
-Most of PoolParty's properties can be passed through `configuration.properties` or `configuration.javaArguments`.
-The `configuration` section holds subsections for some of the specific and external components, required by PoolParty.
+Most of PoolParty Workbench's properties can be passed through `configuration.properties` or
+`configuration.javaArguments`. 
+The `configuration` section holds subsections for some of the specific and external components, required by the
+application.
 
-PoolParty uses Logback to configure logging using the `logback.xml` file.
+TODO: most likely no
+PoolParty Workbench uses Logback to configure logging using the `logback.xml` file.
 The file can be provisioned before PoolParty's startup with the `configuration.logback.existingConfigmap` configuration.
 
 ### Networking
 
-By default, PoolParty's Helm chart comes with a default Ingress.
+By default, PoolParty Workbench's Helm chart comes with a default Ingress.
 The Ingress can be disabled by switching `ingress.enabled` to false.
 
 ### Deployment
 
 Some important properties to update according to your deployment are:
 
-* `configuration.externalUrl` - Configures the address at which the Ingress controller and PoolParty are accessible.
+* `configuration.externalUrl` - Configures the address at which the Ingress controller and PoolParty Workbench are
+  accessible.
 
 ### Resources
 
-Default resource limits that are sufficient to deploy the chart and use it with small
-sets of data. However, for production deployments it is obligatory to revise these resource limits and tune them for
-your environment. You should consider common requirements like amount of data, users, expected traffic.
+Default resource limits that are sufficient to deploy the chart and use it with small sets of data. However, for
+production deployments it is obligatory to revise these resource limits and tune them for your environment. You should
+consider common requirements like amount of data, users, expected traffic.
 
 See the Kubernetes documentation
 [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
@@ -199,6 +138,7 @@ about defining resource limits.
 
 ## Examples
 
+TODO
 Checkout the [examples/](examples) folder in this repository.
 
 ## Values
@@ -215,30 +155,14 @@ IMPORTANT: This is generated by helm-docs, do not attempt modifying it by hand a
 | automountServiceAccountToken | bool | `false` |  |
 | command | list | `[]` |  |
 | configuration.defaultJavaArguments | string | `"-XX:MaxRAMPercentage=85"` |  |
-| configuration.externalUrl | string | `"http://poolparty.127.0.0.1.nip.io"` |  |
+| configuration.externalUrl | string | `"http://poolparty-workbench.127.0.0.1.nip.io"` |  |
 | configuration.javaArguments | string | `""` |  |
 | configuration.logback.configmapKey | string | `"logback.xml"` |  |
 | configuration.logback.existingConfigmap | string | `""` |  |
-| configuration.properties.POOLPARTY_GRAPHDB_PASSWORD | string | `"root"` |  |
-| configuration.properties.POOLPARTY_GRAPHDB_URL | string | `"http://graphdb:7200"` |  |
-| configuration.properties.POOLPARTY_GRAPHDB_USERNAME | string | `"admin"` |  |
-| configuration.properties.POOLPARTY_INDEX_TYPE | string | `"elasticsearch"` |  |
-| configuration.properties.POOLPARTY_INDEX_URL | string | `"http://elasticsearch:9200"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_CLIENTID | string | `"admin-cli"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_CLIENTSECRET | string | `"nPFFgUeLbmzjd28IObJEkkMtvd4TzvdF"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_PASSWORD | string | `"admin"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_REALM | string | `"master"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_ADMIN_USERNAME | string | `"poolparty_auth_admin"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL | string | `"http://keycloak:8080/auth"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_CLIENTID | string | `"ppt"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET | string | `"yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_ENABLEBASICAUTH | bool | `true` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_PRINCIPALATTRIBUTE | string | `"preferred_username"` |  |
-| configuration.properties.POOLPARTY_KEYCLOAK_LOGIN_REALM | string | `"poolparty"` |  |
-| configuration.properties._POOLPARTY_ENCRYPTION_PASSWORD | string | `"6wFdqOjvxuyeDvh1ENTm"` |  |
+| configuration.properties.TODO | string | `"examples and defaults"` |  |
 | configuration.propertiesOverrides.existingConfigmap | string | `""` |  |
 | configuration.propertiesOverrides.existingSecret | string | `""` |  |
-| containerPorts.http | int | `8081` |  |
+| containerPorts.http | int | `8080` |  |
 | dnsConfig | object | `{}` |  |
 | dnsPolicy | string | `""` |  |
 | extraContainerPorts | object | `{}` |  |
@@ -258,7 +182,7 @@ IMPORTANT: This is generated by helm-docs, do not attempt modifying it by hand a
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.pullSecrets | list | `[]` |  |
 | image.registry | string | `"docker.io"` |  |
-| image.repository | string | `"ontotext/poolparty"` |  |
+| image.repository | string | `"ontotext/poolparty-workbench"` |  |
 | image.tag | string | `""` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
@@ -280,7 +204,7 @@ IMPORTANT: This is generated by helm-docs, do not attempt modifying it by hand a
 | license.licenseFilename | string | `"poolparty.key"` |  |
 | license.optional | bool | `false` |  |
 | license.readOnly | bool | `true` |  |
-| livenessProbe.httpGet.path | string | `"/PoolParty/health/liveness"` |  |
+| livenessProbe.httpGet.path | string | `"/"` |  |
 | livenessProbe.httpGet.port | string | `"http"` |  |
 | livenessProbe.initialDelaySeconds | int | `60` |  |
 | livenessProbe.periodSeconds | int | `10` |  |
@@ -309,13 +233,13 @@ IMPORTANT: This is generated by helm-docs, do not attempt modifying it by hand a
 | podSecurityContext.runAsUser | int | `1001` |  |
 | podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | priorityClassName | string | `""` |  |
-| readinessProbe.httpGet.path | string | `"/PoolParty/health/readiness"` |  |
+| readinessProbe.httpGet.path | string | `"/"` |  |
 | readinessProbe.httpGet.port | string | `"http"` |  |
 | readinessProbe.periodSeconds | int | `10` |  |
 | readinessProbe.timeoutSeconds | int | `5` |  |
-| resources.limits.memory | string | `"8Gi"` |  |
+| resources.limits.memory | string | `"512Mi"` |  |
 | resources.requests.cpu | string | `"500m"` |  |
-| resources.requests.memory | string | `"8Gi"` |  |
+| resources.requests.memory | string | `"1Gi"` |  |
 | revisionHistoryLimit | int | `10` |  |
 | schedulerName | string | `""` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
@@ -338,7 +262,7 @@ IMPORTANT: This is generated by helm-docs, do not attempt modifying it by hand a
 | serviceAccount.create | bool | `false` |  |
 | serviceAccount.name | string | `""` |  |
 | startupProbe.failureThreshold | int | `300` |  |
-| startupProbe.httpGet.path | string | `"/PoolParty/health/startup"` |  |
+| startupProbe.httpGet.path | string | `"/"` |  |
 | startupProbe.httpGet.port | string | `"http"` |  |
 | startupProbe.periodSeconds | int | `3` |  |
 | startupProbe.timeoutSeconds | int | `1` |  |
@@ -359,10 +283,10 @@ common issue with Minikube between system restarts or when inappropriate Minikub
 
 **Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
 
-When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty instances across
-multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These issues
-are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need to
-adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
+When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty Workbench instances
+across multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These
+issues are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need
+to adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
 ["CSI Driver and Volume Snapshots"](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/) section,
 specifically in the "Multi-Node Clusters" chapter.
 

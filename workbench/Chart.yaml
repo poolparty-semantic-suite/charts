@@ -1,9 +1,9 @@
 #
-# Official Helm chart for PoolParty.
+# Official Helm chart for PoolParty Workbench.
 #
 apiVersion: v2
-name: poolparty
-description: PoolParty is a semantic middleware, it tackles the ever-growing problems associated with unstructured data, language ambiguity, and data silos.
+name: poolparty-workbench
+description: PoolParty workbench is a .... (can't find info)
 type: application
 version: 0.1.0
 appVersion: 10.0.1

@@ -1,4 +1,4 @@
-# Helm chart repository for the PoolParty Semantic Suite
+# Helm Chart Repository for the PoolParty Semantic Suite
 
 This is the Helm repository for the all PoolParty Semantic Suite charts.
 

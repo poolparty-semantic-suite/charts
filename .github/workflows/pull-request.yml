@@ -7,6 +7,7 @@ on:
     # Ignore when updating only documentation files.
     paths-ignore:
       - '**.md'
+      - '**.gotmpl'
 
 jobs:
   lint-test:
@@ -23,6 +24,13 @@ jobs:
 
       - name: Set up Helm
         uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
+
+      - name: PoolParty Workbench - Helm lint & render check
+        if: contains(steps.verify-changed-files.outputs.changed_files, 'workbench')
+        working-directory: ./workbench
+        run: |
+          helm lint --strict .
+          helm template . > output.yaml --debug
 
       - name: PoolParty - Helm lint & render check
         if: contains(steps.verify-changed-files.outputs.changed_files, 'poolparty')
