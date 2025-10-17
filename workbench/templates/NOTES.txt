@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------------------------------
+  ____             _ ____            _          __        __         _    _                     _
+ |  _ \ ___   ___ | |  _ \ __ _ _ __| |_ _   _  \ \      / /__  _ __| | _| |__   ___ _ __   ___| |__
+ | |_) / _ \ / _ \| | |_) / _` | '__| __| | | |  \ \ /\ / / _ \| '__| |/ / '_ \ / _ \ '_ \ / __| '_ \
+ |  __/ (_) | (_) | |  __/ (_| | |  | |_| |_| |   \ V  V / (_) | |  |   <| |_) |  __/ | | | (__| | | |
+ |_|   \___/ \___/|_|_|   \__,_|_|   \__|\__, |    \_/\_/ \___/|_|  |_|\_\_.__/ \___|_| |_|\___|_| |_|
+                                         |___/
+------------------------------------------------------------------------------------------------------
+
+Chart version: {{ .Chart.Version }}
+PoolParty Workbench version: {{ coalesce .Values.image.tag .Chart.AppVersion }}
+PoolParty Workbench URL: {{ include "semantic-workbench.external-url" . }}{{ .Values.ingress.path }}
+
+** Please be patient while the chart is being deployed and services are available **
+You can check their status with kubectl --namespace {{ include "semantic-workbench.namespace" . }} get pods
+
+{{- include "semantic-workbench.notes.warnings" . }}
+
+----------------------------------------------------------------------------------------------------
+For more information on running PoolParty, visit https://help.poolparty.biz/
+----------------------------------------------------------------------------------------------------

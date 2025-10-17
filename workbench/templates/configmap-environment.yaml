@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "semantic-workbench.fullname.configmap.environment" . }}
+  namespace: {{ include "semantic-workbench.namespace" . }}
+  labels:
+    {{- include "semantic-workbench.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  JAVA_TOOL_OPTIONS: >-
+    {{ tpl .Values.configuration.defaultJavaArguments . }}
+    {{ tpl .Values.configuration.javaArguments . }}

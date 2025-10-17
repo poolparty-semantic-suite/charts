@@ -1,0 +1,22 @@
+#
+# Official Helm chart for PoolParty Workbench.
+#
+apiVersion: v2
+name: poolparty-workbench
+description: PoolParty workbench is a .... (can't find info)
+type: application
+version: 0.1.0
+appVersion: 10.0.1
+kubeVersion: ^1.30.0-0
+home: https://www.poolparty.biz/
+icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+maintainers:
+  - name: Graphwise
+    email: dnd@graphwise.ai
+sources:
+  - https://github.com/poolparty-semantic-suite/charts
+keywords:
+  - graphwise
+  - poolparty
+  - graphdb
+  - semantic
