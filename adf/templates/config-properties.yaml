@@ -1,0 +1,19 @@
+{{- if not .Values.configuration.propertiesOverrides.existingConfigmap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "adf.fullname.configmap.properties" . }}
+  namespace: {{ include "adf.namespace" . }}
+  labels:
+    {{- include "adf.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  {{- range $key, $val := .Values.configuration.properties -}}
+    {{- if ne $val nil }}
+      {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
+    {{- end }}
+  {{- end -}}
+{{ end }}
