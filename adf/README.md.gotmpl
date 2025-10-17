@@ -1,0 +1,244 @@
+# Helm Chart for PoolParty
+
+<!-- [![CI](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml/badge.svg)](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml) -->
+{{ template "chart.versionBadge" . }}
+{{ template "chart.appVersionBadge" . }}
+
+<!--
+TODO: Add ArtifactHub badge when ready
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/ontotext)](https://artifacthub.io/packages/helm/ontotext/graphdb)
+-->
+
+Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty](https://www.poolparty.biz/)!
+This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
+
+# About PoolParty
+
+The PoolParty Semantic Suite is a comprehensive middleware software. It includes browser-based taxonomy management,
+thesaurus management, linked data frontend, ontology management, corpus management, extractor and a semantic middleware configurator.
+
+# Versioning
+
+The Helm chart follows [Semantic Versioning v2](https://semver.org/) so any breaking changes will be rolled out only in
+MAJOR versions of the chart.
+
+Please, always check out the migration guides in [UPGRADE.md](UPGRADE.md), before switching to another major version of
+the Helm chart.
+
+The chart has it's own version and it's not the same as the version of PoolParty.
+The table bellow highlights the version mapping between the Helm chart and PoolParty.
+
+| Helm chart version | PoolParty version |
+|--------------------|-------------------|
+| 0.1.x              | 10.x.x            |
+
+# Prerequisites
+
+* Kubernetes v1.26+
+* Helm v3.8+
+* kubectl
+
+# Installation
+
+## Dependencies
+
+PoolParty depends on several services than need to be installed before PoolParty.
+
+### GraphDB
+
+PoolParty requires at least version 11.1 of GraphDB. To install it, consult the chart for
+[GraphDB](https://github.com/Ontotext-AD/graphdb-helm).
+
+The basic steps to install GraphDB using the official Helm chart are:
+1. Create a secret with the GraphDB license
+    ```shell
+    kubectl create secret generic --from-file graphdb.license=/path/to/graphdb.license
+    ```
+2. Add the Helm repository
+    ```shell
+    helm repo add ontotext https://maven.ontotext.com/repository/helm-public/
+    helm repo update
+    ```
+3. Install GraphDB
+    ```shell
+    helm install graphdb ontotext/graphdb
+    ```
+
+### Elasticsearch
+
+Elasticsearch instance at version 8.x is required. Additionally, the instance needs to have the
+[MAT](https://www.elastic.co/docs/reference/elasticsearch/plugins/mapper-annotated-text) plugin installed.
+
+The [elasticsearch.yaml](examples/dependencies/elasticsearch.yaml) file provides a minimal example to install an
+Elasticsearch instance in your cluster. This example uses a Graphwise provided image that has the MAT plugin
+pre-installed.
+
+Install this example with:
+```shell
+kubectl apply --filename examples/dependencies/elasticsearch.yaml
+```
+
+> [!CAUTION]
+> This example is for development and evaluation purposes only. Consult the official
+> [Elasticsearch documentation](https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s) for deploying a
+> production grade instance in Kubernetes.
+
+### Keycloak
+
+PoolParty uses a custom image for Keycloak. This image includes Graphwise developed extensions, that make their
+integration smoother, as well as a parameterized Keycloak realm json file, that is used when initializing the realm
+used by PoolParty.
+
+The [keycloak.yaml](examples/dependencies/keycloak.yaml) file provides a minimal example to install a
+Keycloak instance in your cluster. This example uses a Graphwise provided image that has extensions pre-installed.
+
+> [!NOTE]
+> The Keycloak address needs to be resolvable from the your browser and from within the cluster. The easiest way to do
+> this is to use a service like [nip.io](https://nip.io/), which encodes the IP address for the A record in the FQDN.
+
+Install this example, first determine the IP address of your host machine, and:
+```shell
+export KEYCLOAK_FQDN="keycloak.[your ip address].nip.io"
+sed "s/[KEYCLOAK_FQDN]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | \
+  kubectl apply --filename -
+```
+
+> [!CAUTION]
+> This example is for development and evaluation purposes only. Consult the official Keycloak Kubernetes getting started
+> [guide](https://www.keycloak.org/getting-started/getting-started-kube) and the
+> [Keycloak Operator](https://www.keycloak.org/guides#operator) documentation for deploying a production grade
+> instance in Kubernetes.
+
+## PoolParty
+
+With all dependencies in place, PoolParty can be installed.
+
+> [!NOTE]
+> PoolParty requires a license. You need to obtain a license file before installing.
+
+1. Create a secret for the PoolParty license
+    ```shell
+    kubectl create secret generic poolparty-license --from-file poolparty.key=/path/to/poolparty.key
+    ```
+
+2. Add the PoolParty Helm repository
+
+    ```shell
+    helm repo add poolparty-semantic-suite https://poolparty-semantic-suite.github.io/charts
+    helm repo update
+    ```
+
+3. Install PoolParty
+
+    ```shell
+    helm install poolparty \
+      --set license.existingSecret=poolparty-license \
+      --set configuration.properties.POOLPARTY_GRAPHDB_URL=http://graphdb.default.svc.cluster.local:7200 \
+      --set configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL=http://$KEYCLOAK_FQDN/auth \
+      --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
+      poolparty-semantic-suite/poolparty
+    ```
+
+See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty deployment.
+
+### Uninstall
+
+To remove the deployed PoolParty, use:
+
+```shell
+helm uninstall poolparty
+```
+
+> [!NOTE]
+> It is important to note that this will not remove any data, so the next time it is installed, the data will be
+> loaded by its components.
+
+## Configuration
+
+Most configuration properties have default values, but as shown in the example above, the URLs to the PoolParty
+dependencies must be provided, along with the name of the secret containing the PoolParty license.
+If you don't want to specify these on the command line, you can create a file name `values_overrides.yaml` with the
+following content:
+
+```yaml
+configuration:
+  properties:
+    POOLPARTY_KEYCLOAK_AUTHURL: http://keycloak.example.com/auth
+    POOLPARTY_GRAPHDB_URL: http://graphdb.example.com:7200
+    POOLPARTY_INDEX_URL: http://elasticsearch.example.com:9200
+```
+
+The install with:
+```shell
+helm install poolparty poolparty-semantic-suite/poolparty -f values_overrides.yaml
+```
+
+### Provisioning Additional Properties and Settings
+
+Most of PoolParty's properties can be passed through `configuration.properties` or `configuration.javaArguments`.
+The `configuration` section holds subsections for some of the specific and external components, required by PoolParty.
+
+PoolParty uses Logback to configure logging using the `logback.xml` file.
+The file can be provisioned before PoolParty's startup with the `configuration.logback.existingConfigmap` configuration.
+
+### Networking
+
+By default, PoolParty's Helm chart comes with a default Ingress.
+The Ingress can be disabled by switching `ingress.enabled` to false.
+
+### Deployment
+
+Some important properties to update according to your deployment are:
+
+* `configuration.externalUrl` - Configures the address at which the Ingress controller and PoolParty are accessible.
+
+### Resources
+
+Default resource limits that are sufficient to deploy the chart and use it with small
+sets of data. However, for production deployments it is obligatory to revise these resource limits and tune them for
+your environment. You should consider common requirements like amount of data, users, expected traffic.
+
+See the Kubernetes documentation
+[Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
+about defining resource limits.
+
+## Examples
+
+Checkout the [examples/](examples) folder in this repository.
+
+## Values
+
+<!--
+IMPORTANT: This is generated by helm-docs, do not attempt modifying it by hand as it will be automatically generated.
+-->
+
+{{ template "chart.valuesTable" . }}
+
+## Troubleshooting
+
+**Connection issues**
+
+If connections time out or the pods cannot resolve each other, it is likely that the Kubernetes DNS is broken. This is a
+common issue with Minikube between system restarts or when inappropriate Minikube driver is used. Please refer to
+[Debugging DNS Resolution](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/).
+
+**Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
+
+When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty instances across
+multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These issues
+are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need to
+adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
+["CSI Driver and Volume Snapshots"](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/) section,
+specifically in the "Multi-Node Clusters" chapter.
+
+## Maintainers
+
+{{ template "chart.maintainersTable" . }}
+
+## Contributing
+
+If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
+
+## License
+
+This code is released under the Apache 2.0 License. See [LICENSE](LICENSE) for more details.

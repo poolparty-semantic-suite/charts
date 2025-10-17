@@ -1,0 +1,20 @@
+{{- if not .Values.configuration.propertiesOverrides.existingConfigmap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "adf.fullname.configmap.properties" . }}
+  namespace: {{ include "adf.namespace" . }}
+  labels:
+    {{- include "adf.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS: {{ (include "adf.external-url" .) | quote }}
+  {{- range $key, $val := .Values.configuration.properties -}}
+    {{- if ne $val nil }}
+      {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
+    {{- end }}
+  {{- end -}}
+{{ end }}

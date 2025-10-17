@@ -1,0 +1,12 @@
+configuration:
+  # The URL at which the ADF application is accessible.
+  # Where we ues the nip.io for convenience in combination with the most common docker gateway.
+  externalUrl: http://poolparty.172.19.0.1.nip.io/ADF
+  properties:
+    # The URL of Keycloak instance used by both ADF and PoolParty for authentication.
+    KEYCLOAK_URL: "http://poolparty.172.19.0.1.nip.io/auth"
+    # The URL of PoolParty. Note that this address should not contain the /PoolParty path.
+    POOLPARTY_URL: "http://poolparty.172.19.0.1.nip.io/"
+    # This is the client secret for the Keycloak client registration used by PoolParty for authentication.
+    # A better place for this could be a secret, which is then added to the config, using extraEnvFrom.
+    SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENT_SECRET: "1-2-3-4-5-6-7-8-9-0"

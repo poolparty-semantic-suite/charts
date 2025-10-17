@@ -1,0 +1,20 @@
+---------------------
+    _    ____  _____
+   / \  |  _ \|  ___|
+  / _ \ | | | | |_
+ / ___ \| |_| |  _|
+/_/   \_\____/|_|
+---------------------
+
+Chart version: {{ .Chart.Version }}
+ADF version: {{ coalesce .Values.image.tag .Chart.AppVersion }}
+ADF URL: {{ include "adf.external-url" . }}
+
+** Please be patient while the chart is being deployed and services are available **
+You can check their status with kubectl --namespace {{ include "adf.namespace" . }} get pods
+
+{{- include "adf.notes.warnings" . }}
+
+----------------------------------------------------------------------------------------------------------------------------------
+For more information on running ADF, visit https://help.poolparty.biz/application-development-framework/index.html?lang=en
+----------------------------------------------------------------------------------------------------------------------------------
