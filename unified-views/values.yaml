@@ -1,0 +1,635 @@
+###############################################################################
+#                        Main configuration file                              #
+#                                                                             #
+# To override single property use --set                                       #
+# To override multiple, provide another values-override.yaml with the -f flag #
+# See https://helm.sh/docs/chart_template_guide/values_files/                 #
+###############################################################################
+
+#########################
+# Global Configurations #
+#########################
+
+global:
+  # Overrides image.registry
+  # Can be used to override it globally when using umbrella charts.
+  imageRegistry: ""
+
+  # Inserts additional pull secret references along with any from .Values.image.pullSecrets
+  # Can be used to override it globally when using umbrella charts.
+  # Values are processed as Helm templates.
+  # Ref: https://kubernetes.io/docs/concepts/configuration/secret/#using-imagepullsecrets
+  #
+  # Example:
+  # imagePullSecrets:
+  #   - name: my-pull-secret
+  imagePullSecrets: []
+
+  # The default domain suffix of the Kubernetes cluster
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+  clusterDomain: cluster.local
+
+###############################
+#   Metadata Configurations   #
+# Naming and labels overrides #
+###############################
+
+# Overrides the name of the chart affecting the names of UnifiedViews resources.
+nameOverride: ""
+
+# Overrides the naming of all UnifiedViews resources, effectively removing the chart's name and the release name prefix.
+# This override takes precedence over anything in .Values.nameOverride
+fullnameOverride: ""
+
+# Overrides the deployment namespace in case of multi-namespace deployments, for example when using umbrella charts
+# where some sub-charts should be deployed in different namespaces.
+# This affects every resource deployed by this chart.
+# The default value is .Release.Namespace if this is left unspecified.
+namespaceOverride: ""
+
+# Additional common labels to add to all resources of UnifiedViews.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+#
+# Example:
+# labels:
+#   foo: bar
+#   some-label: {{ .Values.someValue }}
+labels: {}
+
+# Additional common annotations to add to all resources of UnifiedViews.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+#
+# Example:
+# annotations:
+#   foo: bar
+#   some-annotation: {{ .Values.someValue }}
+annotations: {}
+
+#####################################
+# UnifiedViews Image Configurations #
+#####################################
+
+# Image configurations for UnifiedViews.
+# All containers in this chart use the UnifiedViews image, all init containers and any Jobs as well.
+# Ref: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  # The registry that hosts the UnifiedViews image.
+  # The default is to pull it from the official Docker registry, but this can be overridden to pull from other public or
+  # private registries.
+  registry: docker.io
+
+  # The repository name of the UnifiedViews image.
+  repository: ontotext/unified-views
+
+  # Image tag that corresponds to the version of UnifiedViews.
+  # By default, the chart uses .Chart.AppVersion to construct the full image name.
+  # Use this to override the value from .Chart.AppVersion and effectively deploy a custom UnifiedViews version.
+  tag: ""
+
+  # Expected SHA256 digest of the used UnifiedViews image, e.g. "sha256@abc"
+  # Use the digest to make sure you are always deploying the exact same UnifiedViews image.
+  # Defining this would override .Chart.AppVersion and image.tag
+  digest: ""
+
+  # Defines the policy for pulling images
+  # Ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
+  pullPolicy: IfNotPresent
+
+  # Secrets for pulling UnifiedViews's Docker image from secured registries.
+  # Values are processed as Helm templates.
+  # Ref: https://kubernetes.io/docs/concepts/configuration/secret/#using-imagepullsecrets
+  #
+  # Example:
+  # pullSecrets:
+  #   - name: my-pull-secret
+  pullSecrets: []
+
+###############################
+# UnifiedViews Configurations #
+###############################
+
+# TODO
+# Commercial license is required for using UnifiedViews.
+license:
+  # Reference to a secret containing 'poolparty.key' file that will be mounted in the UnifiedViews pod.
+  # The value is processed as a Helm template.
+  existingSecret: ""
+
+  # Name of the UnifiedViews license file in the existing license secret.
+  # The default is poolparty.key, but it can be changed to map to a different secret key.
+  licenseFilename: poolparty.key
+
+  # Defines the secret volume as optional or not.
+  # Note: Useful if the PoolParty license has not yet been provisioned but will be, for example by an external system or
+  # an operator such as External Secret Operator.
+  optional: false
+
+  # Marks the secret mount as read-only to prevent any modifications to the license file.
+  readOnly: true
+
+# UnifiedViews runtime configuration settings.
+# Ref. TODO
+configuration:
+  # The external URL at which UnifiedViews should be accessible.
+  # This can be a publicly available domain name, an internal one or even a Kubernetes service address.
+  #
+  # This configures the address resolving in UnifiedViews, if enabled.
+  # It also configures the hostname in the default Ingress resource, if enabled.
+  # The value is processed as a Helm template.
+  #
+  # Note: If the external URL uses HTTPS and the default Ingress is enabled, you have to configure .Values.ingress.tls
+  #
+  # Note: When deploying on a context path different from /, you need to properly configure the Ingress according to the
+  # requirements of the Ingress controller implementation.
+  externalUrl: http://unified-views.127.0.0.1.nip.io
+
+  # Additional UnifiedViews configurations that will be appended to unified-views.properties, effectively overriding
+  # anything configured in the default unified-views.properties ConfigMap.
+  # The ConfigMap serves as source for environment variables passed to the UnifiedViews.
+  # Values are processed as Helm templates.
+  #
+  # Example:
+  # properties:
+  #   POOLPARTY_GRAPHDB_URL: "http://graphdb-node-0:7200, http://graphdb-node-1:7200"
+  properties:
+    TODO: TODO
+
+  # UnifiedViews configurations settings to use instead of the ones defined into the default unfield-views.properties
+  # ConfigMap.
+  #
+  # Example:
+  # propertiesOverrides:
+  #   existingConfigmap: my-unified-views-properties
+  #   existingSecret: my-secret-unified-views-properties
+  propertiesOverrides:
+    # Reference to an existing ConfigMap resource containing UnifiedViews configuration settings.
+    # Note: When providing override of the default ConfigMap, you need to provide all of the required properties!
+    # The value is processed as a Helm template.
+    existingConfigmap: ""
+
+    # Reference to an existing Secret resource containing sensitive UnifiedViews configuration settings.
+    # Note: The recommended way to provide all password and sensitive configurations.
+    # The value is processed as a Helm template.
+    existingSecret: ""
+
+  # Default Java arguments with which UnifiedViews instances will be launched.
+  # UnifiedViews configuration properties can also be passed here in the format -Dproperty=value
+  # The value is processed as a Helm template.
+  # Ref: TODO is there a documentation about specific Java Arguments for optimization of PP
+  defaultJavaArguments: -XX:MaxRAMPercentage=85
+
+  # Java arguments to append after .Values.configuration.defaultJavaArguments
+  # Use this one in order to avoid overriding the default values.
+  # The value is processed as a Helm template.
+  javaArguments: ""
+
+  # TODO: double-check
+  # Configurations for UnifiedViews's Logback
+  # Ref: TODO
+  #
+  # Example:
+  # logback:
+  #   existingConfigmap: custom-logback-config
+  logback:
+    # Reference to an existing ConfigMap containing a Logback XML configuration.
+    # The value is processed as a Helm template.
+    existingConfigmap: ""
+
+    # Key in the existing ConfigMap that maps to the Logback XML configuration.
+    configmapKey: logback.xml
+
+##########################
+# Ingress Configurations #
+##########################
+
+# Configurations for the default Ingress resource for UnifiedViews.
+#
+# The default Ingress in this chart makes no assumptions of what Ingress controller is being used, it's up to you to
+# define any specific annotations required by the controller implementation in your cluster.
+#
+# Ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  # Toggles the deployment of the default Ingress resource.
+  enabled: true
+
+  # Specifies the ingress controller implementation that will control this Ingress resource.
+  # Not defining this would result in using the default ingress controller in the cluster, if there is one.
+  className: ""
+
+  # Additional labels to append to the Ingress resource.
+  # Values are processed as Helm templates.
+  labels: {}
+
+  # Additional annotations to append to the Ingress resource.
+  # Values are processed as Helm templates.
+  annotations: {}
+
+  # If set, overrides the host from .Values.configuration.externalUrl
+  host: ""
+
+  # If set, overrides the context path from .Values.configuration.externalUrl
+  path: ""
+
+  # Sets the ingress path type.
+  # If you need to use ImplementationSpecific, make sure to set any annotations needed by the controller implementation.
+  pathType: Prefix
+
+  # Configures SSL termination on Ingress level.
+  # Ref: https://kubernetes.github.io/ingress-nginx/examples/tls-termination/
+  tls:
+    # Feature toggle for SSL termination. Disabled by default.
+    # If TLS is enabled, the .Values.configuration.externalUrl should also be updated to use HTTPS.
+    enabled: false
+
+    # Name of a Kubernetes Secret object with the key and certificate.
+    # If TLS is enabled, it's required to be provided, depending on the deployment.
+    # This could be an existing Secret or one that is not yet created.
+    secretName: ""
+
+  # List of additional hostnames to append to the Ingress resource.
+  # Values are processed as Helm templates.
+  extraHosts: []
+
+  # List of additional TLS records to append to the Ingress resource.
+  # Values are processed as Helm templates.
+  extraTLS: []
+
+##########################
+# Service Configurations #
+##########################
+
+# Configurations for UnifiedViews Service.
+# Ref: https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  # Enables or disables the Service deployment
+  enabled: true
+
+  # Additional labels to append to the Service resource.
+  # Values are processed as Helm templates.
+  labels: {}
+
+  # Additional annotations to append to the Service resource.
+  # Values are processed as Helm templates.
+  annotations: {}
+
+  # Service type
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+
+  # Ports exposed by the Service.
+  # Note: If you want to add additional ports, use .Values.service.extraPorts.
+  ports:
+    # Port mapped to UnifiedViews's HTTP API.
+    http: 8081 # TODO which port is used
+
+  # Exposes the Service on a specific node port on the host machine when "serviceType: NodePort"
+  # If left undefined, K8S will pick a random port from the node port range of the cluster.
+  nodePort: ""
+
+  # Defines the policy for treating external ingress traffic.
+  # By default, Cluster does not preserve client IPs. Change to Local to preserve them.
+  # See https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  externalTrafficPolicy: ""
+
+  # NodePort used by external load balancers when the external traffic policy is set to Local.
+  # By default, Kubernetes will assign a random port, use this to override it.
+  healthCheckNodePort: ""
+
+  # Defines the class that should select a particular load balancer implementation.
+  # By default Kubernetes will assign the cluster default implementation, use this to override it.
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-class
+  loadBalancerClass: ""
+
+  # Source IP ranges for restricting external ingress traffic.
+  loadBalancerSourceRanges: []
+
+  # External IP addresses at which the Service will be exposed.
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
+  externalIPs: []
+
+  # Additional ports to expose with the Service.
+  extraPorts: []
+
+##############################
+# Persistence Configurations #
+##############################
+
+persistence:
+  # Toggles the persistence of UnifiedViews data.
+  # - If enabled, the StatefulSet will use a PVC template and rely on the CSI to dynamically provision Persistent Volumes.
+  # - If disabled, it falls back to an emptyDir volume.
+  enabled: true
+
+  # Configurations for PVC based persistence.
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
+  # Ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  volumeClaimTemplate:
+    # Prefix used when naming the PVCs for the StatefulSet.
+    name: "storage"
+
+    # Additional labels to add to the PVC template.
+    # Values are processed as Helm templates.
+    labels: {}
+
+    # Additional annotations to add to the PVC template.
+    # Values are processed as Helm templates.
+    annotations: {}
+
+    # Specification for a PVC to be created by the StatefulSet.
+    # Tune according to your needs.
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+
+  # Overrides the retention policy of the StatefulSet's PVC.
+  # This requires Kubernetes v1.27 or greater.
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  #
+  # Example:
+  # volumeClaimRetentionPolicy:
+  #   whenScaled: Retain
+  #   whenDeleted: Delete
+  volumeClaimRetentionPolicy: {}
+
+  # Configurations for an emptyDir volume to be used for data storage by the StatefulSet.
+  # Used when the persistence is disabled with .Values.persistence.enabled
+  # Ref: https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/
+  emptyDir:
+    # Default emptyDir limit, override to your needs.
+    sizeLimit: 1Gi
+
+# Configurations for an emptyDir volume for the /tmp folder in each UnifiedViews container.
+# Because the default security context in .Values.securityContext configures the root filesystem to be in read-only
+# mode, certain UnifiedViews features cannot create and write files in /tmp. If you don't use a read-only root filesystem,
+# you can disable this with .Values.tempVolume.enabled
+tempVolume:
+  # Toggles the temp folder emptyDir volume creation.
+  # - If enabled, the StatefulSet will use an emptyDir volume for /tmp.
+  # - If disabled, the chart won't create and mount ephemeral volumes for /tmp.
+  enabled: true
+
+  # Configurations for an emptyDir volume to be used for /tmp.
+  # Ref: https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/
+  emptyDir:
+    # Default emptyDir limit, override to your needs.
+    sizeLimit: 128Mi
+
+##############################
+# StatefulSet Configurations #
+##############################
+
+# Configures the strategy of updating StatefulSet Pods.
+# The default type of RollingUpdate ensures that there will always be .Values.replicas amount of running nodes at the same time.
+# Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
+updateStrategy:
+  type: RollingUpdate
+
+# Configures how Pods are created and scaled.
+# Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies
+podManagementPolicy: Parallel
+
+# Changes the maximum amount of revisions that are kept.
+revisionHistoryLimit: 10
+
+# Grace period in seconds before terminating the Pods.
+# Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination
+terminationGracePeriodSeconds: 120
+
+# Toggles the auto mounting of API credentials token into the Pods.
+# Enable this if you need to contact either the API server or need web identity credentials for federated authentication in cloud APIs.
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#opt-out-of-api-credential-automounting
+automountServiceAccountToken: false
+
+# Overrides the default Kubernetes scheduler.
+# See https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/#specify-schedulers-for-pods
+schedulerName: ""
+
+# Overrides the Pod's DNS settings.
+# Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+dnsConfig: {}
+
+# Defines the Pod's policy for DNS resolution.
+# Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+dnsPolicy: ""
+
+# Name of an existing PriorityClass to assign, defining the importance of the pods compared to other pods in the cluster.
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+priorityClassName: ""
+
+# Overrides the default UnifiedViews container command.
+# Use only for troubleshooting!
+# See https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
+command: []
+
+# Overrides the default UnifiedViews container command's arguments.
+# Use only for troubleshooting!
+# See https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
+args: []
+
+# Ports used by the UnifiedViews container
+# Note: If you want to add additional ports, use .Values.extraContainerPorts.
+containerPorts:
+  # Port mapped to UnifiedViews's HTTP API.
+  http: 8081 # TODO port
+
+# Additional labels to append to the Pod definition.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+# Additional annotations to append to the Pod definition.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+
+###################################
+# Security Context Configurations #
+###################################
+
+# Defines privilege and access control settings for all containers in the UnifiedViews Pod.
+# See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  runAsGroup: 1001
+  fsGroup: 1001
+  fsGroupChangePolicy: OnRootMismatch
+  seccompProfile:
+    type: RuntimeDefault
+
+# Defines privilege and access control settings for the container running UnifiedViews.
+# See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: [ "ALL" ]
+  seccompProfile:
+    type: RuntimeDefault
+
+# Defines privilege and access control settings for the init containers provisioning configurations for UnifiedViews.
+# See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+initContainerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: [ "ALL" ]
+  seccompProfile:
+    type: RuntimeDefault
+
+#############################
+# Scheduling Configurations #
+#############################
+
+# Selector labels to match when selecting nodes.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
+# See https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
+nodeSelector: {}
+
+# Node and pod affinity & anti affinity configurations for constraining the Pod scheduling.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+
+# Default podAntiAffinity rule ensuring that UnifiedViews pods are scheduled on different Kubernetes nodes.
+# Note that this would take effect when UnifiedViews is deployed in a cluster.
+#
+# Possible values for .Values.podAntiAffinity.preset are:
+# - "soft" (default) - Configures a preferredDuringSchedulingIgnoredDuringExecution rule.
+# - "hard" - Configures a requiredDuringSchedulingIgnoredDuringExecution rule.
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+podAntiAffinity:
+  enabled: true
+  preset: soft
+  topology: kubernetes.io/hostname
+
+# List of taint tolerations.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+tolerations: []
+
+# Configurations for spreading Pods across different failure domains.
+# Values are processed as Helm templates.
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#pod-topology-spread-constraints
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+topologySpreadConstraints: []
+
+##########################
+# Resource Configuration #
+##########################
+
+# Resource configurations for the UnifiedViews containers.
+# For resizing to your needs, refer to the UnifiedViews documentation TODO
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
+
+# TODO
+resources:
+  limits:
+    memory: 1Gi
+  requests:
+    memory: 2Gi
+    cpu: 500m
+
+#########################
+# Probes Configurations #
+#########################
+
+# TODO
+# Configurations for the UnifiedViews container startup probe.
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  failureThreshold: 300
+  timeoutSeconds: 1
+  periodSeconds: 3
+
+# Configurations for the UnifiedViews container readiness probe.
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  timeoutSeconds: 5
+  periodSeconds: 10
+
+# Configurations for the UnifiedViews container liveness probe.
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 60
+  timeoutSeconds: 5
+  periodSeconds: 10
+
+#########################################
+# Additional StatefulSet Configurations #
+#########################################
+
+# Additional environment variables to be set for the UnifiedViews containers.
+# Values are processed as Helm templates.
+extraEnvFrom: []
+
+# Additional environment variables to be set for the UnifiedViews containers.
+# Values are processed as Helm templates.
+extraEnv: []
+
+# Additional volumes to be set for the UnifiedViews Pod.
+# Values are processed as Helm templates.
+extraVolumes: []
+
+# Additional volume mounts to be set for the UnifiedViews containers.
+# Values are processed as Helm templates.
+extraVolumeMounts: []
+
+# Additional volume claim templates to be set in UnifiedViews's StatefulSet.
+# Values are processed as Helm templates.
+extraVolumeClaimTemplates: []
+
+# Additional init containers to be inserted after the provisioning init containers.
+# Values are processed as Helm templates.
+extraInitContainers: []
+
+# Additional UnifiedViews container ports to expose.
+extraContainerPorts: {}
+
+# Additional containers to insert into the UnifiedViews Pod, e.g. sidecar containers
+# Values are processed as Helm templates.
+extraContainers: []
+
+##################################
+# Service Account Configurations #
+##################################
+
+# Configurations for the default ServiceAccount for UnifiedViews.
+# UnifiedViews by itself has no need to communicate with the Kubernetes API but the service account tokens can be used
+# as ODIC federated web identity tokens for authentication in cloud APIs.
+# Ref: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created for UnifiedViews.
+  create: false
+
+  # The name of the ServiceAccount to use.
+  #
+  # There are three cases to be aware of when using this:
+  # - If not set and create is true, a name is generated using the fullname template
+  # - If set and create is true, it will use the provided name when creating the ServiceAccount
+  # - If set but create is false, it will use the provided ServiceAccount.
+  name: ""
+
+  # If .Values.serviceAccount.create is true, insert additional annotations to the created ServiceAccount.
+  # Values are processed as Helm templates.
+  annotations: {}
+
+#################################
+# Additional Kubernetes Objects #
+#################################
+
+# Additional objects to insert along with the release.
+# Values are processed as Helm templates with tpl function.
+# Ref: https://helm.sh/docs/howto/charts_tips_and_tricks/#using-the-tpl-function
+extraObjects: []

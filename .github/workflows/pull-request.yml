@@ -24,6 +24,14 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
 
+      # TODO: use strategy.matrix in order to reuse this step and stay dry
+      - name: Unified Views - Helm lint & render check
+        if: contains(steps.verify-changed-files.outputs.changed_files, 'unified-views')
+        working-directory: ./unified-views
+        run: |
+          helm lint --strict .
+          helm template . > output.yaml --debug
+
       - name: PoolParty - Helm lint & render check
         if: contains(steps.verify-changed-files.outputs.changed_files, 'poolparty')
         working-directory: ./poolparty

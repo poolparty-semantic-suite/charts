@@ -1,0 +1,22 @@
+---------------------------------------------------------------
+  _    _       _  __ _          ___      ___                   
+ | |  | |     (_)/ _(_)        | \ \    / (_)                  
+ | |  | |_ __  _| |_ _  ___  __| |\ \  / / _  _____      _____ 
+ | |  | | '_ \| |  _| |/ _ \/ _` | \ \/ / | |/ _ \ \ /\ / / __|
+ | |__| | | | | | | | |  __/ (_| |  \  /  | |  __/\ V  V /\__ \
+  \____/|_| |_|_|_| |_|\___|\__,_|   \/   |_|\___| \_/\_/ |___/
+                                                               
+---------------------------------------------------------------
+
+Chart version: {{ .Chart.Version }}
+UnifiedViews version: {{ coalesce .Values.image.tag .Chart.AppVersion }}
+UnifiedViews URL: {{ include "unified-views.external-url" . }}
+
+** Please be patient while the chart is being deployed and services are available **
+You can check their status with kubectl --namespace {{ include "unified-views.namespace" . }} get pods
+
+{{- include "unified-views.notes.warnings" . }}
+
+----------------------------------------------------------------------------------------------------
+For more information on running UnifiedViews, visit https://www.poolparty.biz/poolparty-unifiedviews
+----------------------------------------------------------------------------------------------------

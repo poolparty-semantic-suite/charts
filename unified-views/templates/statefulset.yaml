@@ -1,0 +1,208 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "unified-views.fullname" . }}
+  namespace: {{ include "unified-views.namespace" . }}
+  labels:
+    {{- include "unified-views.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  serviceName: {{ include "unified-views.fullname" . }}
+  updateStrategy: {{ .Values.updateStrategy | toYaml | nindent 4 }}
+  podManagementPolicy: {{ .Values.podManagementPolicy }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  persistentVolumeClaimRetentionPolicy: {{ .Values.persistence.volumeClaimRetentionPolicy | toYaml | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "unified-views.selectorLabels" . | nindent 6 }}
+  {{- if or .Values.persistence.enabled .Values.extraVolumeClaimTemplates }}
+  volumeClaimTemplates:
+    {{- if .Values.persistence.enabled }}
+    - metadata:
+        name: {{ .Values.persistence.volumeClaimTemplate.name }}
+        {{- with .Values.persistence.volumeClaimTemplate.labels }}
+        labels: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.persistence.volumeClaimTemplate.annotations }}
+        annotations: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+      spec:
+        {{- toYaml .Values.persistence.volumeClaimTemplate.spec | nindent 8 }}
+    {{- end }}
+    {{- with .Values.extraVolumeClaimTemplates }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "unified-views.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/configmap-environment: {{ include (print .Template.BasePath "/configmap-environment.yaml") . | sha256sum }}
+        {{- if not .Values.configuration.propertiesOverrides.existingConfigmap }}
+        checksum/config-properties: {{ include (print .Template.BasePath "/config-properties.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      serviceAccountName: {{ include "unified-views.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
+      {{- if .Values.schedulerName }}
+      schedulerName: {{ .Values.schedulerName }}
+      {{- end }}
+      {{- with .Values.dnsConfig }}
+      dnsConfig: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      volumes:
+        {{- if not .Values.persistence.enabled }}
+        - name: {{ .Values.persistence.volumeClaimTemplate.name }}
+          emptyDir: {{ .Values.persistence.emptyDir | toYaml | nindent 12 }}
+        {{- end }}
+        {{- if .Values.tempVolume.enabled }}
+        - name: temp-dir
+          emptyDir: {{ .Values.tempVolume.emptyDir | toYaml | nindent 12 }}
+        {{- end }}
+        {{- if .Values.configuration.logback.existingConfigmap }}
+        - name: poolparty-logback-config
+          configMap:
+            name: {{ tpl .Values.configuration.logback.existingConfigmap . }}
+        {{- end }}
+        {{- if .Values.license.existingSecret }}
+        - name: poolparty-license
+          secret:
+            secretName: {{ tpl .Values.license.existingSecret . }}
+            optional: {{ .Values.license.optional }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.affinity .Values.podAntiAffinity.enabled }}
+      affinity:
+        {{- if .Values.affinity  }}
+          {{- tpl (toYaml .Values.affinity) $ | nindent 8 }}
+        {{- end }}
+        {{- if and .Values.podAntiAffinity.enabled (not .Values.affinity.podAntiAffinity) }}
+        podAntiAffinity:
+          {{- if eq .Values.podAntiAffinity.preset "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                topologyKey: {{ .Values.podAntiAffinity.topology }}
+                labelSelector:
+                  matchLabels:
+                    {{- include "unified-views.selectorLabels" . | nindent 20 }}
+          {{- else if eq .Values.podAntiAffinity.preset "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: {{ .Values.podAntiAffinity.topology }}
+              labelSelector:
+                matchLabels:
+                  {{- include "unified-views.selectorLabels" . | nindent 18 }}
+          {{- else }}
+            {{- fail (printf "Unknown podAntiAffinity preset '%s'" .Values.podAntiAffinity.preset) }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.global.imagePullSecrets .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- include "unified-views.combinedImagePullSecrets" . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        {{- with .Values.extraInitContainers }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ include "unified-views.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.command }}
+          command: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.args }}
+          args: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPorts.http }}
+            {{- with .Values.extraContainerPorts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- if .Values.configuration.propertiesOverrides.existingConfigmap }}
+            - configMapRef:
+                name: {{ .Values.configuration.propertiesOverrides.existingConfigmap }}
+            {{- else }}
+            - configMapRef:
+                name: {{ include "unified-views.fullname.configmap.properties" . }}
+            {{- end }}
+            {{- if .Values.configuration.propertiesOverrides.existingSecret }}
+            - secretRef:
+                name: {{ .Values.configuration.extraProperties.existingSecret }}
+            {{- end }}
+            - configMapRef:
+                name: {{ include "unified-views.fullname.configmap.environment" . }}
+            {{- with .Values.extraEnvFrom }}
+              {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+          {{- with .Values.extraEnv }}
+          env: {{- tpl (toYaml .) $ | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: {{ .Values.persistence.volumeClaimTemplate.name }}
+              mountPath: /var/lib/poolparty
+            - name: temp-dir
+              mountPath: /tmp
+            {{- if .Values.license.existingSecret }}
+            - name: poolparty-license
+              mountPath: /usr/share/poolparty/config/licenses
+              readOnly: {{ .Values.license.readOnly }}
+            {{- end }}
+            {{- if .Values.configuration.logback.existingConfigmap }}
+            - name: poolparty-logback-config
+              mountPath: /var/lib/poolparty/config/logback.xml
+              subPath: {{ .Values.configuration.logback.configmapKey }}
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+              {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+          {{- with .Values.resources }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- with .Values.extraContainers }}
+          {{ tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
