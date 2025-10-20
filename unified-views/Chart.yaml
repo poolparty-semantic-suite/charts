@@ -1,0 +1,28 @@
+#
+# Official Helm chart for PoolParty UnifiedViews.
+#
+apiVersion: v2
+name: unified-views
+description: |
+  PoolParty's UnifiedViews is an Extract-Transform-Load (ETL) framework that natively supports RDF data and ontologies.
+  It helps organizations to integrate different data types and connect them in a knowledge graph so that enterprise data
+  and content can be searched for and used effectively.
+type: application
+version: 0.1.0
+appVersion: 10.0.1
+kubeVersion: ^1.30.0-0
+home: https://www.poolparty.biz/poolparty-unifiedviews
+icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+maintainers:
+  - name: Graphwise
+    email: dnd@graphwise.ai
+sources:
+  - https://github.com/poolparty-semantic-suite/charts
+keywords:
+  - graphwise
+  - poolparty
+  - unified-views
+  - etl
+  - rdf
+  - graphdb
+  - semantic
