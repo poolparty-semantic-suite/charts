@@ -1,0 +1,207 @@
+{{- if .Values.rdf4j.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "rdf4j.fullname" . }}
+  namespace: {{ include "rdf4j.namespace" . }}
+  labels:
+    {{- include "rdf4j.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  serviceName: {{ include "rdf4j.fullname" . }}
+  updateStrategy: {{ .Values.rdf4j.updateStrategy | toYaml | nindent 4 }}
+  podManagementPolicy: {{ .Values.rdf4j.podManagementPolicy }}
+  revisionHistoryLimit: {{ .Values.rdf4j.revisionHistoryLimit }}
+  persistentVolumeClaimRetentionPolicy: {{ .Values.rdf4j.persistence.volumeClaimRetentionPolicy | toYaml | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "rdf4j.selectorLabels" . | nindent 6 }}
+  {{- if or .Values.rdf4j.persistence.enabled .Values.extraVolumeClaimTemplates }}
+  volumeClaimTemplates:
+    {{- if .Values.rdf4j.persistence.enabled }}
+    - metadata:
+        name: {{ .Values.rdf4j.persistence.volumeClaimTemplate.name }}
+        {{- with .Values.rdf4j.persistence.volumeClaimTemplate.labels }}
+        labels: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.rdf4j.persistence.volumeClaimTemplate.annotations }}
+        annotations: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+      spec:
+        {{- toYaml .Values.rdf4j.persistence.volumeClaimTemplate.spec | nindent 8 }}
+    {{- end }}
+    - metadata:
+        name: tomcat
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
+    {{- with .Values.extraVolumeClaimTemplates }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "rdf4j.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/configmap-environment: {{ include (print .Template.BasePath "/rdf4j/configmap-environment.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.rdf4j.terminationGracePeriodSeconds }}
+      serviceAccountName: {{ include "rdf4j.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.rdf4j.automountServiceAccountToken }}
+      {{- if .Values.rdf4j.schedulerName }}
+      schedulerName: {{ .Values.rdf4j.schedulerName }}
+      {{- end }}
+      {{- with .Values.rdf4j.dnsConfig }}
+      dnsConfig: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.rdf4j.dnsPolicy }}
+      dnsPolicy: {{ .Values.rdf4j.dnsPolicy }}
+      {{- end }}
+      {{- if .Values.rdf4j.priorityClassName }}
+      priorityClassName: {{ .Values.rdf4j.priorityClassName }}
+      {{- end }}
+      volumes:
+        {{- if not .Values.rdf4j.persistence.enabled }}
+        - name: {{ .Values.rdf4j.persistence.volumeClaimTemplate.name }}
+          emptyDir: {{ .Values.rdf4j.persistence.emptyDir | toYaml | nindent 12 }}
+        {{- end }}
+        - name: tomcat
+      {{- with .Values.rdf4j.nodeSelector }}
+      nodeSelector: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.rdf4j.affinity .Values.rdf4j.podAntiAffinity.enabled }}
+      affinity:
+        {{- if .Values.rdf4j.affinity  }}
+          {{- tpl (toYaml .Values.rdf4j.affinity) $ | nindent 8 }}
+        {{- end }}
+        {{- if and .Values.rdf4j.podAntiAffinity.enabled (not .Values.rdf4j.affinity.podAntiAffinity) }}
+        podAntiAffinity:
+          {{- if eq .Values.rdf4j.podAntiAffinity.preset "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                topologyKey: {{ .Values.rdf4j.podAntiAffinity.topology }}
+                labelSelector:
+                  matchLabels:
+                    {{- include "rdf4j.selectorLabels" . | nindent 20 }}
+          {{- else if eq .Values.rdf4j.podAntiAffinity.preset "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: {{ .Values.rdf4j.podAntiAffinity.topology }}
+              labelSelector:
+                matchLabels:
+                  {{- include "rdf4j.selectorLabels" . | nindent 18 }}
+          {{- else }}
+            {{- fail (printf "Unknown podAntiAffinity preset '%s'" .Values.rdf4j.podAntiAffinity.preset) }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.rdf4j.tolerations }}
+      tolerations: {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.rdf4j.podSecurityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.global.imagePullSecrets .Values.rdf4j.image.pullSecrets }}
+      imagePullSecrets:
+        {{- include "rdf4j.combinedImagePullSecrets" . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        {{- if and .Values.persistence.enabled .Values.rdf4j.initContainerDataPermissions.enabled }}
+        - name: rdf4j-modify-tomcat
+          image: {{ include "rdf4j.image" . }}
+          imagePullPolicy: {{ .Values.rdf4j.image.pullPolicy }}
+          env:
+            - name: USER_ID
+              value: {{ coalesce .Values.rdf4j.securityContext.runAsUser .Values.rdf4j.podSecurityContext.runAsUser | quote }}
+            - name: GROUP_ID
+              value: {{ coalesce .Values.rdf4j.securityContext.runAsGroup .Values.rdf4j.podSecurityContext.runAsGroup | quote }}
+          volumeMounts:
+            - name: tomcat
+              mountPath: /tomcat
+          {{- with .Values.rdf4j.initContainerResources }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.rdf4j.initContainerDataPermissions.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          command: [ "bash", "-c" ]
+          args:
+            - |
+              if [[ ! -f /usr/local/tomcat/.initialized ]] ;then
+                echo "initializing tomcat volume"
+                cp -rvf /usr/local/tomcat/* /tomcat
+                touch /tomcat/.initialized
+                chown -R ${USER_ID}:${GROUP_ID} /tomcat/
+                echo "Done."
+              else
+                echo "Volume already initialized"
+              fi
+        {{- end }}
+        {{- with .Values.rdf4j.extraInitContainers }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      containers:
+        - name: {{ include "rdf4j.chartName" . }}
+          image: {{ include "rdf4j.image" . }}
+          imagePullPolicy: {{ .Values.rdf4j.image.pullPolicy }}
+          {{- with .Values.rdf4j.command }}
+          command: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.rdf4j.args }}
+          args: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.rdf4j.containerPorts.http }}
+            {{- with .Values.rdf4j.extraContainerPorts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "rdf4j.fullname.configmap.environment" . }}
+            {{- with .Values.rdf4j.extraEnvFrom }}
+              {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+          {{- with .Values.rdf4j.extraEnv }}
+          env: {{- tpl (toYaml .) $ | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: {{ .Values.rdf4j.persistence.volumeClaimTemplate.name }}
+              mountPath: /var/rdf4j
+            {{- with .Values.rdf4j.extraVolumeMounts }}
+              {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+            - name: tomcat
+              mountPath: /usr/local/tomcat
+          {{- with .Values.rdf4j.resources }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.rdf4j.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.rdf4j.startupProbe }}
+          startupProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.rdf4j.readinessProbe }}
+          readinessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.rdf4j.livenessProbe }}
+          livenessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- with .Values.rdf4j.extraContainers }}
+          {{ tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+{{- end }}

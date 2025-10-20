@@ -1,0 +1,31 @@
+{{- if and .Values.rdf4j.enabled .Values.rdf4j.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rdf4j.fullname" . }}
+  namespace: {{ include "rdf4j.namespace" . }}
+  labels:
+    {{- include "rdf4j.labels" . | nindent 4 }}
+    {{- with .Values.rdf4j.service.labels }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- with (mergeOverwrite (deepCopy .Values.annotations) .Values.rdf4j.service.annotations) }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.rdf4j.service.type }}
+  selector:
+    {{- include "rdf4j.selectorLabels" . | nindent 4 }}
+  {{- if .Values.rdf4j.service.healthCheckNodePort }}
+  healthCheckNodePort: {{ .Values.rdf4j.service.healthCheckNodePort }}
+  {{- end }}
+  ports:
+    - name: http
+      port: {{ .Values.rdf4j.service.ports.http }}
+      targetPort: http
+      protocol: TCP
+  {{- with .Values.rdf4j.service.extraPorts -}}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
