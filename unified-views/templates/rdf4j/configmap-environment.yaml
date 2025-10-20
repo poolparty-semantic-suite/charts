@@ -1,0 +1,18 @@
+{{- if .Values.rdf4j.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "rdf4j.fullname.configmap.environment" . }}
+  namespace: {{ include "rdf4j.namespace" . }}
+  labels:
+    {{- include "rdf4j.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  JAVA_OPTS: >-
+    {{ tpl .Values.configuration.defaultJavaArguments . }}
+    {{ tpl .Values.configuration.javaArguments . }}
+
+{{- end }}

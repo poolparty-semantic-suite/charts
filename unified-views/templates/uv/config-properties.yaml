@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "unified-views.fullname.configmap.properties" . }}
+  namespace: {{ include "unified-views.namespace" . }}
+  labels:
+    {{- include "unified-views.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  uv.properties: |-
+    {{- if not (empty .Values.configuration.rdf4j.url) }}
+    database.rdf.conf.url={{ .Values.configuration.rdf4j.url }}
+    {{- else }}
+    database.rdf.conf.url={{ include "rdf4j.service.address" . }}/rdf4j-server
+    {{- end }}
+    {{- if not ( empty .Values.configuration.rdf4j.platform) }}
+    database.rdf.platform={{ .Values.configuration.rdf4j.platform }}
+    {{- end }}
+    {{- if not ( empty .Values.configuration.rdf4j.repositoryName ) }}
+    database.rdf.conf.repository={{ .Values.configuration.rdf4j.repositoryName }}
+    {{- end }}
+    {{- if not ( empty .Values.configuration.rdf4j.user) }}
+    database.rdf.conf.user={{ .Values.configuration.rdf4j.user }}
+    {{- end }}
+    {{- if .Values.configuration.properties }}
+    ##### Overrides from values.yaml #####
+      {{- range $key, $val := .Values.configuration.properties -}}
+        {{- if eq $key "database.rdf.conf.url" -}}
+          {{- fail "Please use 'configuration.rdf4j.url' to provide the RDF4J URL!" -}}
+        {{- end -}}
+        {{- if ne $val nil -}}
+          {{ $key | nindent 4 }}={{ tpl ($val | toString) $ }}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
