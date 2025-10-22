@@ -51,15 +51,20 @@ PoolParty requires at least version 11.1 of GraphDB. To install it, consult the 
 
 The basic steps to install GraphDB using the official Helm chart are:
 1. Create a secret with the GraphDB license
+
     ```shell
-    kubectl create secret generic --from-file graphdb.license=/path/to/graphdb.license
+    kubectl create secret generic graphdb-license --from-file graphdb.license=/path/to/graphdb.license
     ```
+
 2. Add the Helm repository
+
     ```shell
     helm repo add ontotext https://maven.ontotext.com/repository/helm-public/
     helm repo update
     ```
+
 3. Install GraphDB
+
     ```shell
     helm install graphdb ontotext/graphdb
     ```
@@ -74,6 +79,7 @@ Elasticsearch instance in your cluster. This example uses a Graphwise provided i
 pre-installed.
 
 Install this example with:
+
 ```shell
 kubectl apply --filename examples/dependencies/elasticsearch.yaml
 ```
@@ -97,9 +103,10 @@ Keycloak instance in your cluster. This example uses a Graphwise provided image 
 > this is to use a service like [nip.io](https://nip.io/), which encodes the IP address for the A record in the FQDN.
 
 Install this example, first determine the IP address of your host machine, and:
+
 ```shell
 export KEYCLOAK_FQDN="keycloak.[your ip address].nip.io"
-sed "s/[KEYCLOAK_FQDN]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | \
+sed "s/\[KEYCLOAK_FQDN\]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | \
   kubectl apply --filename -
 ```
 
@@ -117,6 +124,7 @@ With all dependencies in place, PoolParty can be installed.
 > PoolParty requires a license. You need to obtain a license file before installing.
 
 1. Create a secret for the PoolParty license
+
     ```shell
     kubectl create secret generic poolparty-license --from-file poolparty.key=/path/to/poolparty.key
     ```
@@ -169,6 +177,7 @@ configuration:
 ```
 
 The install with:
+
 ```shell
 helm install poolparty poolparty-semantic-suite/poolparty -f values_overrides.yaml
 ```
