@@ -1,8 +1,8 @@
 # Helm Chart for PoolParty
 
 <!-- [![CI](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml/badge.svg)](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml) -->
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square)
-![AppVersion: 10.0.1](https://img.shields.io/badge/AppVersion-10.0.1-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square)
+![AppVersion: 10.0.2](https://img.shields.io/badge/AppVersion-10.0.2-informational?style=flat-square)
 
 <!--
 TODO: Add ArtifactHub badge when ready
@@ -25,7 +25,7 @@ MAJOR versions of the chart.
 Please, always check out the migration guides in [UPGRADE.md](UPGRADE.md), before switching to another major version of
 the Helm chart.
 
-The chart has it's own version and it's not the same as the version of PoolParty.
+The chart has its own version, and it's not the same as the version of PoolParty.
 The table bellow highlights the version mapping between the Helm chart and PoolParty.
 
 | Helm chart version | PoolParty version |
