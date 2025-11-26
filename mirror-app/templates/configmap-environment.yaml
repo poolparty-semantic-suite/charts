@@ -1,0 +1,16 @@
+{{- if .Values.configuration.gunicornArguments -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mirror-app.fullname.configmap.environment" . }}
+  namespace: {{ include "mirror-app.namespace" . }}
+  labels:
+    {{- include "mirror-app.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  APP_ARGS: >-
+    {{ tpl .Values.configuration.gunicornArguments . }}
+{{- end -}}
