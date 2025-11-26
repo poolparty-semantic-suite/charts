@@ -1,0 +1,22 @@
+#
+# Official Helm chart for Mirror App.
+#
+apiVersion: v2
+name: mirror-app
+description: |
+  The Mirror application allows one-way synchronization of project data from source PoolParty to one or more target
+  PoolParty instances.
+type: application
+version: 0.1.0
+appVersion: 2.4.0
+kubeVersion: ^1.32.0-0
+home: https://help.poolparty.biz/en/administrator-guide/poolparty-administration/example-for-a-thesaurus-curation-workflow/how-to-mirror-a-project-with-the-mirror-app.html
+maintainers:
+  - name: Graphwise
+    email: dnd@graphwise.ai
+sources:
+  - https://github.com/poolparty-semantic-suite/charts
+keywords:
+  - graphwise
+  - poolparty
+  - synchronization

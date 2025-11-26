@@ -1,0 +1,22 @@
+{{- if or .Values.configuration.properties .Values.configuration.existingServerMap.configmap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mirror-app.fullname.configmap.properties" . }}
+  namespace: {{ include "mirror-app.namespace" . }}
+  labels:
+    {{- include "mirror-app.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  {{- range $key, $val := .Values.configuration.properties -}}
+    {{- if ne $val nil }}
+      {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
+    {{- end }}
+  {{- end -}}
+  {{- if .Values.configuration.existingServerMap.configmap -}}
+  MIRROR_CONFIG: {{ .Values.configuration.existingServerMap.mountPath }}
+  {{- end -}}
+{{- end -}}
