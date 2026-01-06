@@ -30,14 +30,14 @@ global:
   clusterDomain: cluster.local
 
 ###############################
-#   Metadata Configurations   #
+# Metadata Configurations     #
 # Naming and labels overrides #
 ###############################
 
-# Overrides the name of the chart affecting the names of PoolParty Workbench resources.
+# Overrides the name of the chart affecting the names of Semantic Workbench resources.
 nameOverride: ""
 
-# Overrides the naming of all PoolParty Workbench resources, effectively removing the chart's name and the release name
+# Overrides the naming of all Semantic Workbench resources, effectively removing the chart's name and the release name
 # prefix.
 # This override takes precedence over anything in .Values.nameOverride
 fullnameOverride: ""
@@ -48,7 +48,7 @@ fullnameOverride: ""
 # The default value is .Release.Namespace if this is left unspecified.
 namespaceOverride: ""
 
-# Additional common labels to add to all resources of PoolParty Workbench.
+# Additional common labels to add to all resources of Semantic Workbench.
 # Values are processed as Helm templates.
 # Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 #
@@ -58,7 +58,7 @@ namespaceOverride: ""
 #   some-label: {{ .Values.someValue }}
 labels: {}
 
-# Additional common annotations to add to all resources of PoolParty Workbench.
+# Additional common annotations to add to all resources of Semantic Workbench.
 # Values are processed as Helm templates.
 # Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
 #
@@ -69,28 +69,28 @@ labels: {}
 annotations: {}
 
 ############################################
-# PoolParty Workbench Image Configurations #
+# Semantic Workbench Image Configurations #
 ############################################
 
-# Image configurations for PoolParty Workbench.
-# All containers in this chart use the PoolParty Workbench image, all init containers and any Jobs as well.
+# Image configurations for Semantic Workbench.
+# All containers in this chart use the Semantic Workbench image, all init containers and any Jobs as well.
 # Ref: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  # The registry that hosts the PoolParty Workbench image.
+  # The registry that hosts the Semantic Workbench image.
   # The default is to pull it from the Ontotext Maven registry, but this can be overridden to pull from other public or
   # private registries.
-  registry: "maven.ontotext.com"
+  registry: "docker.io"
 
-  # The repository name of the PoolParty Workbench image.
-  repository:
+  # The repository name of the Semantic Workbench image.
+  repository: "ontotext/semantic-workbench"
 
-  # Image tag that corresponds to the version of PoolParty Workbench.
+  # Image tag that corresponds to the version of Semantic Workbench.
   # By default, the chart uses .Chart.AppVersion to construct the full image name.
-  # Use this to override the value from .Chart.AppVersion and effectively deploy a custom PoolParty Workbench version.
+  # Use this to override the value from .Chart.AppVersion and effectively deploy a custom Semantic Workbench version.
   tag: ""
 
-  # Expected SHA256 digest of the used PoolParty Workbench image, e.g. "sha256@abc"
-  # Use the digest to make sure you are always deploying the exact same PoolParty Workbench image.
+  # Expected SHA256 digest of the used Semantic Workbench image, e.g. "sha256@abc"
+  # Use the digest to make sure you are always deploying the exact same Semantic Workbench image.
   # Defining this would override .Chart.AppVersion and image.tag
   digest: ""
 
@@ -98,7 +98,7 @@ image:
   # Ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
   pullPolicy: IfNotPresent
 
-  # Secrets for pulling PoolParty Workbench's Docker image from secured registries.
+  # Secrets for pulling Semantic Workbench's Docker image from secured registries.
   # Values are processed as Helm templates.
   # Ref: https://kubernetes.io/docs/concepts/configuration/secret/#using-imagepullsecrets
   #
@@ -108,7 +108,7 @@ image:
   pullSecrets: []
 
 ######################################
-# PoolParty Workbench Configurations #
+# Semantic Workbench Configurations #
 ######################################
 
 # Commercial license is required for using PoolParty.
@@ -129,12 +129,12 @@ license:
   # Marks the secret mount as read-only to prevent any modifications to the license file.
   readOnly: true
 
-# PoolParty Workbench runtime configuration settings.
+# Semantic Workbench runtime configuration settings.
 configuration:
-  # The external URL at which PoolParty Workbench should be accessible.
+  # The external URL at which Semantic Workbench should be accessible.
   # This can be a publicly available domain name, an internal one or even a Kubernetes service address.
   #
-  # This configures the address resolving in PoolParty Workbench, if enabled.
+  # This configures the address resolving in Semantic Workbench, if enabled.
   # It also configures the hostname in the default Ingress resource, if enabled.
   # The value is processed as a Helm template.
   #
@@ -142,34 +142,35 @@ configuration:
   #
   # Note: When deploying on a context path different from /, you need to properly configure the Ingress according to the
   # requirements of the Ingress controller implementation.
-  externalUrl: http://poolparty-workbench.127.0.0.1.nip.io
+  externalUrl: http://semantic-workbench.127.0.0.1.nip.io/SemanticWorkbench
 
-  # Additional PoolParty Workbench configurations that will be appended to poolparty-workbench.properties, effectively
-  # overriding anything configured in the default poolparty-workbench.properties ConfigMap.
+  # Additional Semantic Workbench configurations that will be appended to semantic-workbench.properties, effectively
+  # overriding anything configured in the default semantic-workbench.properties ConfigMap.
   # The ConfigMap serves as source for environment variables passed to the application.
   # Values are processed as Helm templates.
   properties:
+    SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTID: "ppt"
 
-  # PoolParty Workbench configurations settings to use instead of the ones defined into the default
-  # poolparty-workbench.properties ConfigMap.
+  # Semantic Workbench configurations settings to use instead of the ones defined into the default
+  # semantic-workbench.properties ConfigMap.
   #
   # Example:
   # propertiesOverrides:
-  #   existingConfigmap: my-poolparty-workbench-properties
-  #   existingSecret: my-secret-poolparty-workbench-properties
+  #   existingConfigmap: my-semantic-workbench-properties
+  #   existingSecret: my-secret-semantic-workbench-properties
   propertiesOverrides:
-    # Reference to an existing ConfigMap resource containing PoolParty Workbench configuration settings.
+    # Reference to an existing ConfigMap resource containing Semantic Workbench configuration settings.
     # Note: When providing override of the default ConfigMap, you need to provide all the required properties!
     # The value is processed as a Helm template.
     existingConfigmap: ""
 
-    # Reference to an existing Secret resource containing sensitive PoolParty Workbench configuration settings.
+    # Reference to an existing Secret resource containing sensitive Semantic Workbench configuration settings.
     # Note: The recommended way to provide all password and sensitive configurations.
     # The value is processed as a Helm template.
     existingSecret: ""
 
-  # Default Java arguments with which PoolParty Workbench instances will be launched.
-  # PoolParty Workbench configuration properties can also be passed here in the format -Dproperty=value
+  # Default Java arguments with which Semantic Workbench instances will be launched.
+  # Semantic Workbench configuration properties can also be passed here in the format -Dproperty=value
   # The value is processed as a Helm template.
   # Ref:
   defaultJavaArguments: -XX:MaxRAMPercentage=85
@@ -180,7 +181,7 @@ configuration:
   javaArguments: ""
 
   # Configurations for PoolParty's Logback
-  # PoolParty Workbench is a Spring Boot service, and like all Spring Boot applications, it uses Logback as the default logging
+  # Semantic Workbench is a Spring Boot service, and like all Spring Boot applications, it uses Logback as the default logging
   # framework. This means that providing Logback configuration works exactly the same way as for any standard Spring Boot application.
   #
   # Example:
@@ -198,7 +199,7 @@ configuration:
 # Ingress Configurations #
 ##########################
 
-# Configurations for the default Ingress resource for PoolParty Workbench.
+# Configurations for the default Ingress resource for Semantic Workbench.
 #
 # The default Ingress in this chart makes no assumptions of what Ingress controller is being used, it's up to you to
 # define any specific annotations required by the controller implementation in your cluster.
@@ -224,8 +225,8 @@ ingress:
   host: ""
 
   # If set, overrides the context path from .Values.configuration.externalUrl. Default is /SemanticWorkbench since
-  # the PoolParty Workbench is exposed behind a context path
-  path: "/SemanticWorkbench/"
+  # the Semantic Workbench is exposed behind a context path
+  path: ""
 
   # Sets the ingress path type.
   # If you need to use ImplementationSpecific, make sure to set any annotations needed by the controller implementation.
@@ -255,7 +256,7 @@ ingress:
 # Service Configurations #
 ##########################
 
-# Configurations for PoolParty Workbench Service.
+# Configurations for Semantic Workbench Service.
 # Ref: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   # Enables or disables the Service deployment
@@ -276,7 +277,7 @@ service:
   # Ports exposed by the Service.
   # Note: If you want to add additional ports, use .Values.service.extraPorts.
   ports:
-    # Port mapped to PoolParty Workbench's HTTP API.
+    # Port mapped to Semantic Workbench's HTTP API.
     http: 8080
 
   # Exposes the Service on a specific node port on the host machine when "serviceType: NodePort"
@@ -293,7 +294,7 @@ service:
   healthCheckNodePort: ""
 
   # Defines the class that should select a particular load balancer implementation.
-  # By default Kubernetes will assign the cluster default implementation, use this to override it.
+  # By default, Kubernetes will assign the cluster default implementation, use this to override it.
   # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-class
   loadBalancerClass: ""
 
@@ -312,16 +313,16 @@ service:
 ##############################
 
 persistence:
-  # Toggles the persistence of PoolParty Workbench data.
+  # Toggles the persistence of Semantic Workbench data.
   # - If enabled, the StatefulSet will use a PVC template and rely on the CSI to dynamically provision Persistent Volumes.
   # - If disabled, it falls back to an emptyDir volume.
   enabled: true
 
   db:
     # Specifies the directory where the SQLite database file will be stored.
-    # This directory must be mounted as a writable volume so the PoolParty Workbench
+    # This directory must be mounted as a writable volume so the Semantic Workbench
     # can persist its runtime configuration data.
-    path: /app/data
+    path: /var/lib/semantic-workbench
 
   # Configurations for PVC based persistence.
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
@@ -363,9 +364,9 @@ persistence:
     # Default emptyDir limit, override to your needs.
     sizeLimit: 1Gi
 
-# Configurations for an emptyDir volume for the /tmp folder in each PoolParty Workbench container.
+# Configurations for an emptyDir volume for the /tmp folder in each Semantic Workbench container.
 # Because the default security context in .Values.securityContext configures the root filesystem to be in read-only
-# mode, certain PoolParty Workbench features cannot create and write files in /tmp. If you don't use a read-only root
+# mode, certain Semantic Workbench features cannot create and write files in /tmp. If you don't use a read-only root
 # filesystem, you can disable this with .Values.tempVolume.enabled
 tempVolume:
   # Toggles the temp folder emptyDir volume creation.
@@ -421,20 +422,20 @@ dnsPolicy: ""
 # Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
 priorityClassName: ""
 
-# Overrides the default PoolParty Workbench container command.
+# Overrides the default Semantic Workbench container command.
 # Use only for troubleshooting!
 # See https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
 command: []
 
-# Overrides the default PoolParty Workbench container command's arguments.
+# Overrides the default Semantic Workbench container command's arguments.
 # Use only for troubleshooting!
 # See https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
 args: []
 
-# Ports used by the PoolParty Workbench container
+# Ports used by the Semantic Workbench container
 # Note: If you want to add additional ports, use .Values.extraContainerPorts.
 containerPorts:
-  # Port mapped to PoolParty Workbench's HTTP API.
+  # Port mapped to Semantic Workbench's HTTP API.
   http: 8080
 
 # Additional labels to append to the Pod definition.
@@ -451,7 +452,7 @@ podAnnotations: {}
 # Security Context Configurations #
 ###################################
 
-# Defines privilege and access control settings for all containers in the PoolParty Workbench Pod.
+# Defines privilege and access control settings for all containers in the Semantic Workbench Pod.
 # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 podSecurityContext:
   runAsNonRoot: true
@@ -462,7 +463,7 @@ podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
 
-# Defines privilege and access control settings for the container running PoolParty Workbench.
+# Defines privilege and access control settings for the container running Semantic Workbench.
 # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 securityContext:
   allowPrivilegeEscalation: false
@@ -472,7 +473,7 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 
-# Defines privilege and access control settings for the init containers provisioning configurations for PoolParty Workbench.
+# Defines privilege and access control settings for the init containers provisioning configurations for Semantic Workbench.
 # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 initContainerSecurityContext:
   allowPrivilegeEscalation: false
@@ -497,8 +498,8 @@ nodeSelector: {}
 # Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
 
-# Default podAntiAffinity rule ensuring that PoolParty Workbench pods are scheduled on different Kubernetes nodes.
-# Note that this would take effect when PoolParty Workbench is deployed in a cluster.
+# Default podAntiAffinity rule ensuring that Semantic Workbench pods are scheduled on different Kubernetes nodes.
+# Note that this would take effect when Semantic Workbench is deployed in a cluster.
 #
 # Possible values for .Values.podAntiAffinity.preset are:
 # - "soft" (default) - Configures a preferredDuringSchedulingIgnoredDuringExecution rule.
@@ -524,8 +525,8 @@ topologySpreadConstraints: []
 # Resource Configuration #
 ##########################
 
-# Resource configurations for the PoolParty Workbench containers.
-# For resizing to your needs, refer to the PoolParty Workbench documentation
+# Resource configurations for the Semantic Workbench containers.
+# For resizing to your needs, refer to the Semantic Workbench documentation
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
 
 resources:
@@ -539,7 +540,7 @@ resources:
 # Probes Configurations #
 #########################
 
-# Configurations for the PoolParty Workbench container startup probe.
+# Configurations for the Semantic Workbench container startup probe.
 startupProbe:
   httpGet:
     path: /SemanticWorkbench/actuator/health/startup
@@ -548,7 +549,7 @@ startupProbe:
   timeoutSeconds: 1
   periodSeconds: 3
 
-# Configurations for the PoolParty Workbench container readiness probe.
+# Configurations for the Semantic Workbench container readiness probe.
 readinessProbe:
   httpGet:
     path: /SemanticWorkbench/actuator/health/readiness
@@ -556,7 +557,7 @@ readinessProbe:
   timeoutSeconds: 5
   periodSeconds: 10
 
-# Configurations for the PoolParty Workbench container liveness probe.
+# Configurations for the Semantic Workbench container liveness probe.
 livenessProbe:
   httpGet:
     path: /SemanticWorkbench/actuator/health/liveness
@@ -569,23 +570,23 @@ livenessProbe:
 # Additional StatefulSet Configurations #
 #########################################
 
-# Additional environment variables to be set for the PoolParty Workbench containers.
+# Additional environment variables to be set for the Semantic Workbench containers.
 # Values are processed as Helm templates.
 extraEnvFrom: []
 
-# Additional environment variables to be set for the PoolParty Workbench containers.
+# Additional environment variables to be set for the Semantic Workbench containers.
 # Values are processed as Helm templates.
 extraEnv: []
 
-# Additional volumes to be set for the PoolParty WorkbenchPod.
+# Additional volumes to be set for the Semantic WorkbenchPod.
 # Values are processed as Helm templates.
 extraVolumes: []
 
-# Additional volume mounts to be set for the PoolParty Workbench containers.
+# Additional volume mounts to be set for the Semantic Workbench containers.
 # Values are processed as Helm templates.
 extraVolumeMounts: []
 
-# Additional volume claim templates to be set in PoolParty Workbench's StatefulSet.
+# Additional volume claim templates to be set in Semantic Workbench's StatefulSet.
 # Values are processed as Helm templates.
 extraVolumeClaimTemplates: []
 
@@ -593,10 +594,10 @@ extraVolumeClaimTemplates: []
 # Values are processed as Helm templates.
 extraInitContainers: []
 
-# Additional PoolParty Workbench container ports to expose.
+# Additional Semantic Workbench container ports to expose.
 extraContainerPorts: {}
 
-# Additional containers to insert into the PoolParty Workbench Pod, e.g. sidecar containers
+# Additional containers to insert into the Semantic Workbench Pod, e.g. sidecar containers
 # Values are processed as Helm templates.
 extraContainers: []
 
@@ -604,12 +605,12 @@ extraContainers: []
 # Service Account Configurations #
 ##################################
 
-# Configurations for the default ServiceAccount for PoolParty Workbench.
-# PoolParty Workbench by itself has no need to communicate with the Kubernetes API but the service account tokens can be
+# Configurations for the default ServiceAccount for Semantic Workbench.
+# Semantic Workbench by itself has no need to communicate with the Kubernetes API but the service account tokens can be
 # used as ODIC federated web identity tokens for authentication in cloud APIs.
 # Ref: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
-  # Specifies whether a ServiceAccount should be created for PoolParty Workbench.
+  # Specifies whether a ServiceAccount should be created for Semantic Workbench.
   create: false
 
   # The name of the ServiceAccount to use.

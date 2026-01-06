@@ -11,6 +11,8 @@ metadata:
     {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
 data:
+  # todo: this should not be configured explicitly
+  APPLICATION_VERSION: {{ .Chart.AppVersion | quote }}
   {{- range $key, $val := .Values.configuration.properties -}}
     {{- if ne $val nil }}
       {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}

@@ -1,12 +1,11 @@
 #
-# Official Helm chart for PoolParty Workbench.
+# Official Helm chart for Semantic Workbench.
 #
 apiVersion: v2
-name: poolparty-workbench
-description: PoolParty workbench is a .... (can't find info)
+name: semantic-workbench
 type: application
 version: 0.1.0
-appVersion: 10.0.1
+appVersion: 2.4.0
 kubeVersion: ^1.30.0-0
 home: https://www.poolparty.biz/
 icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
