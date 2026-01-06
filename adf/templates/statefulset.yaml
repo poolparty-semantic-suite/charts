@@ -77,11 +77,6 @@ spec:
         - name: temp-dir
           emptyDir: {{ .Values.tempVolume.emptyDir | toYaml | nindent 12 }}
         {{- end }}
-        {{- if .Values.configuration.logback.existingConfigmap }}
-        - name: adf-logback-config
-          configMap:
-            name: {{ tpl .Values.configuration.logback.existingConfigmap . }}
-        {{- end }}
         {{- with .Values.extraVolumes }}
           {{- tpl (toYaml .) $ | nindent 8 }}
         {{- end }}
@@ -169,11 +164,6 @@ spec:
               mountPath: /var/lib/adf
             - name: temp-dir
               mountPath: /tmp
-            {{- if .Values.configuration.logback.existingConfigmap }}
-            - name: adf-logback-config
-              mountPath: /var/lib/adf/config/logback.xml
-              subPath: {{ .Values.configuration.logback.configmapKey }}
-            {{- end }}
             {{- with .Values.extraVolumeMounts }}
               {{- tpl (toYaml .) $ | nindent 12 }}
             {{- end }}
