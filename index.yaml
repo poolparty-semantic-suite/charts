@@ -1,5 +1,32 @@
 apiVersion: v1
 entries:
+  adf:
+  - apiVersion: v2
+    appVersion: 1.8.0
+    created: "2026-01-06T14:04:06.616679769Z"
+    description: The PoolParty Application Development Framework (ADF) is a low-code
+      development framework for the PoolParty Semantic Suite. The framework works
+      on top of the PoolParty API and allows you to easily create and train semantic
+      AI applications.
+    digest: eb65928d2a020bcc73bc54c1cc07c1bd36ccc450804181cc4edbed3aaac89e2c
+    home: https://help.poolparty.biz/application-development-framework/index.html?lang=en
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.26.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: adf
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/adf-0.1.0/adf-0.1.0.tgz
+    version: 0.1.0
   poolparty:
   - apiVersion: v2
     appVersion: 10.0.2
@@ -72,4 +99,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.0/semantic-workbench-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-06T13:29:09.597363563Z"
+generated: "2026-01-06T14:04:06.616693525Z"
