@@ -49,4 +49,27 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/poolparty-0.1.0/poolparty-0.1.0.tgz
     version: 0.1.0
-generated: "2025-10-29T08:26:33.249710595Z"
+  semantic-workbench:
+  - apiVersion: v2
+    appVersion: 2.4.0
+    created: "2026-01-06T13:29:09.597350128Z"
+    digest: 5e3bb2fd38c0815be32e40d57df2a3daeecf366060e286ebbbc5b2104e696436
+    home: https://www.poolparty.biz/
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.30.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: semantic-workbench
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.0/semantic-workbench-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-01-06T13:29:09.597363563Z"
