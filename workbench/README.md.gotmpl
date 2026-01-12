@@ -1,16 +1,19 @@
-# Helm Chart for PoolParty Workbench
+# Helm Chart for Semantic Workbench
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
 {{ template "chart.versionBadge" . }}
 {{ template "chart.appVersionBadge" . }}
 
-TODO: we need info here
-Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty Workbench](https://www.poolparty.biz/)!
+Welcome to the official [Helm](https://helm.sh/) chart repository for [Semantic Workbench](https://www.poolparty.biz/)!
 This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
 
-# About PoolParty Workbench
+# About Semantic Workbench
 
-TODO: ?????
+The Workbench supports subject matter experts in finding the optimal combination of parameters for inference tagging and semantic recommender features.
+The Workbench is a useful tool allowing subject matter experts to define specific settings for the required
+calls(which can be extraction, expansion and recommendation); these calls are stored together in a configuration in a DB and can be loaded to be edited or tested at any point using the Workbench.
+
+[Learn more](https://help.poolparty.biz/en/poolparty-quick-start-guides/workbench-quick-start-guide.html)
 
 # Versioning
 
@@ -20,16 +23,16 @@ MAJOR versions of the chart.
 Please, always check out the migration guides in [UPGRADE.md](UPGRADE.md), before switching to another major version of
 the Helm chart.
 
-The chart has it's own version and it's not the same as the version of PoolParty Workbench application.
-The table bellow highlights the version mapping between the Helm chart and PoolParty Workbench.
+The chart has its own version, and it's not the same as the version of Semantic Workbench application.
+The table bellow highlights the version mapping between the Helm chart and Semantic Workbench.
 
-| Helm chart version | PoolParty Workbench version |
+| Helm chart version | Semantic Workbench version  |
 |--------------------|-----------------------------|
 | 0.1.x              | 2.3.x                       |
 
 # Prerequisites
 
-* Kubernetes v1.30+
+* Kubernetes v1.32+
 * Helm v3.18+
 * kubectl
 
@@ -37,16 +40,15 @@ The table bellow highlights the version mapping between the Helm chart and PoolP
 
 ## Dependencies
 
-PoolParty Workbench requires running PoolParty, to which it will connect and basically extend. For more details about
+Semantic Workbench requires running PoolParty, to which it will connect and basically extend. For more details about
 PoolParty installation, please check the `/poolparty` directory and the [README.md](../poolparty/README.md) file there.
 
-## PoolParty Workbench
+## Semantic Workbench
 
 With all dependencies in place, the Workbench can be installed.
 
-TODO: to be seen...
 > [!NOTE]
-> PoolParty Workbench requires a license. You need to obtain a license file before installing.
+> Semantic Workbench requires a license. You need to obtain a license file before installing.
 
 1. Create a secret for the PoolParty license
 
@@ -54,17 +56,17 @@ TODO: to be seen...
     kubectl create secret generic poolparty-license --from-file poolparty.key=/path/to/poolparty.key
     ```
 
-2. Add the PoolParty Workbench Helm repository
+2. Add the Semantic Workbench Helm repository
 
     ```shell
     helm repo add poolparty-semantic-suite https://poolparty-semantic-suite.github.io/charts
     helm repo update
     ```
 
-3. Install PoolParty Workbench
+3. Install Semantic Workbench
 
     ```shell
-    helm install poolparty-workbench \
+    helm install semantic-workbench \
       --set license.existingSecret=poolparty-license \
       poolparty-semantic-suite/poolparty-workbench
     ```
@@ -74,17 +76,16 @@ deployment.
 
 ### Uninstall
 
-To remove the deployed PoolParty Workbench, use:
+To remove the deployed Semantic Workbench, use:
 
 ```shell
-helm uninstall poolparty-workbench 
+helm uninstall semantic-workbench
 ```
 
 > [!NOTE]
 > It is important to note that this will not remove any data, so the next time it is installed, the data will be
 > loaded by its components.
 
-TODO: Revision once we have Docker image
 ## Configuration
 
 Most configuration properties have default values, but as shown in the example above, the URLs to the PoolParty
@@ -93,37 +94,59 @@ If you don't want to specify these on the command line, you can create a file na
 following content:
 
 ```yaml
+license:
+  existingSecret: ppw-license
 configuration:
   properties:
-    .....
+    POOLPARTY_URL: http://localhost:8081
+    POOLPARTY_LICENSE_PATH: /usr/share/poolparty-workbench/licenses/
+    KEYCLOAK_URL: http://poolparty.127.0.0.1.nip.io:8080/auth
+    SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: "ohIP3x4XuoCsGDsGlZRvNvO5VN6veFb5"
+    SPRING_DATASOURCE_URL: jdbc:sqlite:/app/data/sqlite_semantic_workbench.db
 ```
 
-The install with:
+Then install with:
+
 ```shell
-helm install poolparty-workbench poolparty-semantic-suite/poolparty-workbench -f values_overrides.yaml
+helm install semantic-workbench poolparty-semantic-suite/semantic-workbench -f values_overrides.yaml
 ```
 
 ### Provisioning Additional Properties and Settings
 
-Most of PoolParty Workbench's properties can be passed through `configuration.properties` or
-`configuration.javaArguments`.  
+Most of Semantic Workbench's properties can be passed through `configuration.properties` or
+`configuration.javaArguments`.
 The `configuration` section holds subsections for some of the specific and external components, required by the
 application.
 
-TODO: most likely no
-PoolParty Workbench uses Logback to configure logging using the `logback.xml` file.
-The file can be provisioned before PoolParty's startup with the `configuration.logback.existingConfigmap` configuration.
+### Using a custom Logback configuration
+
+Semantic Workbench allows you to override its default logging configuration by supplying your own `logback.xml` file.
+
+To do this:
+
+1. Create a ConfigMap containing your `logback.xml`
+2. Reference that ConfigMap in your Helm values
+3. Provide the JVM logging configuration argument
+
+Example values:
+
+```yaml
+configuration:
+  logback:
+    existingConfigMap: workbench-logback
+  javaArguments: "-Dlogging.config=/var/lib/semantic-workbench/config/logback.xml"
+```
 
 ### Networking
 
-By default, PoolParty Workbench's Helm chart comes with a default Ingress.
+By default, Semantic Workbench's Helm chart comes with a default Ingress.
 The Ingress can be disabled by switching `ingress.enabled` to false.
 
 ### Deployment
 
 Some important properties to update according to your deployment are:
 
-* `configuration.externalUrl` - Configures the address at which the Ingress controller and PoolParty Workbench are
+* `configuration.externalUrl` - Configures the address at which the Ingress controller and Semantic Workbench are
   accessible.
 
 ### Resources
@@ -135,11 +158,6 @@ consider common requirements like amount of data, users, expected traffic.
 See the Kubernetes documentation
 [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
 about defining resource limits.
-
-## Examples
-
-TODO
-Checkout the [examples/](examples) folder in this repository.
 
 ## Values
 

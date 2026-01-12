@@ -149,7 +149,7 @@ spec:
             {{- end }}
             {{- if .Values.configuration.propertiesOverrides.existingSecret }}
             - secretRef:
-                name: {{ .Values.configuration.extraProperties.existingSecret }}
+                name: {{ .Values.configuration.propertiesOverrides.existingSecret }}
             {{- end }}
             - configMapRef:
                 name: {{ include "adf.fullname.configmap.environment" . }}

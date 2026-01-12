@@ -1,13 +1,16 @@
 #
-# Official Helm chart for PoolParty.
+# Official Helm chart for ADF.
 #
 apiVersion: v2
 name: adf
-description: The PoolParty Application Development Framework (ADF) is a low-code development framework for the PoolParty Semantic Suite. The framework works on top of the PoolParty API and allows you to easily create and train semantic AI applications.
+description: |
+  The PoolParty Application Development Framework (ADF) is a low-code development framework for the PoolParty Semantic
+  Suite. The framework works on top of the PoolParty API and allows you to easily create and train semantic AI
+  applications.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: 1.8.0
-kubeVersion: ^1.26.0-0
+kubeVersion: ^1.32.0-0
 home: https://help.poolparty.biz/application-development-framework/index.html?lang=en
 icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
 maintainers:
