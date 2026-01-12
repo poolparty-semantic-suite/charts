@@ -156,7 +156,6 @@ configuration:
     # Key in the existing ConfigMap resource that holds the content of the Server-map.json configuration.
     configmapKey: Server-map.json
     # The path where the Server-map.json configuration will be mounted.
-    # The path should be set for the configuration.properties.MIRROR_CONFIG as well!
     mountPath: path/to/Server-map.json
 
   # Gunicorn arguments to applied on application start up.

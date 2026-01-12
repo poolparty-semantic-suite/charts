@@ -3,11 +3,17 @@
 #
 apiVersion: v2
 name: semantic-workbench
+description: |
+  The Workbench supports subject matter experts in finding the optimal combination of parameters for inference tagging
+  and semantic recommender features.
+  The Workbench is a useful tool allowing subject matter experts to define specific settings for the required calls
+  (which can be extraction, expansion and recommendation); these calls are stored together in a configuration in a DB
+  and can be loaded to be edited or tested at any point using the Workbench.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: 2.4.0
-kubeVersion: ^1.30.0-0
-home: https://www.poolparty.biz/
+kubeVersion: ^1.32.0-0
+home: https://help.poolparty.biz/en/poolparty-quick-start-guides/poolparty-workbench-at-a-glance.html
 icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
 maintainers:
   - name: Graphwise

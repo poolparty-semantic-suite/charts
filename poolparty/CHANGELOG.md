@@ -1,5 +1,12 @@
 # PoolParty Helm Chart Changelog
 
+## Version 0.1.2
+
+### Updated
+
+- Bumped the required `kubeVersion` for the chart.
+- Updated some parts of the documentation.
+
 ## Version 0.1.1
 
 ### Updated
