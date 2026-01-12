@@ -1,21 +1,18 @@
-# Helm Chart for PoolParty
+# Helm Chart for ADF
 
-<!-- [![CI](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml/badge.svg)](https://github.com/Ontotext-AD/graphdb-helm/actions/workflows/ci.yml) -->
+[![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
 {{ template "chart.versionBadge" . }}
 {{ template "chart.appVersionBadge" . }}
 
-<!--
-TODO: Add ArtifactHub badge when ready
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/ontotext)](https://artifacthub.io/packages/helm/ontotext/graphdb)
--->
-
-Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty](https://www.poolparty.biz/)!
+Welcome to the official [Helm](https://helm.sh/) chart repository for
+[ADF](https://help.poolparty.biz/en/poolparty-application-development-framework-documentation.html)!  
 This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
 
-# About PoolParty
+# About ADF
 
-The PoolParty Semantic Suite is a comprehensive middleware software. It includes browser-based taxonomy management,
-thesaurus management, linked data frontend, ontology management, corpus management, extractor and a semantic middleware configurator.
+The PoolParty Application Development Framework (ADF) is a low-code platform for the PoolParty Semantic Suite. ADF
+allows you to easily create semantic AI applications on top of the PoolParty Semantic Middleware. The framework works on
+top of PoolParty API and provides an additional layer of customization and integration mechanisms.
 
 # Versioning
 
@@ -25,128 +22,42 @@ MAJOR versions of the chart.
 Please, always check out the migration guides in [UPGRADE.md](UPGRADE.md), before switching to another major version of
 the Helm chart.
 
-The chart has it's own version and it's not the same as the version of PoolParty.
-The table bellow highlights the version mapping between the Helm chart and PoolParty.
+The chart has it's own version and it's not the same as the version of ADF.
+The table bellow highlights the version mapping between the Helm chart and ADF.
 
-| Helm chart version | PoolParty version |
-|--------------------|-------------------|
-| 0.1.x              | 10.x.x            |
+| Helm chart version | ADF version |
+|--------------------|-------------|
+| 0.1.x              | 1.8.0       |
 
 # Prerequisites
 
-* Kubernetes v1.26+
-* Helm v3.8+
+* Kubernetes v1.32+
+* Helm v3.18+
 * kubectl
 
 # Installation
 
 ## Dependencies
 
-PoolParty depends on several services than need to be installed before PoolParty.
+ADF requires running PoolParty, to which it will connect and extend. For more details about PoolParty installation,
+please check the `/poolparty` directory and the [README.md](../poolparty/README.md) file there.
 
-### GraphDB
+## ADF
 
-PoolParty requires at least version 11.1 of GraphDB. To install it, consult the chart for
-[GraphDB](https://github.com/Ontotext-AD/graphdb-helm).
+**Update/Install ADF**
 
-The basic steps to install GraphDB using the official Helm chart are:
-1. Create a secret with the GraphDB license
-    ```shell
-    kubectl create secret generic --from-file graphdb.license=/path/to/graphdb.license
-    ```
-2. Add the Helm repository
-    ```shell
-    helm repo add ontotext https://maven.ontotext.com/repository/helm-public/
-    helm repo update
-    ```
-3. Install GraphDB
-    ```shell
-    helm install graphdb ontotext/graphdb
-    ```
-
-### Elasticsearch
-
-Elasticsearch instance at version 8.x is required. Additionally, the instance needs to have the
-[MAT](https://www.elastic.co/docs/reference/elasticsearch/plugins/mapper-annotated-text) plugin installed.
-
-The [elasticsearch.yaml](examples/dependencies/elasticsearch.yaml) file provides a minimal example to install an
-Elasticsearch instance in your cluster. This example uses a Graphwise provided image that has the MAT plugin
-pre-installed.
-
-Install this example with:
 ```shell
-kubectl apply --filename examples/dependencies/elasticsearch.yaml
+helm upgrade --install --create-namespace --namespace adf adf ./
 ```
 
-> [!CAUTION]
-> This example is for development and evaluation purposes only. Consult the official
-> [Elasticsearch documentation](https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s) for deploying a
-> production grade instance in Kubernetes.
-
-### Keycloak
-
-PoolParty uses a custom image for Keycloak. This image includes Graphwise developed extensions, that make their
-integration smoother, as well as a parameterized Keycloak realm json file, that is used when initializing the realm
-used by PoolParty.
-
-The [keycloak.yaml](examples/dependencies/keycloak.yaml) file provides a minimal example to install a
-Keycloak instance in your cluster. This example uses a Graphwise provided image that has extensions pre-installed.
-
-> [!NOTE]
-> The Keycloak address needs to be resolvable from the your browser and from within the cluster. The easiest way to do
-> this is to use a service like [nip.io](https://nip.io/), which encodes the IP address for the A record in the FQDN.
-
-Install this example, first determine the IP address of your host machine, and:
-```shell
-export KEYCLOAK_FQDN="keycloak.[your ip address].nip.io"
-sed "s/[KEYCLOAK_FQDN]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | \
-  kubectl apply --filename -
-```
-
-> [!CAUTION]
-> This example is for development and evaluation purposes only. Consult the official Keycloak Kubernetes getting started
-> [guide](https://www.keycloak.org/getting-started/getting-started-kube) and the
-> [Keycloak Operator](https://www.keycloak.org/guides#operator) documentation for deploying a production grade
-> instance in Kubernetes.
-
-## PoolParty
-
-With all dependencies in place, PoolParty can be installed.
-
-> [!NOTE]
-> PoolParty requires a license. You need to obtain a license file before installing.
-
-1. Create a secret for the PoolParty license
-    ```shell
-    kubectl create secret generic poolparty-license --from-file poolparty.key=/path/to/poolparty.key
-    ```
-
-2. Add the PoolParty Helm repository
-
-    ```shell
-    helm repo add poolparty-semantic-suite https://poolparty-semantic-suite.github.io/charts
-    helm repo update
-    ```
-
-3. Install PoolParty
-
-    ```shell
-    helm install poolparty \
-      --set license.existingSecret=poolparty-license \
-      --set configuration.properties.POOLPARTY_GRAPHDB_URL=http://graphdb.default.svc.cluster.local:7200 \
-      --set configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL=http://$KEYCLOAK_FQDN/auth \
-      --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
-      poolparty-semantic-suite/poolparty
-    ```
-
-See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty deployment.
+See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your ADF deployment.
 
 ### Uninstall
 
-To remove the deployed PoolParty, use:
+To remove the deployed ADF, use:
 
 ```shell
-helm uninstall poolparty
+helm uninstall adf
 ```
 
 > [!NOTE]
@@ -155,42 +66,32 @@ helm uninstall poolparty
 
 ## Configuration
 
-Most configuration properties have default values, but as shown in the example above, the URLs to the PoolParty
-dependencies must be provided, along with the name of the secret containing the PoolParty license.
-If you don't want to specify these on the command line, you can create a file name `values_overrides.yaml` with the
-following content:
+Most configuration properties have default values.
+The configurations are provided as environment variables to the application, when it is started.
 
 ```yaml
 configuration:
   properties:
-    POOLPARTY_KEYCLOAK_AUTHURL: http://keycloak.example.com/auth
-    POOLPARTY_GRAPHDB_URL: http://graphdb.example.com:7200
-    POOLPARTY_INDEX_URL: http://elasticsearch.example.com:9200
-```
-
-The install with:
-```shell
-helm install poolparty poolparty-semantic-suite/poolparty -f values_overrides.yaml
+    KEYCLOAK_URL: http://keycloak.example.com/auth
+    POOLPARTY_URL: "http://poolparty.example.com"
 ```
 
 ### Provisioning Additional Properties and Settings
 
-Most of PoolParty's properties can be passed through `configuration.properties` or `configuration.javaArguments`.
-The `configuration` section holds subsections for some of the specific and external components, required by PoolParty.
-
-PoolParty uses Logback to configure logging using the `logback.xml` file.
-The file can be provisioned before PoolParty's startup with the `configuration.logback.existingConfigmap` configuration.
+Most of ADF's properties can be passed through `configuration.properties` or `configuration.javaArguments`.
+The `configuration` section holds subsections, either to provide the properties directly as environment variables or
+to provide existing configuration file, which contains the properties that should be passed to the application.
 
 ### Networking
 
-By default, PoolParty's Helm chart comes with a default Ingress.
+By default, ADF's Helm chart comes with a default Ingress.
 The Ingress can be disabled by switching `ingress.enabled` to false.
 
 ### Deployment
 
 Some important properties to update according to your deployment are:
 
-* `configuration.externalUrl` - Configures the address at which the Ingress controller and PoolParty are accessible.
+* `configuration.externalUrl` - Configures the address at which the Ingress controller and ADF are accessible.
 
 ### Resources
 

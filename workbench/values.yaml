@@ -68,9 +68,9 @@ labels: {}
 #   some-annotation: {{ .Values.someValue }}
 annotations: {}
 
-############################################
+###########################################
 # Semantic Workbench Image Configurations #
-############################################
+###########################################
 
 # Image configurations for Semantic Workbench.
 # All containers in this chart use the Semantic Workbench image, all init containers and any Jobs as well.
@@ -107,9 +107,11 @@ image:
   #   - name: my-pull-secret
   pullSecrets: []
 
-######################################
+#####################################
 # Semantic Workbench Configurations #
-######################################
+#####################################
+
+# The same configuration settings as the one for the PoolParty! The Workbench requires access to the license as well.
 
 # Commercial license is required for using PoolParty.
 license:
@@ -149,6 +151,7 @@ configuration:
   # The ConfigMap serves as source for environment variables passed to the application.
   # Values are processed as Helm templates.
   properties:
+    # The ID of the Keycloak client that will be used for authentication. 
     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTID: "ppt"
 
   # Semantic Workbench configurations settings to use instead of the ones defined into the default
@@ -180,7 +183,7 @@ configuration:
   # The value is processed as a Helm template.
   javaArguments: ""
 
-  # Configurations for PoolParty's Logback
+  # Configurations for Semantic Workbench's Logback
   # Semantic Workbench is a Spring Boot service, and like all Spring Boot applications, it uses Logback as the default logging
   # framework. This means that providing Logback configuration works exactly the same way as for any standard Spring Boot application.
   #
@@ -539,6 +542,8 @@ resources:
 #########################
 # Probes Configurations #
 #########################
+
+# TODO We should make these composable/template. If the default address changes, the probes will stop working.
 
 # Configurations for the Semantic Workbench container startup probe.
 startupProbe:

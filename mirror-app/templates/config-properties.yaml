@@ -16,7 +16,7 @@ data:
       {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
     {{- end }}
   {{- end -}}
-  {{- if .Values.configuration.existingServerMap.configmap -}}
-  MIRROR_CONFIG: {{ .Values.configuration.existingServerMap.mountPath }}
-  {{- end -}}
+  {{- if .Values.configuration.existingServerMap.configmap }}
+  MIRROR_CONFIG: {{ .Values.configuration.existingServerMap.mountPath | quote }}
+  {{- end }}
 {{- end -}}
