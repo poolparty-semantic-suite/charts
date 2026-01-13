@@ -27,6 +27,29 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/adf-0.1.0/adf-0.1.0.tgz
     version: 0.1.0
+  mirror-app:
+  - apiVersion: v2
+    appVersion: 2.4.0
+    created: "2026-01-13T11:47:49.630642594Z"
+    description: 'The Mirror application allows one-way synchronization of project
+      data from source PoolParty to one or more target PoolParty instances. '
+    digest: 083b6b82885f3090ea8b86e737303d4a7d5975d895867360ca36bdee6163cf69
+    home: https://help.poolparty.biz/en/administrator-guide/poolparty-administration/example-for-a-thesaurus-curation-workflow/how-to-mirror-a-project-with-the-mirror-app.html
+    keywords:
+    - graphwise
+    - poolparty
+    - synchronization
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: mirror-app
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/mirror-app-0.1.0/mirror-app-0.1.0.tgz
+    version: 0.1.0
   poolparty:
   - apiVersion: v2
     appVersion: 10.0.2
@@ -99,4 +122,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.0/semantic-workbench-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-06T14:04:06.616693525Z"
+generated: "2026-01-13T11:47:49.630658945Z"
