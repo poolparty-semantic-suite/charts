@@ -1,0 +1,19 @@
+---------------------------------------------------------
+  ____                 _  __     _____
+ / ___|_ __ __ _ _ __ | |_\ \   / /_ _|_____      _____
+| |  _| '__/ _` | '_ \| '_ \ \ / / | |/ _ \ \ /\ / / __|
+| |_| | | | (_| | |_) | | | \ V /  | |  __/\ V  V /\__ \
+ \____|_|  \__,_| .__/|_| |_|\_/  |___\___| \_/\_/ |___/
+                |_|
+---------------------------------------------------------
+
+Chart version: {{ .Chart.Version }}
+GraphViews version: {{ coalesce .Values.image.tag .Chart.AppVersion }}
+GraphViews URL: {{ include "graphviews.external-url" . }}
+
+** Please be patient while the chart is being deployed and services are available **
+You can check their status with kubectl --namespace {{ include "graphviews.namespace" . }} get pods
+
+----------------------------------------------------------------------------------------------------
+For more information on running GraphViews, visit https://help.poolparty.biz/pp2024r1/en/administrator-guide/poolparty-installation/installation-guide/install-and-configure-poolparty-graphviews.html
+----------------------------------------------------------------------------------------------------

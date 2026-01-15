@@ -1,0 +1,20 @@
+#
+# Official Helm chart for GraphViews.
+#
+apiVersion: v2
+name: graphviews
+description: With PoolParty GraphViews you can discover the many hidden connections, develop a view of the big picture and view your data with the help of graph visualizations.
+type: application
+version: 0.1.0
+appVersion: 1.0.0
+kubeVersion: ^1.32.0-0
+home: https://help.poolparty.biz/pp2024r1/en/user-guide-for-knowledge-engineers/add-on/poolparty-graphviews.html
+maintainers:
+  - name: Graphwise
+    email: dnd@graphwise.ai
+sources:
+  - https://github.com/poolparty-semantic-suite/charts
+keywords:
+  - graphwise
+  - poolparty
+  - visualization

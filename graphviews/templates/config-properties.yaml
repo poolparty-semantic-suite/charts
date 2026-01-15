@@ -1,0 +1,19 @@
+{{- if or .Values.configuration.properties .Values.configuration.existingServerMap.configmap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "graphviews.fullname.configmap.properties" . }}
+  namespace: {{ include "graphviews.namespace" . }}
+  labels:
+    {{- include "graphviews.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  {{- range $key, $val := .Values.configuration.properties -}}
+    {{- if ne $val nil }}
+      {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
+    {{- end }}
+  {{- end -}}
+{{- end -}}
