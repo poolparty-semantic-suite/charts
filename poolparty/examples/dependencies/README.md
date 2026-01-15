@@ -14,7 +14,7 @@ PoolParty needs an Elasticsearch instance at version 8.x with the
 ## Keycloak
 
 PoolParty requires a Keycloak at version 25.0. The
-[ontotext/poolparty-keycloa](https://hub.docker.com/r/ontotext/poolparty-keycloak) image must be used because it also
+[ontotext/poolparty-keycloak](https://hub.docker.com/r/ontotext/poolparty-keycloak) image must be used because it also
 installs extension, needed by PoolParty, as well as a custom login theme and a realm json file used to provision the
 PoolParty realm.
 
