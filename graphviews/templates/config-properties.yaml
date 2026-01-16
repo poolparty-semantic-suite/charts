@@ -1,4 +1,4 @@
-{{- if or .Values.configuration.properties .Values.configuration.existingServerMap.configmap }}
+{{- if .Values.configuration.properties }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
