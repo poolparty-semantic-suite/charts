@@ -130,14 +130,14 @@ configuration:
   #
   # Note: When deploying on a context path different from /, you need to properly configure the Ingress according to the
   # requirements of the Ingress controller implementation.
-  externalUrl: http://graphviews.127.0.0.1.nip.io
+  externalUrl: http://graphviews.127.0.0.1.nip.io/GraphViews
 
   # GraphViews properties to insert in the default graphviews.properties ConfigMap.
   # Values are processed as Helm templates.
   #
   # Example:
   # properties:
-  #  POOLPARTY_URL: http://poolparty:7200
+  #    pp.url: http://poolparty:7200
   properties: {}
 
   # Reference to an existing Secret resource containing sensitive GraphViews configuration settings.
@@ -148,8 +148,8 @@ configuration:
   # existingSecret: my-graphviews-secret-properties
   #
   # Example fields in the secret:
-  # POOLPARTY_USER: user
-  # POOLPARTY_PASS: graphviews
+  # pp.username: user
+  # pp.password: graphviews
   existingSecret: ""
 
   # GraphViews configurations settings to use instead of the ones defined into the default
@@ -461,7 +461,7 @@ resources:
 # Configurations for the GraphViews container startup probe.
 startupProbe:
   httpGet:
-    path: /
+    path: /GraphViews
     port: http
   failureThreshold: 300
   timeoutSeconds: 1
@@ -470,7 +470,7 @@ startupProbe:
 # Configurations for the GraphViews container readiness probe.
 readinessProbe:
   httpGet:
-    path: /
+    path: /GraphViews
     port: http
   timeoutSeconds: 5
   periodSeconds: 10
@@ -478,7 +478,7 @@ readinessProbe:
 # Configurations for the GraphViews container liveness probe.
 livenessProbe:
   httpGet:
-    path: /
+    path: /GraphViews
     port: http
   initialDelaySeconds: 60
   timeoutSeconds: 5

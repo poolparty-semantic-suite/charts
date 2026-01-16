@@ -26,12 +26,8 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        {{- if or .Values.configuration.properties .Values.configuration.existingServerMap.configmap }}
-        checksum/config-properties: {{ include (print $.Template.BasePath "/config-properties.yaml") . | sha256sum }}
-        {{- end }}
-        {{- if .Values.configuration.gunicornArguments }}
-        checksum/configmap-environment: {{ include (print $.Template.BasePath "/configmap-environment.yaml") . | sha256sum }}
-        {{- end }}
+        checksum/configmap-environment: {{ include (print .Template.BasePath "/configmap-environment.yaml") . | sha256sum }}
+        checksum/config-properties: {{ include (print .Template.BasePath "/config-properties.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -58,11 +54,6 @@ spec:
       volumes:
         - name: tmp-volume
           emptyDir: {{ .Values.tempVolume.emptyDir | toYaml | nindent 12 }}
-      {{- if .Values.configuration.existingServerMap.configmap }}
-        - name: {{ .Values.configuration.existingServerMap.configmap }}
-          configMap:
-            name: {{ .Values.configuration.existingServerMap.configmap }}
-      {{- end }}
       {{- with .Values.extraVolumes }}
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
@@ -103,7 +94,7 @@ spec:
             {{- if .Values.configuration.propertiesOverrides.existingConfigmap }}
             - configMapRef:
                 name: {{ .Values.configuration.propertiesOverrides.existingConfigmap }}
-            {{- else }}
+            {{- else if .Values.configuration.properties }}
             - configMapRef:
                 name: {{ include "graphviews.fullname.configmap.properties" . }}
             {{- end }}
@@ -125,11 +116,6 @@ spec:
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
-          {{- if .Values.configuration.existingServerMap.configmap }}
-            - name: {{ .Values.configuration.existingServerMap.configmap }}
-              mountPath: {{ .Values.configuration.existingServerMap.mountPath }}
-              subPath: {{ .Values.configuration.existingServerMap.configmapKey }}
-          {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
