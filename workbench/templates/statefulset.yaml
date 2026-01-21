@@ -177,7 +177,7 @@ spec:
               mountPath: /tmp
             {{- if .Values.license.existingSecret }}
             - name: semantic-workbench-license
-              mountPath: /usr/share/semantic-workbench/licenses
+              mountPath: {{ .Values.license.mountPath }}
               readOnly: {{ .Values.license.readOnly }}
             {{- end }}
             {{- if .Values.configuration.logback.existingConfigmap }}

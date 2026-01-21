@@ -123,6 +123,10 @@ license:
   # The default is poolparty.key, but it can be changed to map to a different secret key.
   licenseFilename: poolparty.key
 
+  # Directory where the license file will be mounted.
+  # Can be used to place the license outside the persistence directory if needed.
+  mountPath: /usr/share/semantic-workbench/licenses
+
   # Defines the secret volume as optional or not.
   # Note: Useful if the PoolParty license has not yet been provisioned but will be, for example by an external system or
   # an operator such as External Secret Operator.

@@ -13,6 +13,9 @@ metadata:
 data:
   # todo: this should not be configured explicitly
   APPLICATION_VERSION: {{ .Chart.AppVersion | quote }}
+  {{- if not (hasKey .Values.configuration.properties "POOLPARTY_LICENSE_PATH") }}
+  POOLPARTY_LICENSE_PATH: {{ .Values.license.mountPath | quote }}
+  {{- end }}
   {{- range $key, $val := .Values.configuration.properties -}}
     {{- if ne $val nil }}
       {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
