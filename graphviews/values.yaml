@@ -137,8 +137,9 @@ configuration:
   #
   # Example:
   # properties:
-  #    pp.url: http://poolparty:7200
-  properties: {}
+  #    PP_URL: http://poolparty:8081
+  properties:
+    PP_URL: http://poolparty:8081
 
   # Reference to an existing Secret resource containing sensitive GraphViews configuration settings.
   # Note: The recommended way to provide all password and sensitive configurations.

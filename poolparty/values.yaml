@@ -157,7 +157,7 @@ configuration:
     _POOLPARTY_ENCRYPTION_PASSWORD: 6wFdqOjvxuyeDvh1ENTm
 
     ##### GraphDB Settings #####
-    POOLPARTY_GRAPHDB_URL: "http://graphdb:7200"
+    POOLPARTY_GRAPHDB_URL: http://graphdb:7200
     POOLPARTY_GRAPHDB_USERNAME: admin
     POOLPARTY_GRAPHDB_PASSWORD: root
 

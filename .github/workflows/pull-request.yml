@@ -32,6 +32,13 @@ jobs:
           helm lint --strict .
           helm template . > output.yaml --debug
 
+      - name: GraphViews - Helm lint & render check
+        if: contains(steps.verify-changed-files.outputs.changed_files, 'graphviews')
+        working-directory: ./graphviews
+        run: |
+          helm lint --strict .
+          helm template . > output.yaml --debug
+
       - name: Mirror App - Helm lint & render check
         if: contains(steps.verify-changed-files.outputs.changed_files, 'mirror-app')
         working-directory: ./mirror-app
@@ -42,13 +49,6 @@ jobs:
       - name: PoolParty - Helm lint & render check
         if: contains(steps.verify-changed-files.outputs.changed_files, 'poolparty')
         working-directory: ./poolparty
-        run: |
-          helm lint --strict .
-          helm template . > output.yaml --debug
-
-      - name: GraphViews - Helm lint & render check
-        if: contains(steps.verify-changed-files.outputs.changed_files, 'graphviews')
-        working-directory: ./graphviews
         run: |
           helm lint --strict .
           helm template . > output.yaml --debug
