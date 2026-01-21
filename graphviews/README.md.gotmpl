@@ -60,7 +60,7 @@ You must have the Poolparty connection configuration in order to start up GraphV
 ```yaml
 configuration:
   properties:
-    pp.url: http://poolparty:7200
+    pp.url: http://poolparty:8081
 ```
 
 The Poolparty user credentials should be provided via a secret:
