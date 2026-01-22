@@ -6,9 +6,6 @@ name: semantic-workbench
 description: |
   The Workbench supports subject matter experts in finding the optimal combination of parameters for inference tagging
   and semantic recommender features.
-  The Workbench is a useful tool allowing subject matter experts to define specific settings for the required calls
-  (which can be extraction, expansion and recommendation); these calls are stored together in a configuration in a DB
-  and can be loaded to be edited or tested at any point using the Workbench.
 type: application
 version: 0.1.1
 appVersion: 2.4.0

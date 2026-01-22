@@ -5,7 +5,8 @@
 {{ template "chart.appVersionBadge" . }}
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for [Semantic Workbench](https://www.poolparty.biz/)!
-This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
+This Helm chart makes it easy to deploy and manage Semantic Workbench on your [Kubernetes](https://kubernetes.io/)
+cluster.
 
 # About Semantic Workbench
 
@@ -68,10 +69,10 @@ With all dependencies in place, the Workbench can be installed.
     ```shell
     helm install semantic-workbench \
       --set license.existingSecret=poolparty-license \
-      poolparty-semantic-suite/poolparty-workbench
+      poolparty-semantic-suite/workbench
     ```
 
-See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty Workbench
+See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your Semantic Workbench
 deployment.
 
 ### Uninstall
@@ -99,9 +100,9 @@ license:
 configuration:
   properties:
     POOLPARTY_URL: http://localhost:8081
-    POOLPARTY_LICENSE_PATH: /usr/share/poolparty-workbench/licenses/
-    KEYCLOAK_URL: http://poolparty.127.0.0.1.nip.io:8080/auth
-    SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: "ohIP3x4XuoCsGDsGlZRvNvO5VN6veFb5"
+    POOLPARTY_LICENSE_PATH: /usr/share/semantic-workbench/licenses/
+    KEYCLOAK_URL: http://keycloak.127.0.0.1.nip.io:8080/auth
+    SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: ohIP3x4XuoCsGDsGlZRvNvO5VN6veFb5
     SPRING_DATASOURCE_URL: jdbc:sqlite:/app/data/sqlite_semantic_workbench.db
 ```
 
@@ -177,7 +178,7 @@ common issue with Minikube between system restarts or when inappropriate Minikub
 
 **Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
 
-When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty Workbench instances
+When expanding your Minikube cluster from one to two or more nodes to deploy different Semantic Workbench instances
 across multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These
 issues are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need
 to adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
