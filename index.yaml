@@ -3,6 +3,32 @@ entries:
   adf:
   - apiVersion: v2
     appVersion: 1.8.0
+    created: "2026-01-23T07:47:07.937531857Z"
+    description: 'The PoolParty Application Development Framework (ADF) is a low-code
+      development framework for the PoolParty Semantic Suite. The framework works
+      on top of the PoolParty API and allows you to easily create and train semantic
+      AI applications. '
+    digest: 74ed3903f6dec928f6e954d66ca6335bf6f6d2e8e49d14d0896830746f07a7d6
+    home: https://help.poolparty.biz/application-development-framework/index.html?lang=en
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: adf
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/adf-0.1.1/adf-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.8.0
     created: "2026-01-06T14:04:06.616679769Z"
     description: The PoolParty Application Development Framework (ADF) is a low-code
       development framework for the PoolParty Semantic Suite. The framework works
@@ -77,6 +103,30 @@ entries:
   poolparty:
   - apiVersion: v2
     appVersion: 10.0.2
+    created: "2026-01-23T07:47:08.712314107Z"
+    description: 'PoolParty is a semantic middleware, it tackles the ever-growing
+      problems associated with unstructured data, language ambiguity, and data silos. '
+    digest: b37375d84969fff7e8fc851369d826aeaf5226d1a92c850c8f943f4c6ef3492d
+    home: https://www.poolparty.biz/
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: poolparty
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/poolparty-0.1.2/poolparty-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 10.0.2
     created: "2025-10-29T08:26:33.2496972Z"
     description: PoolParty is a semantic middleware, it tackles the ever-growing problems
       associated with unstructured data, language ambiguity, and data silos.
@@ -126,6 +176,30 @@ entries:
   semantic-workbench:
   - apiVersion: v2
     appVersion: 2.4.0
+    created: "2026-01-23T07:47:08.931852604Z"
+    description: 'The Workbench supports subject matter experts in finding the optimal
+      combination of parameters for inference tagging and semantic recommender features. '
+    digest: c5b23f2fc0b47a6874f323948de4c8af37dc71c89a3370b52cd774ddaae0defc
+    home: https://help.poolparty.biz/en/poolparty-quick-start-guides/poolparty-workbench-at-a-glance.html
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: semantic-workbench
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.1/semantic-workbench-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 2.4.0
     created: "2026-01-06T13:29:09.597350128Z"
     digest: 5e3bb2fd38c0815be32e40d57df2a3daeecf366060e286ebbbc5b2104e696436
     home: https://www.poolparty.biz/
@@ -146,4 +220,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.0/semantic-workbench-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-21T11:52:17.939013705Z"
+generated: "2026-01-23T07:47:08.931873894Z"
