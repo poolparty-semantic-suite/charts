@@ -5,7 +5,7 @@ metadata:
   name: keycloak
 spec:
   replicas: 1
-  serviceName: keycloak-service
+  serviceName: keycloak
   selector:
     matchLabels:
       app.kubernetes.io/name: keycloak
@@ -36,7 +36,7 @@ spec:
             - name: POOLPARTY_SUPER_ADMIN_PASSWORD
               value: "poolparty"
             - name: POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET
-              value: "Kugwr5dv4wSkpBdtlnDFbLuXdl05yApZ"
+              value: "yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u"
             - name: KC_HOSTNAME
               value: "[KEYCLOAK_FQDN]"
             - name: KC_HTTP_RELATIVE_PATH
@@ -80,6 +80,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: keycloak-service
+                name: keycloak
                 port:
                   number: 8080
