@@ -18,49 +18,49 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Verify Changed Files
-        id: verify-changed-files
-        uses: tj-actions/verify-changed-files@a1c6acee9df209257a246f2cc6ae8cb6581c1edf # v20.0.4
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # v47.0.1
 
       - name: Set up Helm
         uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
 
       - name: Point of View
         env:
-          CHANGED_FILES: ${{ steps.verify-changed-files.outputs.changed_files }}
+          CHANGED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
           echo "Changed files: $CHANGED_FILES"
 
       - name: ADF - Helm lint & render check
-        if: contains(steps.verify-changed-files.outputs.changed_files, 'adf')
+        if: contains(steps.changed-files.outputs.modified_files, 'adf')
         working-directory: ./adf
         run: |
           helm lint --strict .
           helm template . > output.yaml --debug
 
       - name: GraphViews - Helm lint & render check
-        if: contains(steps.verify-changed-files.outputs.changed_files, 'graphviews')
+        if: contains(steps.changed-files.outputs.modified_files, 'graphviews')
         working-directory: ./graphviews
         run: |
           helm lint --strict .
           helm template . > output.yaml --debug
 
       - name: Mirror App - Helm lint & render check
-        if: contains(steps.verify-changed-files.outputs.changed_files, 'mirror-app')
+        if: contains(steps.changed-files.outputs.modified_files, 'mirror-app')
         working-directory: ./mirror-app
         run: |
           helm lint --strict .
           helm template . > output.yaml --debug
 
       - name: PoolParty - Helm lint & render check
-        if: contains(steps.verify-changed-files.outputs.changed_files, 'poolparty')
+        if: contains(steps.changed-files.outputs.modified_files, 'poolparty')
         working-directory: ./poolparty
         run: |
           helm lint --strict .
           helm template . > output.yaml --debug
 
       - name: Semantic Workbench - Helm lint & render check
-        if: contains(steps.verify-changed-files.outputs.changed_files, 'workbench')
+        if: contains(steps.changed-files.outputs.modified_files, 'workbench')
         working-directory: ./workbench
         run: |
           helm lint --strict .
