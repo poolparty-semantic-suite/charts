@@ -367,7 +367,6 @@ persistence:
           storage: 5Gi
 
   # Overrides the retention policy of the StatefulSet's PVC.
-  # This requires Kubernetes v1.27 or greater.
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
   #
   # Example:
@@ -383,21 +382,51 @@ persistence:
     # Default emptyDir limit, override to your needs.
     sizeLimit: 1Gi
 
-# Configurations for an emptyDir volume for the /tmp folder in each PoolParty container.
-# Because the default security context in .Values.securityContext configures the root filesystem to be in read-only
-# mode, certain PoolParty features cannot create and write files in /tmp. If you don't use a read-only root filesystem,
-# you can disable this with .Values.tempVolume.enabled
+# Configurations for the volume created for the /tmp folder in each PoolParty container.
 tempVolume:
-  # Toggles the temp folder emptyDir volume creation.
-  # - If enabled, the StatefulSet will use an emptyDir volume for /tmp.
-  # - If disabled, the chart won't create and mount ephemeral volumes for /tmp.
-  enabled: true
+  # Toggles the temp folder volume creation.
+  # - If enabled, the StatefulSet will use a PVC template and rely on the CSI to dynamically provision Persistent Volumes.
+  # - If disabled, it falls back to an emptyDir volume.
+  enabled: false
+
+  # Configurations for PVC based persistence.
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
+  # Ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  volumeClaimTemplate:
+    # Prefix used when naming the PVCs for the StatefulSet.
+    name: "temp-storage"
+
+    # Additional labels to add to the PVC template.
+    # Values are processed as Helm templates.
+    labels: {}
+
+    # Additional annotations to add to the PVC template.
+    # Values are processed as Helm templates.
+    annotations: {}
+
+    # Specification for a PVC to be created by the StatefulSet.
+    # Tune according to your needs.
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+
+  # Overrides the retention policy of the StatefulSet's PVC.
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  #
+  # Example:
+  # volumeClaimRetentionPolicy:
+  #   whenScaled: Retain
+  #   whenDeleted: Delete
+  volumeClaimRetentionPolicy: {}
 
   # Configurations for an emptyDir volume to be used for /tmp.
+  # Used when the persistence is disabled with .Values.tempVolume.enabled
   # Ref: https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/
   emptyDir:
     # Default emptyDir limit, override to your needs.
-    sizeLimit: 128Mi
+    sizeLimit: 512Mi
 
 ##############################
 # StatefulSet Configurations #
