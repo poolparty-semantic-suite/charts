@@ -7,8 +7,8 @@ description: |
   The Workbench supports subject matter experts in finding the optimal combination of parameters for inference tagging
   and semantic recommender features.
 type: application
-version: 0.1.1
-appVersion: 2.4.0
+version: 0.1.2
+appVersion: 2.4.1
 kubeVersion: ^1.32.0-0
 home: https://help.poolparty.biz/en/poolparty-quick-start-guides/poolparty-workbench-at-a-glance.html
 icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
