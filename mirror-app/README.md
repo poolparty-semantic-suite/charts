@@ -1,8 +1,8 @@
 # Helm Chart for Mirror App
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square)
-![AppVersion: 2.4.0](https://img.shields.io/badge/AppVersion-2.4.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square)
+![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for
 [Mirror App](https://help.poolparty.biz/en/administrator-guide/poolparty-administration/example-for-a-thesaurus-curation-workflow/how-to-mirror-a-project-with-the-mirror-app.html)!
@@ -28,7 +28,7 @@ The table bellow highlights the version mapping between the Helm chart and Mirro
 
 | Helm chart version | Mirror App version |
 |--------------------|--------------------|
-| 0.1.x              | 2.4.0              |
+| 0.1.x              | 2.4.x              |
 
 # Prerequisites
 
@@ -69,6 +69,19 @@ configuration:
 > [!NOTE]
 > If you provide the `PORT` configuration, it will set the port on which the application will be accessible. You need
 > to set the same port for the Kubernetes Service resource.
+
+## Resources
+
+If you are mirroring large projects with a lot of data, consider increasing the default `resources` settings. The
+mirroring process works in-memory.
+
+```yaml
+resources:
+  requests:
+    memory: 128Mi  <---
+  limits:
+    memory: 256Mi  <---
+```
 
 ### Provisioning Additional Properties and Settings
 
