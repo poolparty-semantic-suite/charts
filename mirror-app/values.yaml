@@ -121,6 +121,7 @@ replicas: 1
 configuration:
   # The external URL at which Mirror App should be accessible.
   # This can be a publicly available domain name, an internal one or even a Kubernetes service address.
+  # It MUST BE the same hostname as PoolParty, because a session cookie is being reused.
   #
   # This configures the address resolving in Mirror App, if enabled.
   # It also configures the hostname in the default Ingress resource, if enabled.
@@ -130,7 +131,7 @@ configuration:
   #
   # Note: When deploying on a context path different from /, you need to properly configure the Ingress according to the
   # requirements of the Ingress controller implementation.
-  externalUrl: http://mirror-app.127.0.0.1.nip.io
+  externalUrl: http://poolparty.127.0.0.1.nip.io/PoolParty/mirror
 
   # Additional Mirror App configurations that will be appended to mirror-app.properties.
   # The ConfigMap serves as source for environment variables passed to the Mirror App.
