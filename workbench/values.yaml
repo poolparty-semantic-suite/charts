@@ -155,8 +155,8 @@ configuration:
   # The ConfigMap serves as source for environment variables passed to the application.
   # Values are processed as Helm templates.
   properties:
-    POOLPARTY_URL: http://poolparty:8081
-    KEYCLOAK_URL: http://keycloak:8080/auth
+    POOLPARTY_URL: http://poolparty.127.0.0.1.nip.io
+    KEYCLOAK_URL: http://keycloak.127.0.0.1.nip.io/auth
     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u
 
   # Semantic Workbench configurations settings to use instead of the ones defined into the default
