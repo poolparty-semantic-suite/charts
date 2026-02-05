@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mirror-app-server-config
+  namespace: mirror-app
+data:
+  server-map.json: |-
+    {
+      "service": {
+        "comments": [
+          "Settings for the mirroring service itself.",
+          "control: where to authenticate PoolParty session and retrieve project uuid. @source is the source server.",
+          "name: optional; will be shown by the UI in the starting page",
+          "token: optional; alternative to session-based authentication",
+          "authorized_users: optional; if absent, any user can trigger synchronization",
+          "origins: optional list of CORS origins; omit if the UI is hosted on the source server",
+          "EXAMPLES:",
+          {
+            "name": "Taxonomy Publishing Service",
+            "token": "XXXXXXXXXXXXXXXXXXX",
+            "authorized_users": [
+              "sync_user",
+              "another_user"
+            ],
+            "origins": [
+              "https://mirroring-host.poolparty.biz"
+            ]
+          }
+        ],
+        "control": "@source"
+      },
+      "source": {
+        "host": "https://my-source.poolparty.com",
+        "name": "Authoring",
+        "user": "api_user",
+        "password": "XXXXXXXXXXXXXXXXXXX",
+        "export_parameters": {
+          "modules": [
+            "concepts",
+            "blacklistedTerms"
+          ]
+        },
+        "comment": "Role: API User; Groups: Mirror"
+      },
+      "targets": [
+        {
+          "host": "https://my-target-1.poolparty.com",
+          "name": "Production",
+          "user": "api_user",
+          "password": "XXXXXXXXXXXXXXXXXXX",
+          "comment": "Role: API Admin; Groups: Public"
+        },
+        {
+          "host": "https://my-target-2.poolparty.com",
+          "name": "Production",
+          "user": "api_user",
+          "password": "XXXXXXXXXXXXXXXXXXX",
+          "comment": "Role: API Admin; Groups: Public"
+        }
+      ]
+    }
