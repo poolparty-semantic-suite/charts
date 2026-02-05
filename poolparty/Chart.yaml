@@ -7,8 +7,8 @@ description: |
   PoolParty is a semantic middleware, it tackles the ever-growing problems associated with unstructured data, language
   ambiguity, and data silos.
 type: application
-version: 0.1.2
-appVersion: 10.0.2
+version: 0.2.0
+appVersion: 10.1.0
 kubeVersion: ^1.32.0-0
 home: https://www.poolparty.biz/
 icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg

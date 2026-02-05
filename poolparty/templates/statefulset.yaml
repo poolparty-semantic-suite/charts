@@ -33,6 +33,18 @@ spec:
       spec:
         {{- toYaml .Values.persistence.volumeClaimTemplate.spec | nindent 8 }}
     {{- end }}
+    {{- if .Values.tempVolume.enabled }}
+    - metadata:
+        name: {{ .Values.tempVolume.volumeClaimTemplate.name }}
+        {{- with .Values.tempVolume.volumeClaimTemplate.labels }}
+        labels: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.tempVolume.volumeClaimTemplate.annotations }}
+        annotations: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+      spec:
+        {{- toYaml .Values.tempVolume.volumeClaimTemplate.spec | nindent 8 }}
+    {{- end }}
     {{- with .Values.extraVolumeClaimTemplates }}
       {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
@@ -73,8 +85,8 @@ spec:
         - name: {{ .Values.persistence.volumeClaimTemplate.name }}
           emptyDir: {{ .Values.persistence.emptyDir | toYaml | nindent 12 }}
         {{- end }}
-        {{- if .Values.tempVolume.enabled }}
-        - name: temp-dir
+        {{- if not .Values.tempVolume.enabled }}
+        - name: {{ .Values.tempVolume.volumeClaimTemplate.name }}
           emptyDir: {{ .Values.tempVolume.emptyDir | toYaml | nindent 12 }}
         {{- end }}
         {{- if .Values.configuration.logback.existingConfigmap }}
@@ -173,7 +185,7 @@ spec:
           volumeMounts:
             - name: {{ .Values.persistence.volumeClaimTemplate.name }}
               mountPath: /var/lib/poolparty
-            - name: temp-dir
+            - name: {{ .Values.tempVolume.volumeClaimTemplate.name }}
               mountPath: /tmp
             {{- if .Values.license.existingSecret }}
             - name: poolparty-license

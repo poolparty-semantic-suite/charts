@@ -25,7 +25,8 @@ The table bellow highlights the version mapping between the Helm chart and PoolP
 
 | Helm chart version | PoolParty version |
 |--------------------|-------------------|
-| 0.1.x              | 10.x.x            |
+| 0.1.x              | 10.0.x            |
+| 0.2.x              | 10.1.x            |
 
 # Prerequisites
 
@@ -139,7 +140,6 @@ With all dependencies in place, PoolParty can be installed.
       --set configuration.properties.POOLPARTY_GRAPHDB_URL=http://graphdb.default.svc.cluster.local:7200 \
       --set configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL=http://$KEYCLOAK_FQDN/auth \
       --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
-      --set configuration.externalUrl=http://poolparty.127.0.0.1.nip.io \
       poolparty-semantic-suite/poolparty
     ```
 
