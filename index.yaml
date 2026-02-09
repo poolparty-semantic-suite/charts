@@ -2,6 +2,32 @@ apiVersion: v1
 entries:
   adf:
   - apiVersion: v2
+    appVersion: 1.8.1
+    created: "2026-02-09T08:32:13.41066811Z"
+    description: 'The PoolParty Application Development Framework (ADF) is a low-code
+      development framework for the PoolParty Semantic Suite. The framework works
+      on top of the PoolParty API and allows you to easily create and train semantic
+      AI applications. '
+    digest: 657af85cb358a083a5c2c2e87c9527b66b541230b1e973a1a205288a345cb25b
+    home: https://help.poolparty.biz/application-development-framework/index.html?lang=en
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: adf
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/adf-0.1.2/adf-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 1.8.0
     created: "2026-01-23T07:47:07.937531857Z"
     description: 'The PoolParty Application Development Framework (ADF) is a low-code
@@ -54,6 +80,29 @@ entries:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/adf-0.1.0/adf-0.1.0.tgz
     version: 0.1.0
   graphviews:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-02-09T08:32:13.632160909Z"
+    description: With PoolParty GraphViews you can discover the many hidden connections,
+      develop a view of the big picture and view your data with the help of graph
+      visualizations.
+    digest: afa631f9d7797ff016e055075015172e602d9a8aa63d69a6fbcedf004344926a
+    home: https://help.poolparty.biz/pp2024r1/en/user-guide-for-knowledge-engineers/add-on/poolparty-graphviews.html
+    keywords:
+    - graphwise
+    - poolparty
+    - visualization
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: graphviews
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/graphviews-0.1.1/graphviews-0.1.1.tgz
+    version: 0.1.1
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2026-01-21T11:52:17.938999168Z"
@@ -197,6 +246,30 @@ entries:
     version: 0.1.0
   semantic-workbench:
   - apiVersion: v2
+    appVersion: 2.4.1
+    created: "2026-02-09T08:32:14.132452865Z"
+    description: 'The Workbench supports subject matter experts in finding the optimal
+      combination of parameters for inference tagging and semantic recommender features. '
+    digest: 362083812b23b19b372e4dc4d5dd5cd9d562f4086f9f1442b5217a586aca8631
+    home: https://help.poolparty.biz/en/poolparty-quick-start-guides/poolparty-workbench-at-a-glance.html
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: semantic-workbench
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.2/semantic-workbench-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 2.4.0
     created: "2026-01-23T07:47:08.931852604Z"
     description: 'The Workbench supports subject matter experts in finding the optimal
@@ -242,4 +315,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.0/semantic-workbench-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-28T13:58:57.555532922Z"
+generated: "2026-02-09T08:32:14.132484393Z"
