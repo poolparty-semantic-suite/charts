@@ -178,6 +178,15 @@ configuration:
     ##### Index Settings #####
     POOLPARTY_INDEX_TYPE: elasticsearch
     POOLPARTY_INDEX_URL: http://elasticsearch:9200
+    # Optional: unique index name prefix for this PoolParty instance.
+    # Must be set (together with or instead of POOLPARTY_ELASTICSEARCH_INDEX_SUFFIX) when multiple PoolParty
+    # instances share the same Elasticsearch cluster, so that each instance operates on its own set of indices.
+    # Example: "instance1-" turns "conceptdata" into "instance1-conceptdata".
+    # POOLPARTY_ELASTICSEARCH_INDEX_PREFIX: ""
+    # Optional: unique index name suffix for this PoolParty instance.
+    # Can be used together with POOLPARTY_ELASTICSEARCH_INDEX_PREFIX.
+    # Example: "-v1" turns "conceptdata" into "conceptdata-v1".
+    # POOLPARTY_ELASTICSEARCH_INDEX_SUFFIX: ""
 
   # PoolParty configurations settings to use instead of the ones defined into the default poolparty.properties ConfigMap.
   #
