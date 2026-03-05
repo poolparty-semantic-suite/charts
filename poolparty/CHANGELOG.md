@@ -1,5 +1,9 @@
 # PoolParty Helm Chart Changelog
 
+## Version 0.2.1
+
+- Updates the version of the PoolParty to `10.1.1`.
+
 ## Version 0.2.0
 
 - Updates the version of the PoolParty to `10.1.0`.
