@@ -195,6 +195,30 @@ entries:
     version: 0.1.0
   poolparty:
   - apiVersion: v2
+    appVersion: 10.1.1
+    created: "2026-03-06T11:28:27.187335422Z"
+    description: 'PoolParty is a semantic middleware, it tackles the ever-growing
+      problems associated with unstructured data, language ambiguity, and data silos. '
+    digest: ef4e24d3e323dc8569cddd47a162eb73373c5e5eb13bd86c9de89209311aea9d
+    home: https://www.poolparty.biz/
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: poolparty
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/poolparty-0.2.1/poolparty-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     appVersion: 10.1.0
     created: "2026-02-09T14:34:33.812868275Z"
     description: 'PoolParty is a semantic middleware, it tackles the ever-growing
@@ -361,4 +385,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.0/semantic-workbench-0.1.0.tgz
     version: 0.1.0
-generated: "2026-02-09T14:34:33.812903721Z"
+generated: "2026-03-06T11:28:27.187376699Z"
