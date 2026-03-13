@@ -33,6 +33,13 @@ spec:
       spec:
         {{- toYaml .Values.persistence.volumeClaimTemplate.spec | nindent 8 }}
     {{- end }}
+    - metadata:
+        name: tomcat
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
     {{- with .Values.extraVolumeClaimTemplates }}
       {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
@@ -45,9 +52,9 @@ spec:
           {{- tpl (toYaml .) $ | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/configmap-environment: {{ include (print .Template.BasePath "/configmap-environment.yaml") . | sha256sum }}
+        checksum/configmap-environment: {{ include (print .Template.BasePath "/uv/configmap-environment.yaml") . | sha256sum }}
         {{- if not .Values.configuration.propertiesOverrides.existingConfigmap }}
-        checksum/config-properties: {{ include (print .Template.BasePath "/config-properties.yaml") . | sha256sum }}
+        checksum/config-properties: {{ include (print .Template.BasePath "/uv/config-properties.yaml") . | sha256sum }}
         {{- end }}
         {{- with .Values.podAnnotations }}
           {{- tpl (toYaml .) $ | nindent 8 }}
@@ -71,8 +78,8 @@ spec:
       volumes:
         {{- if not .Values.persistence.enabled }}
         - name: {{ .Values.persistence.volumeClaimTemplate.name }}
-          emptyDir: {{ .Values.persistence.emptyDir | toYaml | nindent 12 }}
         {{- end }}
+        - name: tomcat
         {{- if .Values.tempVolume.enabled }}
         - name: temp-dir
           emptyDir: {{ .Values.tempVolume.emptyDir | toYaml | nindent 12 }}
@@ -83,11 +90,14 @@ spec:
             name: {{ tpl .Values.configuration.logback.existingConfigmap . }}
         {{- end }}
         {{- if .Values.license.existingSecret }}
-        - name: poolparty-license
+        - name: uv-license
           secret:
             secretName: {{ tpl .Values.license.existingSecret . }}
             optional: {{ .Values.license.optional }}
         {{- end }}
+        - name: uv-properties
+          configMap:
+            name: {{ include "unified-views.fullname.configmap.properties" . }}
         {{- with .Values.extraVolumes }}
           {{- tpl (toYaml .) $ | nindent 8 }}
         {{- end }}
@@ -131,8 +141,92 @@ spec:
         {{- include "unified-views.combinedImagePullSecrets" . | nindent 8 }}
       {{- end }}
       initContainers:
+        - name: {{ .Chart.Name }}-wait-for-rdf4j
+          image: {{ include "unified-views.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.initContainerResources }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.initContainerDataPermissions.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          command: [ "bash", "-c" ]
+          env:
+            - name: SERVICE_FQDN
+              value: 'http://{{ include "rdf4j.fullname" . }}-0.{{ include "rdf4j.fullname" . }}.{{ include "unified-views.namespace" . }}:{{ .Values.rdf4j.headlessService.ports.http }}'
+          args:
+            - |
+              sleep 5
+              while ! curl --connect-timeout 1 --max-time 2 -f ${SERVICE_FQDN}/rdf4j-server; do
+              echo "Waiting for RDF4J Workbench to be ready..."
+              sleep 5
+              done
+              echo "RDF4J Workbench is ready. Sleeping for 5 seconds and proceeding..."
+              sleep 5
+        {{- if and .Values.persistence.enabled .Values.initContainerDataPermissions.enabled }}
+        - name: {{ .Chart.Name }}-provision-data
+          image: {{ include "unified-views.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: USER_ID
+              value: {{ coalesce .Values.securityContext.runAsUser .Values.podSecurityContext.runAsUser | quote }}
+            - name: GROUP_ID
+              value: {{ coalesce .Values.securityContext.runAsGroup .Values.podSecurityContext.runAsGroup | quote }}
+          volumeMounts:
+            - name: {{ .Values.persistence.volumeClaimTemplate.name }}
+              mountPath: /unified-views-new
+            - name: tomcat
+              mountPath: /tomcat
+            - name: uv-properties
+              mountPath: /tmp/uv/uv.properties
+              subPath: uv.properties
+          {{- with .Values.initContainerResources }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.initContainerDataPermissions.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          command: [ "bash", "-c" ]
+          args:
+            - |
+              if [[ ! -f /unified-views-new/.initialized ]] ;then
+                echo "Copying data"
+                cp -rv /unified-views/* /unified-views-new/
+                echo "Done. Parsing and adding properties from /tmp/uv/uv.properties to /unified-views-new/configs/uv.properties"
+                while IFS= read -r line; do
+                  if echo "$line" | grep "=" > /dev/null; then
+                    echo "IN. Reading"
+                    IFS="=" read -r key value <<< "$line"
+                    echo "READ $key $value"
+                    if grep "${key}\s*=" >/dev/null /unified-views-new/configs/uv.properties; then
+                      sed -i -e "s|$key\s*=.*|$key=$value|g" /unified-views-new/configs/uv.properties
+                    else
+                      echo "${key}=${value}" >> /unified-views-new/configs/uv.properties
+                    fi
+                  fi
+                done < /tmp/uv/uv.properties
+                echo "Changing ownership to ${USER_ID}:${GROUP_ID}"
+                chown -R ${USER_ID}:${GROUP_ID} /unified-views-new/
+                touch /unified-views-new/.initialized
+                echo "Done."
+              else
+                echo "Volume already initialized"
+              fi
+
+              if [[ ! -f /usr/local/tomcat/.initialized ]] ;then
+                echo "initializing tomcat volume"
+                cp -rvf /usr/local/tomcat/* /tomcat
+                touch /tomcat/.initialized
+                chown -R ${USER_ID}:${GROUP_ID} /tomcat/
+                echo "Done."
+              else
+                echo "Volume already initialized"
+              fi
+
+
+        {{- end }}
         {{- with .Values.extraInitContainers }}
-          {{- tpl (toYaml .) $ | nindent 8 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -155,8 +249,6 @@ spec:
             - configMapRef:
                 name: {{ .Values.configuration.propertiesOverrides.existingConfigmap }}
             {{- else }}
-            - configMapRef:
-                name: {{ include "unified-views.fullname.configmap.properties" . }}
             {{- end }}
             {{- if .Values.configuration.propertiesOverrides.existingSecret }}
             - secretRef:
@@ -172,17 +264,19 @@ spec:
           {{- end }}
           volumeMounts:
             - name: {{ .Values.persistence.volumeClaimTemplate.name }}
-              mountPath: /var/lib/poolparty
+              mountPath: /unified-views
+            - name: tomcat
+              mountPath: /usr/local/tomcat
             - name: temp-dir
               mountPath: /tmp
             {{- if .Values.license.existingSecret }}
-            - name: poolparty-license
-              mountPath: /usr/share/poolparty/config/licenses
+            - name: uv-license
+              mountPath: /unified-views/license
               readOnly: {{ .Values.license.readOnly }}
             {{- end }}
             {{- if .Values.configuration.logback.existingConfigmap }}
             - name: poolparty-logback-config
-              mountPath: /var/lib/poolparty/config/logback.xml
+              mountPath: /unified-views/configs/logback.xml
               subPath: {{ .Values.configuration.logback.configmapKey }}
             {{- end }}
             {{- with .Values.extraVolumeMounts }}
