@@ -586,12 +586,11 @@ topologySpreadConstraints: []
 # For resizing to your needs, refer to the PoolParty documentation TODO
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
 
-# TODO
 resources:
   limits:
     memory: 8Gi
   requests:
-    memory: 8Gi
+    memory: 12Gi
     cpu: 500m
 
 #########################
