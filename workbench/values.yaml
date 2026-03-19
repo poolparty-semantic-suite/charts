@@ -538,11 +538,11 @@ topologySpreadConstraints: []
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
 
 resources:
-  limits:
-    memory: 5Gi
   requests:
     memory: 4Gi
     cpu: 500m
+  limits:
+    memory: 5Gi
 
 #########################
 # Probes Configurations #
