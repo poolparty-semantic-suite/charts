@@ -1,3 +1,10 @@
+#
+# Pipeline that tests the changes in a changed chart. It is executed on each Pull Request (PR) and PR update.
+# The tests are consisting of:
+#   - verifying the structure of the chart(s) 
+#   - verifying that chart(s) manifest can be rendered
+#
+
 name: CI - Pull Request
 run-name: CI - Pull Request pipeline triggered by ${{ github.actor }}
 
@@ -49,6 +56,13 @@ jobs:
       - name: PoolParty - Helm lint & render check
         if: contains(steps.changed-files.outputs.modified_files, 'poolparty')
         working-directory: ./poolparty
+        run: |
+          helm lint --strict .
+          helm template . > output.yaml --debug
+
+      - name: Unified Views - Helm lint & render check
+        if: contains(steps.changed-files.outputs.modified_files, 'unified-views')
+        working-directory: ./unified-views
         run: |
           helm lint --strict .
           helm template . > output.yaml --debug

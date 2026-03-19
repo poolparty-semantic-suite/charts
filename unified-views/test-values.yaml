@@ -1,0 +1,91 @@
+# Image configurations for UnifiedViews.
+# All containers in this chart use the UnifiedViews image, all init containers and any Jobs as well.
+# Ref: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  # The registry that hosts the UnifiedViews image.
+  # The default is to pull it from the official Docker registry, but this can be overridden to pull from other public or
+  # private registries.
+  registry: docker-registry.ontotext.com
+
+  # The repository name of the UnifiedViews image.
+  repository: gwp/unifiedviews
+
+  # Image tag that corresponds to the version of UnifiedViews.
+  # By default, the chart uses .Chart.AppVersion to construct the full image name.
+  # Use this to override the value from .Chart.AppVersion and effectively deploy a custom UnifiedViews version.
+  tag: "10.2.0-SNAPSHOT-amd64"
+
+  # Expected SHA256 digest of the used UnifiedViews image, e.g. "sha256@abc"
+  # Use the digest to make sure you are always deploying the exact same UnifiedViews image.
+  # Defining this would override .Chart.AppVersion and image.tag
+  digest: ""
+
+  # Defines the policy for pulling images
+  # Ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
+  pullPolicy: IfNotPresent
+
+  # Secrets for pulling UnifiedViews's Docker image from secured registries.
+  # Values are processed as Helm templates.
+  # Ref: https://kubernetes.io/docs/concepts/configuration/secret/#using-imagepullsecrets
+  #
+  # Example:
+  # pullSecrets:
+  #   - name: my-pull-secret
+  pullSecrets:
+    - name: registry-secret
+
+rdf4j:
+
+  # Image configurations for RDF4J Workbench.
+  # All containers in this chart use the UnifiedViews image, all init containers and any Jobs as well.
+  # Ref: https://kubernetes.io/docs/concepts/containers/images/
+  image:
+    # The registry that hosts the UnifiedViews image.
+    # The default is to pull it from the official Docker registry, but this can be overridden to pull from other public or
+    # private registries.
+    registry: docker.io
+
+    # The repository name of the UnifiedViews image.
+    repository: eclipse/rdf4j-workbench
+
+    # Image tag that corresponds to the version of UnifiedViews.
+    # By default, the chart uses .Chart.AppVersion to construct the full image name.
+    # Use this to override the value from .Chart.AppVersion and effectively deploy a custom UnifiedViews version.
+    tag: "5.2.2-tomcat"
+
+    # Expected SHA256 digest of the used UnifiedViews image, e.g. "sha256@abc"
+    # Use the digest to make sure you are always deploying the exact same UnifiedViews image.
+    # Defining this would override .Chart.AppVersion and image.tag
+    digest: ""
+
+    # Defines the policy for pulling images
+    # Ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
+    pullPolicy: IfNotPresent
+
+    # Secrets for pulling UnifiedViews's Docker image from secured registries.
+    # Values are processed as Helm templates.
+    # Ref: https://kubernetes.io/docs/concepts/configuration/secret/#using-imagepullsecrets
+    #
+    # Example:
+    # pullSecrets:
+    #   - name: my-pull-secret
+    pullSecrets: [ ]
+
+
+# Commercial license is required for using UnifiedViews.
+license:
+  # Reference to a secret containing 'poolparty.key' file that will be mounted in the UnifiedViews pod.
+  # The value is processed as a Helm template.
+  existingSecret: "uv-license"
+
+  # Name of the UnifiedViews license file in the existing license secret.
+  # The default is poolparty.key, but it can be changed to map to a different secret key.
+  licenseFilename: pp-uv-license.key
+
+  # Defines the secret volume as optional or not.
+  # Note: Useful if the PoolParty license has not yet been provisioned but will be, for example by an external system or
+  # an operator such as External Secret Operator.
+  optional: false
+
+  # Marks the secret mount as read-only to prevent any modifications to the license file.
+  readOnly: true
