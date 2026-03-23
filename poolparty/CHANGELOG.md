@@ -1,5 +1,9 @@
 # PoolParty Helm Chart Changelog
 
+## Version 0.2.3
+
+- Updates the version of the PoolParty to `10.1.2`.
+
 ## Version 0.2.2
 
 - Fixes the `resources` section in the chart. We've switched the values for `request` and `limit`.

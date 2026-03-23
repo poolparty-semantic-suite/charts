@@ -2,7 +2,7 @@
 
 ## Configuring Unique Elasticsearch Index Names for Multi-Instance Deployments
 
-Starting with PoolParty 10.2.0 (Helm chart 0.2.x), each PoolParty instance can be configured with its own
+Starting with PoolParty 10.2.0 (Helm chart 0.3.x), each PoolParty instance can be configured with its own
 Elasticsearch index prefix and/or suffix. This is required when multiple PoolParty instances share a single
 Elasticsearch cluster. Without unique names, all instances would read and write the same indices.
 
@@ -15,7 +15,8 @@ and/or suffix before the first startup:
 configuration:
   properties:
     POOLPARTY_ELASTICSEARCH_INDEX_PREFIX: "instance1-"
-    # POOLPARTY_ELASTICSEARCH_INDEX_SUFFIX: ""  # optional
+    # Optional
+    # POOLPARTY_ELASTICSEARCH_INDEX_SUFFIX: ""
 ```
 
 On first startup PoolParty will create its indices using the configured names (e.g. `instance1-conceptdata`,
