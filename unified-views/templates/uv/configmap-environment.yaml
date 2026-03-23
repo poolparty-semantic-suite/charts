@@ -13,4 +13,3 @@ data:
   CATALINA_OPTS: >-
       {{ tpl .Values.configuration.defaultJavaArguments . }}
       {{ tpl .Values.configuration.javaArguments . }}
-{{/*  CATALINA_TMPDIR: "/tmp"*/}}

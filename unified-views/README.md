@@ -82,7 +82,7 @@ following content:
 ```yaml
 configuration:
   properties:
-    TODO: TODO
+    database.rdf.conf.url: http://rdf4j.server.com/rdf4j-server
 ```
 
 The install with:

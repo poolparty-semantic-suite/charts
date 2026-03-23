@@ -1,4 +1,4 @@
-{{- if and .Values.rdf4j.service.enabled }}
+{{- if .Values.rdf4j.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:

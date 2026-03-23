@@ -12,8 +12,6 @@ metadata:
   {{- end }}
 data:
   uv.properties: |-
-    ##### GraphDB configurations #####
-    # See https://graphdb.ontotext.com/documentation/ for supported properties
     database.rdf.conf.url=http://{{ include "rdf4j.fullname" . }}-0.{{ include "rdf4j.fullname" . }}.{{ include "unified-views.namespace" . }}:{{ .Values.rdf4j.headlessService.ports.http }}/rdf4j-server
     {{- if .Values.configuration.properties }}
     ##### Overrides from values.yaml #####
