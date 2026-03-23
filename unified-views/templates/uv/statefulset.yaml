@@ -172,6 +172,28 @@ spec:
               value: {{ coalesce .Values.securityContext.runAsUser .Values.podSecurityContext.runAsUser | quote }}
             - name: GROUP_ID
               value: {{ coalesce .Values.securityContext.runAsGroup .Values.podSecurityContext.runAsGroup | quote }}
+            {{- if not ( empty .Values.rdf4j.configuration.server.passwordSecret.key ) }}
+            - name: RDF4J_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.rdf4j.configuration.server.passwordSecret.key }}
+                  name: {{ .Values.rdf4j.configuration.server.passwordSecret.name }}
+            {{- end }}
+            {{- if .Values.configuration.sso.keycloak.enabled }}
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.configuration.sso.keycloak.oidcClientSecret.key }}
+                  name: {{ .Values.configuration.sso.keycloak.oidcClientSecret.name }}
+            {{- if not ( empty .Values.configuration.sso.keycloak.oidcClientId ) }}
+            - name: OIDC_CLIENT_ID
+              value: {{ .Values.configuration.sso.keycloak.oidcClientId | quote }}
+            {{- end }}
+            {{- if not ( empty .Values.configuration.sso.keycloak.oidcClientName ) }}
+            - name: OIDC_CLIENT_NAME
+              value: {{ .Values.configuration.sso.keycloak.oidcClientName | quote }}
+            {{- end }}
+            {{- end }}
           volumeMounts:
             - name: {{ .Values.persistence.volumeClaimTemplate.name }}
               mountPath: /unified-views-new
@@ -205,6 +227,19 @@ spec:
                     fi
                   fi
                 done < /tmp/uv/uv.properties
+                if [[ ! -z "${OIDC_CLIENT_SECRET}" ]]; then
+                  echo "oidc.client-secret=${OIDC_CLIENT_SECRET}" >> /unified-views-new/configs/uv.properties
+                fi
+                if [[ ! -z "${RDF4J_USER_PASSWORD}" ]]; then
+                  sed -i -e "s|database\.rdf\.conf\.password\s*=.*|database\.rdf\.conf\.password=${RDF4J_USER_PASSWORD}|g" /unified-views-new/configs/uv.properties
+                fi
+                if [[ ! -z "${OIDC_CLIENT_ID}" ]]; then
+                  echo "oidc.client-id=${OIDC_CLIENT_ID}" >> /unified-views-new/configs/uv.properties
+                fi
+                if [[ ! -z "${OIDC_CLIENT_NAME}" ]]; then
+                  echo "oidc.client-name=${OIDC_CLIENT_NAME}" >> /unified-views-new/configs/uv.properties
+                fi
+
                 echo "Changing ownership to ${USER_ID}:${GROUP_ID}"
                 chown -R ${USER_ID}:${GROUP_ID} /unified-views-new/
                 touch /unified-views-new/.initialized

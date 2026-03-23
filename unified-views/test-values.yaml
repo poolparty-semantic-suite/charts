@@ -71,6 +71,12 @@ rdf4j:
     #   - name: my-pull-secret
     pullSecrets: [ ]
 
+  configuration:
+    server:
+      user: user
+      passwordSecret:
+        key: password
+        name: rdf4j-password
 
 # Commercial license is required for using UnifiedViews.
 license:
@@ -89,3 +95,18 @@ license:
 
   # Marks the secret mount as read-only to prevent any modifications to the license file.
   readOnly: true
+
+configuration:
+  sso:
+    # Keycloak configuration
+    keycloak:
+      # Enable Keycloak (default: disabled)
+      enabled: true
+      # The Kubernetes secret corresponding to the OIDC Client Secret. Maps to oidc.client-secret. Note: this field must not contain the actual secret value
+      oidcClientSecret:
+        key: secret
+        name: oidc-secret
+      # The Client ID for Keycloak SSO. Maps to oidc.client-id
+      oidcClientId: "a"
+      # The Client Name for Keycloak SSO. Maps to oidc.client-name
+      oidcClientName: "name"

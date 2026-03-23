@@ -11,7 +11,7 @@ metadata:
     {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
 data:
-  {{- range $key, $val := .Values.configuration.properties -}}
+  {{- range $key, $val := .Values.rdf4j.configuration.properties -}}
     {{- if ne $val nil }}
       {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
     {{- end }}

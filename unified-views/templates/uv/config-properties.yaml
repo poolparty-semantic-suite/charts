@@ -12,13 +12,26 @@ metadata:
   {{- end }}
 data:
   uv.properties: |-
+    {{- if not (empty .Values.rdf4j.configuration.server.url) }}
+    database.rdf.conf.url={{ .Values.rdf4j.configuration.server.url }}
+    {{- else }}
     database.rdf.conf.url=http://{{ include "rdf4j.fullname" . }}-0.{{ include "rdf4j.fullname" . }}.{{ include "unified-views.namespace" . }}:{{ .Values.rdf4j.headlessService.ports.http }}/rdf4j-server
-    {{- if .Values.configuration.properties }}
-    ##### Overrides from values.yaml #####
-    {{- range $key, $val := .Values.configuration.properties -}}
-    {{- if ne $val nil }}
-    {{ $key }}={{ tpl ($val | toString) $ }}
     {{- end }}
-    {{- end -}}
+    {{- if not ( empty .Values.rdf4j.configuration.server.platform) }}
+    database.rdf.platform={{ .Values.rdf4j.configuration.server.platform }}
+    {{- end }}
+    {{- if not ( empty .Values.rdf4j.configuration.server.user) }}
+    database.rdf.conf.user={{ .Values.rdf4j.configuration.server.user }}
+    {{- end }}
+    {{- if not ( empty .Values.rdf4j.configuration.server.repositoryName ) }}
+    database.rdf.conf.repository={{ .Values.rdf4j.configuration.server.repositoryName }}
+    {{- end }}
+    {{- if .Values.configuration.properties }}
+      ##### Overrides from values.yaml #####
+      {{- range $key, $val := .Values.configuration.properties -}}
+        {{- if ne $val nil }}
+            {{ $key }}={{ tpl ($val | toString) $ }}
+        {{- end }}
+      {{- end -}}
     {{- end -}}
 {{- end -}}

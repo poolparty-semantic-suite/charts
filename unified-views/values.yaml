@@ -152,7 +152,7 @@ configuration:
   # Example:
   # properties:
   #   POOLPARTY_GRAPHDB_URL: "http://graphdb-node-0:7200, http://graphdb-node-1:7200"
-  #properties:
+  properties: {}
 
   # UnifiedViews configurations settings to use instead of the ones defined into the default unfield-views.properties
   # ConfigMap.
@@ -198,6 +198,22 @@ configuration:
 
     # Key in the existing ConfigMap that maps to the Logback XML configuration.
     configmapKey: logback.xml
+
+  # SSO configuration
+  sso:
+    # Keycloak configuration
+    keycloak:
+      # Enable Keycloak (default: disabled)
+      enabled: false
+      # The Kubernetes secret corresponding to the OIDC Client Secret. Maps to oidc.client-secret. Note: this field must not contain the actual secret value
+      oidcClientSecret:
+        key: ""
+        name: secret
+      # The Client ID for Keycloak SSO. Maps to oidc.client-id
+      oidcClientId: ""
+      # The Client Name for Keycloak SSO. Maps to oidc.client-name
+      oidcClientName: ""
+
 
 ##########################
 # Ingress Configurations #
@@ -490,7 +506,7 @@ initContainerDataPermissions:
     runAsNonRoot: false
     runAsUser: 0
 
-# Resource configurations for the init containers in the GraphDB proxy Pod.
+
 initContainerResources:
   limits:
     memory: 1Gi
@@ -772,26 +788,31 @@ rdf4j:
 
   # RDF4J Workbench runtime configuration settings.
   configuration:
-    # RDF4J Workbench properties to insert in the default graphdb.properties ConfigMap for the proxy.
-    # Values are processed as Helm templates.
+
+    # RDF4J Workbench server configuration.
+    server:
+      platform: "remoteRDF"
+      # The full URL to this server, i.e. https://rdf4j.com:8080
+      url: ""
+      user: ""
+      # Kubernetes secret, key=name
+      passwordSecret:
+        key: ""
+        name: password
+      repositoryName: "uv"
+
+    # Additional properties to be injected in the RDF4J Workbench runtime. Values are processed as Helm templates.
     properties: { }
 
-    # Sensitive RDF4J Workbench properties to insert in the default graphdb.properties Secret for the proxy.
-    # Values defined here will be merged with the values from the default graphdb.properties ConfigMap for the proxy.
-    # Values are processed as Helm templates.
-    # Note: Consider mounting existing Secret objects as environment variables or files
-    secretProperties: { }
 
-    # Additional RDF4J Workbench configurations that will be appended to graphdb.properties, effectively overriding anything configured
-    # in the default graphdb.properties ConfigMap and Secret resources for the proxy.
     extraProperties:
-      # Reference to an existing ConfigMap resource containing RDF4J Workbench configurations under a graphdb.properties file.
+      # Reference to an existing ConfigMap resource containing RDF4J Workbench configurations
       # The value is processed as a Helm template.
       existingConfigmap: ""
       # Key in the existing ConfigMap that holds the properties for RDF4J Workbench
       configmapKey: ""
 
-      # Reference to an existing Secret resource containing sensitive RDF4J Workbench configurations under a graphdb.properties file.
+      # Reference to an existing Secret resource containing sensitive RDF4J Workbench configurations
       # The value is processed as a Helm template.
       existingSecret: ""
       # Key in the existing Secret that holds the properties for RDF4J Workbench
@@ -799,9 +820,7 @@ rdf4j:
 
     # Default Java arguments with which the RDF4J Workbench instances will be launched.
     # RDF4J Workbench configuration properties can also be passed here in the format -Dprop=value
-    # Takes precedence over any configurations in graphdb.properties
     # The value is processed as a Helm template.
-    # Ref: https://graphdb.ontotext.com/documentation/11.3/directories-and-config-properties.html#configuration
     defaultJavaArguments: -XX:+UseContainerSupport -XX:MaxRAMPercentage=70
 
     # Java arguments to append after .Values.proxy.configuration.defaultJavaArguments
@@ -810,7 +829,6 @@ rdf4j:
     javaArguments: ""
 
     # Configurations for RDF4J Workbench's Logback
-    # Ref: https://graphdb.ontotext.com/documentation/11.3/diagnosing-and-reporting-critical-errors.html#logs
     logback:
       # Reference to an existing ConfigMap containing a Logback XML configuration.
       # The value is processed as a Helm template.
@@ -1007,7 +1025,6 @@ rdf4j:
   ##########################
 
   # Resource configurations for the RDF4J Workbench containers.
-  # For resizing to your needs, refer to the RDF4J Workbench documentation https://graphdb.ontotext.com/documentation/11.3/requirements.html
   # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
   resources:
     limits:
