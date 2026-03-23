@@ -1,3 +1,13 @@
+#
+# A release pipeline, which is automatically triggered when there is a chart with changed version.
+# It is triggered, after a Pull Request is merged into the default (main) branch and contains changes of the version of
+# specific chart or charts.
+# 
+# If multiple charts versions are updated, the pipeline will trigger for each of the charts in order to release them.
+#
+# See chart-releaser-action for more information on where and how the charts are released and distributed.
+#
+
 name: Release Charts
 
 on:
