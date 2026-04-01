@@ -142,20 +142,20 @@ configuration:
   #   MIRROR_CONFIG: path/to/Server-map.json
   properties:
 
-  # Allows provisioning of external Server-map.json file by using ConfigMap object.
-  # When the configmap value is set, the application will use the configured Server-map.json.
+  # Allows provisioning of external Server-map.json file by using Secret object.
+  # When the secret value is set, the application will use the configured Server-map.json.
   #
   # Example:
   # existingServerMap:
-  #   configmap: my-server-map-configuration
-  #   configmapKey: my-server-map.json
+  #   secret: my-server-map-configuration
+  #   secretKey: my-server-map.json
   #   mountPath: /opt/mirror-app/my-server-map.json
   existingServerMap:
-    # Reference to an existing ConfigMap resource containing the Server-map.json configuration.
+    # Reference to an existing Secret resource containing the Server-map.json configuration.
     # The value is processed as a Helm template.
-    configmap: ""
-    # Key in the existing ConfigMap resource that holds the content of the Server-map.json configuration.
-    configmapKey: Server-map.json
+    secret: ""
+    # Key in the existing Secret resource that holds the content of the Server-map.json configuration.
+    secretKey: Server-map.json
     # The path where the Server-map.json configuration will be mounted.
     mountPath: path/to/Server-map.json
 

@@ -4,9 +4,9 @@ configuration:
     MIRROR_CONFIG: /app/server-map.json
 
   existingServerMap:
-    # The name of the ConfigMap object.
-    configmap: mirror-app-server-config
-    # Key in the ConfigMap object that holds the JSON content.
-    configmapKey: server-map.json
+    # The name of the Secret object.
+    secret: mirror-app-server-secret
+    # Key in the Secret object that holds the JSON content.
+    secretKey: Server-map.json
     # The path where the server map JSON file will be mounted.
-    mountPath: /app/server-map.json
+    mountPath: /app/Server-map.json

@@ -26,7 +26,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        {{- if or .Values.configuration.properties .Values.configuration.existingServerMap.configmap }}
+        {{- if or .Values.configuration.properties .Values.configuration.existingServerMap.secret }}
         checksum/config-properties: {{ include (print $.Template.BasePath "/config-properties.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.configuration.gunicornArguments }}
@@ -58,10 +58,10 @@ spec:
       volumes:
         - name: tmp-volume
           emptyDir: {{ .Values.tempVolume.emptyDir | toYaml | nindent 12 }}
-      {{- if .Values.configuration.existingServerMap.configmap }}
-        - name: {{ .Values.configuration.existingServerMap.configmap }}
-          configMap:
-            name: {{ .Values.configuration.existingServerMap.configmap }}
+      {{- if .Values.configuration.existingServerMap.secret }}
+        - name: {{ .Values.configuration.existingServerMap.secret }}
+          secret:
+            secretName: {{ .Values.configuration.existingServerMap.secret }}
       {{- end }}
       {{- with .Values.extraVolumes }}
         {{- tpl (toYaml .) $ | nindent 8 }}
@@ -100,7 +100,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           envFrom:
-          {{- if or .Values.configuration.properties .Values.configuration.existingServerMap.configmap }}
+          {{- if or .Values.configuration.properties .Values.configuration.existingServerMap.secret }}
             - configMapRef:
                 name: {{ include "mirror-app.fullname.configmap.properties" . }}
           {{- end }}
@@ -117,10 +117,10 @@ spec:
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
-          {{- if .Values.configuration.existingServerMap.configmap }}
-            - name: {{ .Values.configuration.existingServerMap.configmap }}
+          {{- if .Values.configuration.existingServerMap.secret }}
+            - name: {{ .Values.configuration.existingServerMap.secret }}
               mountPath: {{ .Values.configuration.existingServerMap.mountPath }}
-              subPath: {{ .Values.configuration.existingServerMap.configmapKey }}
+              subPath: {{ .Values.configuration.existingServerMap.secretKey }}
           {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

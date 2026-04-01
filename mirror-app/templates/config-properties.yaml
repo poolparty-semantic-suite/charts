@@ -1,4 +1,4 @@
-{{- if or .Values.configuration.properties .Values.configuration.existingServerMap.configmap }}
+{{- if or .Values.configuration.properties .Values.configuration.existingServerMap.secret }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -16,7 +16,7 @@ data:
       {{- $key | nindent 2 }}: {{ tpl ($val | toString) $ | quote }}
     {{- end }}
   {{- end -}}
-  {{- if .Values.configuration.existingServerMap.configmap }}
+  {{- if .Values.configuration.existingServerMap.secret }}
   MIRROR_CONFIG: {{ .Values.configuration.existingServerMap.mountPath | quote }}
   {{- end }}
 {{- end -}}
