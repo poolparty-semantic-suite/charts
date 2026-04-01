@@ -1,5 +1,17 @@
 # Mirror App Helm Chart Changelog
 
+## Version 1.0.0
+
+### Breaking Changes
+
+- Changes the type of the object used for the Sever Mapping JSON. Now instead of ConfigMap, the chart uses Secret. This
+  is done, because the JSON file contains sensitive data.
+
+  Configuration changes:
+
+  `configuration.existingServerMap.configmap` ---> `configuration.existingServerMap.secret`
+  `configuration.existingServerMap.configmapKey` ---> `configuration.existingServerMap.secretKey`
+
 ## Version 0.1.2
 
 - Bumped the version of the Mirror App image to `2.4.1`.
