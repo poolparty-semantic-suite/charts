@@ -8,9 +8,9 @@ description: |
   It helps organizations to integrate different data types and connect them in a knowledge graph so that enterprise data
   and content can be searched for and used effectively.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: 10.2.0
-kubeVersion: ^1.30.0-0
+kubeVersion: ^1.32.0-0
 home: https://www.poolparty.biz/poolparty-unifiedviews
 icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
 maintainers:
