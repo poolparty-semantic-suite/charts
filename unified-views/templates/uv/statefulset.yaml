@@ -170,6 +170,8 @@ spec:
               value: {{ coalesce .Values.securityContext.runAsUser .Values.podSecurityContext.runAsUser | quote }}
             - name: GROUP_ID
               value: {{ coalesce .Values.securityContext.runAsGroup .Values.podSecurityContext.runAsGroup | quote }}
+            - name: PROPERTIES_FILE_CHECKSUM
+              value: {{ include (print .Template.BasePath "/uv/config-properties.yaml") . | sha256sum }}
             {{- if not ( empty .Values.configuration.rdf4j.passwordSecret.key ) }}
             - name: RDF4J_USER_PASSWORD
               valueFrom:
@@ -207,9 +209,6 @@ spec:
           securityContext: {{- toYaml . | nindent 12 }}
           {{- end }}
           command: [ "bash", "-c" ]
-          env:
-            - name: PROPERTIES_FILE_CHECKSUM
-              value: {{ include (print .Template.BasePath "/uv/config-properties.yaml") . | sha256sum }}
           args:
             - |
               if [[ ! -f /unified-views-new/.initialized-${PROPERTIES_FILE_CHECKSUM} ]] ;then
@@ -229,16 +228,33 @@ spec:
                   fi
                 done < /tmp/uv/uv.properties
                 if [[ ! -z "${OIDC_CLIENT_SECRET}" ]]; then
-                  echo "oidc.client-secret=${OIDC_CLIENT_SECRET}" >> /unified-views-new/configs/uv.properties
+                  if grep "oidc.client-secret\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                    sed -i -e "s|oidc\.client-secret\s*=.*|oidc.client-secret=${OIDC_CLIENT_SECRET}|g" /unified-views-new/configs/uv.properties
+                  else
+                    echo "oidc.client-secret=${OIDC_CLIENT_SECRET}" >> /unified-views-new/configs/uv.properties
+                  fi
                 fi
+
                 if [[ ! -z "${RDF4J_USER_PASSWORD}" ]]; then
-                  sed -i -e "s|database\.rdf\.conf\.password\s*=.*|database\.rdf\.conf\.password=${RDF4J_USER_PASSWORD}|g" /unified-views-new/configs/uv.properties
+                  if grep "database.rdf.conf.password\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                    sed -i -e "s|database\.rdf\.conf\.password\s*=.*|database\.rdf\.conf\.password=${RDF4J_USER_PASSWORD}|g" /unified-views-new/configs/uv.properties
+                  else
+                    echo "database.rdf.conf.password=${RDF4J_USER_PASSWORD}" >> /unified-views-new/configs/uv.properties
+                  fi
                 fi
                 if [[ ! -z "${OIDC_CLIENT_ID}" ]]; then
-                  echo "oidc.client-id=${OIDC_CLIENT_ID}" >> /unified-views-new/configs/uv.properties
+                  if grep "oidc.client-id\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                    sed -i -e "s|oidc\.client-id\s*=.*|oidc\.client-id=${OIDC_CLIENT_ID}|g" /unified-views-new/configs/uv.properties
+                  else
+                    echo "oidc.client-id=${OIDC_CLIENT_ID}" >> /unified-views-new/configs/uv.properties
+                  fi
                 fi
                 if [[ ! -z "${OIDC_CLIENT_NAME}" ]]; then
-                  echo "oidc.client-name=${OIDC_CLIENT_NAME}" >> /unified-views-new/configs/uv.properties
+                  if grep "oidc.client-name\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                    sed -i -e "s|oidc\.client-name\s*=.*|oidc\.client-name=${OIDC_CLIENT_NAME}|g" /unified-views-new/configs/uv.properties
+                  else
+                    echo "oidc.client-name=${OIDC_CLIENT_NAME}" >> /unified-views-new/configs/uv.properties
+                  fi
                 fi
 
                 echo "Changing ownership to ${USER_ID}:${GROUP_ID}"
