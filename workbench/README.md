@@ -1,8 +1,8 @@
 # Helm Chart for Semantic Workbench
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square)
-![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square)
+![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for [Semantic Workbench](https://www.poolparty.biz/)!
 This Helm chart makes it easy to deploy and manage Semantic Workbench on your [Kubernetes](https://kubernetes.io/)
@@ -29,7 +29,7 @@ The table bellow highlights the version mapping between the Helm chart and Seman
 
 | Helm chart version | Semantic Workbench version  |
 |--------------------|-----------------------------|
-| 0.1.x              | 2.3.x                       |
+| 0.1.x              | 2.4.x                       |
 
 # Prerequisites
 

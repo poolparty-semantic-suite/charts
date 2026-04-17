@@ -1,5 +1,9 @@
 # Semantic Workbench Helm Chart Changelog
 
+## Version 0.1.3
+
+- Bumped the version of the Semantic Workbench application to `2.4.2`.
+
 ## Version 0.1.2
 
 - Bumped the version of the Semantic Workbench application to `2.4.1`.
