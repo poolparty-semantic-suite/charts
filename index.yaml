@@ -408,6 +408,30 @@ entries:
     version: 0.1.0
   semantic-workbench:
   - apiVersion: v2
+    appVersion: 2.4.2
+    created: "2026-04-27T11:41:55.714894546Z"
+    description: 'The Workbench supports subject matter experts in finding the optimal
+      combination of parameters for inference tagging and semantic recommender features. '
+    digest: de79189a9e7e880b65ef4334fe3d8c3dbef31a5e0f30efa2e1038e75b324ca6f
+    home: https://help.poolparty.biz/en/poolparty-quick-start-guides/poolparty-workbench-at-a-glance.html
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: semantic-workbench
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.3/semantic-workbench-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
     appVersion: 2.4.1
     created: "2026-02-09T08:32:14.132452865Z"
     description: 'The Workbench supports subject matter experts in finding the optimal
@@ -536,4 +560,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/unified-views-0.1.0/unified-views-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-16T12:06:52.477543751Z"
+generated: "2026-04-27T11:41:55.714939583Z"
