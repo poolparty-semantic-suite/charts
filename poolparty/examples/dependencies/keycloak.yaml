@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: ontotext/poolparty-keycloak:2.2.0
+          image: ontotext/poolparty-keycloak:2.3.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: https
@@ -37,6 +37,8 @@ spec:
               value: "poolparty"
             - name: POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET
               value: "yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u"
+            - name: POOLPARTY_GRAPHDB_URL
+              value: "[GRAPHDB_URL]"
             - name: KC_HOSTNAME
               value: "[KEYCLOAK_FQDN]"
             - name: KC_HTTP_RELATIVE_PATH
