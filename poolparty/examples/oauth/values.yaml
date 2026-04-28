@@ -1,0 +1,4 @@
+configuration:
+  properties:
+    # Setting this property reconfigures the Graph Modeler to use OAuth 2.0 Client Credentials authentication
+    POOLPARTY_GRAPHDB_OAUTH_CLIENTID: graphdb

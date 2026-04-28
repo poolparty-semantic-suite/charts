@@ -67,7 +67,7 @@ The basic steps to install GraphDB using the official Helm chart are:
 
 ### Elasticsearch
 
-Elasticsearch instance at version 8.x is required. Additionally, the instance needs to have the
+Elasticsearch instance at version 9.x is required. Additionally, the instance needs to have the
 [MAT](https://www.elastic.co/docs/reference/elasticsearch/plugins/mapper-annotated-text) plugin installed.
 
 The [elasticsearch.yaml](examples/dependencies/elasticsearch.yaml) file provides a minimal example to install an
@@ -88,14 +88,14 @@ kubectl apply --filename examples/dependencies/elasticsearch.yaml
 ### Keycloak
 
 PoolParty uses a custom image for Keycloak. This image includes Graphwise developed extensions, that make their
-integration smoother, as well as a parameterized Keycloak realm json file, that is used when initializing the realm
+integration smoother, as well as a parameterized Keycloak realm JSON file, that is used when initializing the realm
 used by PoolParty.
 
 The [keycloak.yaml](examples/dependencies/keycloak.yaml) file provides a minimal example to install a
 Keycloak instance in your cluster. This example uses a Graphwise provided image that has extensions pre-installed.
 
 > [!NOTE]
-> The Keycloak address needs to be resolvable from the your browser and from within the cluster. The easiest way to do
+> The Keycloak address needs to be resolvable from your browser and from within the cluster. The easiest way to do
 > this is to use a service like [nip.io](https://nip.io/), which encodes the IP address for the A record in the FQDN.
 
 Install this example, first determine the IP address of your host machine, and:
@@ -105,6 +105,10 @@ export KEYCLOAK_FQDN="keycloak.[your ip address].nip.io"
 sed "s/\[KEYCLOAK_FQDN\]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | \
   kubectl apply --filename -
 ```
+
+If you intend on using OAuth 2.0 Client Credentials authentication flow between PoolParty and GraphDB, you also need to
+replace `GRAPHDB_URL` in [examples/dependencies/keycloak.yaml](examples/dependencies/keycloak.yaml), otherwise you have
+to configured it later via the admin console.
 
 > [!CAUTION]
 > This example is for development and evaluation purposes only. Consult the official Keycloak Kubernetes getting started
@@ -172,7 +176,7 @@ configuration:
     POOLPARTY_INDEX_URL: http://elasticsearch.example.com:9200
 ```
 
-The install with:
+Then install with:
 
 ```shell
 helm install poolparty poolparty-semantic-suite/poolparty -f values_overrides.yaml

@@ -161,6 +161,9 @@ configuration:
     POOLPARTY_GRAPHDB_USERNAME: admin
     POOLPARTY_GRAPHDB_PASSWORD: root
 
+    # Uncomment to enable OAuth2 Client Credentials flow authentication in GraphDB
+    # POOLPARTY_GRAPHDB_OAUTH_CLIENTID: graphdb
+
     ##### Keycloak Settings #####
     POOLPARTY_KEYCLOAK_AUTHURL: http://keycloak:8080/auth
 

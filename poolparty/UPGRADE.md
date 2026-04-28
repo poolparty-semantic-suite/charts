@@ -1,12 +1,20 @@
-# Migration Guide
+# Migration and Upgrade Guide
 
-## Configuring Unique Elasticsearch Index Names for Multi-Instance Deployments
+## 10.2.0
+
+### Migrating from Elasticsearch version 8.x to version 9.x
+
+Graph Modeler (PoolParty) 10.2 migrates to Elasticsearch 9.x which requires a mandatory migration for old deployments
+that still use Elasticsearch version 8.x. You can follow the steps from the official Elasticsearch
+documentation https://www.elastic.co/docs/deploy-manage/upgrade/prepare-to-upgrade#prepare-upgrade-from-8.x
+
+### Configuring Unique Elasticsearch Index Names for Multi-Instance Deployments
 
 Starting with PoolParty 10.2.0 (Helm chart 0.3.x), each PoolParty instance can be configured with its own
 Elasticsearch index prefix and/or suffix. This is required when multiple PoolParty instances share a single
 Elasticsearch cluster. Without unique names, all instances would read and write the same indices.
 
-### New Deployments
+#### New Deployments
 
 For a brand-new deployment that will share an Elasticsearch cluster with other PoolParty instances, set a prefix
 and/or suffix before the first startup:
@@ -22,7 +30,7 @@ configuration:
 On first startup PoolParty will create its indices using the configured names (e.g. `instance1-conceptdata`,
 `instance1-searchdata`, etc.).
 
-### Existing Deployments — Enabling a Prefix or Suffix
+#### Existing Deployments — Enabling a Prefix or Suffix
 
 If you have an existing single-instance deployment with data already indexed in Elasticsearch (indices named
 `conceptdata`, `searchdata`, etc.) and you now want to enable a prefix or suffix:
@@ -62,7 +70,7 @@ If you have an existing single-instance deployment with data already indexed in 
 > Elasticsearch cluster. Both would write to the same underlying indices via different names, corrupting data.
 > Perform the migration during a maintenance window.
 
-### Verifying the Migration
+#### Verifying the Migration
 
 After startup, use the Elasticsearch Aliases API to confirm the aliases were created:
 
