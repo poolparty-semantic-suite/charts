@@ -1,5 +1,9 @@
 # ADF Helm Chart Changelog
 
+## Version 0.1.3
+
+- Bumped the version of the ADF application to `1.8.2`.
+
 ## Version 0.1.2
 
 - Bumped the version of the ADF application to `1.8.1`.
