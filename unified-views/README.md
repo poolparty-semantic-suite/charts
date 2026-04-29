@@ -1,7 +1,7 @@
 # Helm Chart for UnifiedViews
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square)
 ![AppVersion: 10.2.0](https://img.shields.io/badge/AppVersion-10.2.0-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for
