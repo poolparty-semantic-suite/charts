@@ -13,7 +13,11 @@ scripts/elasticsearch/
       is-migrated.sh            # exits 0 if this version is already applied
       pre-upgrade.sh            # runs against the old node before restart
       post-upgrade.sh           # runs against the new node after restart
-    9.2.4/
+    9.2.5/
+      is-migrated.sh
+      pre-upgrade.sh
+      post-upgrade.sh
+    9.3.3/
       is-migrated.sh
       pre-upgrade.sh
       post-upgrade.sh
@@ -41,23 +45,23 @@ Alternatively, if running the script from a pod inside the cluster (e.g., a Job)
 
 ```sh
 POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
-  ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.2.4
+  ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.3.3
 ```
 
 ## Quick start
 
 ```sh
-# Upgrade to 9.2.4 from the version currently in the StatefulSet image tag (auto-detected)
-./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.2.4
+# Upgrade to 9.3.3 from the version currently in the StatefulSet image tag (auto-detected)
+./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.3.3
 
 # Explicit from/to — useful when resuming a partial upgrade
-./scripts/elasticsearch/upgrade-elasticsearch.sh --from 8.17.6 --to 9.2.4
+./scripts/elasticsearch/upgrade-elasticsearch.sh --from 8.17.6 --to 9.3.3
 
 # Single hop only
 ./scripts/elasticsearch/upgrade-elasticsearch.sh --from 8.17.6 --to 8.19.13
 
 # Take a snapshot before each version step
-./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.2.4 --snapshot
+./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.3.3 --snapshot
 ```
 
 ## Environment variables
@@ -114,7 +118,7 @@ If `xpack.security.enabled=true` is set in the ES configuration, all API calls r
 ```sh
 # Via environment variables
 POOLPARTY_INDEX_USERNAME=elastic POOLPARTY_INDEX_PASSWORD=secret \
-  ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.2.4
+  ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.3.3
 
 # Via a Kubernetes Secret (keys must be "username" and "password")
 kubectl create secret generic es-credentials \
@@ -122,7 +126,7 @@ kubectl create secret generic es-credentials \
   --from-literal=password=secret
 
 ES_SECRET_NAME=es-credentials \
-  ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.2.4
+  ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.3.3
 ```
 
 All curl calls — in the orchestrator and in every migration script — pick up credentials automatically through `lib.sh`.
@@ -136,7 +140,7 @@ Pass `--snapshot` to take a snapshot before each version step. The repository mu
 curl http://localhost:9200/_snapshot/backup
 
 # Run with snapshots
-SNAPSHOT_REPO=backup ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.2.4 --snapshot
+SNAPSHOT_REPO=backup ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.3.3 --snapshot
 ```
 
 Snapshots are named `pre-upgrade-to-<version>-<timestamp>` and polled until `SUCCESS` (30-minute timeout). A `FAILED` or `PARTIAL` result aborts the upgrade before any image changes are made.
@@ -156,7 +160,7 @@ This means re-running the script after a partial failure skips any version steps
 
    **`is-migrated.sh`** — exits 0 if the migration is already applied:
    ```sh
-   cp -r migrations/9.2.4 migrations/<new-version>
+   cp -r migrations/9.3.3 migrations/<new-version>
    # Update MARKER path, TARGET version, and .done text
    ```
 
@@ -166,7 +170,7 @@ This means re-running the script after a partial failure skips any version steps
 
 2. Add the new version to `KNOWN_VERSIONS` in `upgrade-elasticsearch.sh` in ascending order:
    ```sh
-   KNOWN_VERSIONS=("8.19.13" "9.2.4" "<new-version>")
+   KNOWN_VERSIONS=("8.19.13" "9.2.5" "9.3.3" "<new-version>")
    ```
 
 ## Troubleshooting
@@ -175,7 +179,7 @@ This means re-running the script after a partial failure skips any version steps
 The script cannot find the StatefulSet. Verify the name and namespace:
 ```sh
 kubectl get statefulsets -n <namespace>
-ES_STATEFULSET=<actual-name> KUBENAMESPACE=<namespace> ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.2.4
+ES_STATEFULSET=<actual-name> KUBENAMESPACE=<namespace> ./scripts/elasticsearch/upgrade-elasticsearch.sh --to 9.3.3
 ```
 
 **`Connection refused` at startup**
@@ -201,7 +205,7 @@ curl http://localhost:9200/_cluster/health
 curl "http://localhost:9200/_cat/shards?h=index,shard,prirep,state,node&v"
 ```
 
-**`critical deprecation(s) found` during 9.2.4 pre-upgrade**
+**`critical deprecation(s) found` during 9.x pre-upgrade**
 The running 8.x instance has breaking-change deprecations that must be resolved before the 8→9 jump:
 ```sh
 curl http://localhost:9200/_migration/deprecations | python3 -m json.tool
