@@ -107,10 +107,6 @@ sed "s/\[KEYCLOAK_FQDN\]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | 
   kubectl apply --filename -
 ```
 
-If you intend on using OAuth 2.0 Client Credentials authentication flow between PoolParty and GraphDB, you also need to
-replace `GRAPHDB_URL` in [examples/dependencies/keycloak.yaml](examples/dependencies/keycloak.yaml), otherwise you have
-to configured it later via the admin console.
-
 > [!CAUTION]
 > This example is for development and evaluation purposes only. Consult the official Keycloak Kubernetes getting started
 > [guide](https://www.keycloak.org/getting-started/getting-started-kube) and the

@@ -8,12 +8,6 @@
 > Graph Modeler (PoolParty) 10.2 uses Elasticsearch version 9.x, so you have to migrate any existing
 > Elasticsearch deployments to this major version. See the [UPGRADE.md](UPGRADE.md) guide for more information.
 
-### New
-
-- Graph Modeler 10.2 introduces OAuth 2.0 Client Credentials authentication flow between Graph Modeling and GraphDB.
-  For new deployments, it's best to use `ontotext/poolparty-keycloak:2.3.0` which includes automatic realm
-  provisioning.
-
 ### Updates
 
 - Updated Graph Modeler (PoolParty) to
