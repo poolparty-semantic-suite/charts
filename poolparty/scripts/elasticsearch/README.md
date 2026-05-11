@@ -34,11 +34,26 @@ Each migration directory also stores a `.done` sentinel file once its post-upgra
 
 ## Connecting to Elasticsearch
 
-The script talks to ES over HTTP. If ES is only accessible inside the cluster, set up a port-forward before running:
+The script talks to ES over HTTP. If ES is only accessible inside the cluster, set up a port-forward before running.
+
+A plain one-shot `kubectl port-forward` will die when the forwarded pod is restarted during the rolling upgrade, causing subsequent API calls to fail. Run it in a restart loop instead:
 
 ```sh
-kubectl port-forward svc/elasticsearch 9200:9200 &
-# Then run the script with the default POOLPARTY_INDEX_URL=http://localhost:9200
+# bash / zsh
+while true; do kubectl port-forward svc/elasticsearch 9200:9200; sleep 1; done &
+PF_PID=$!
+```
+
+```fish
+# fish
+while true; kubectl port-forward svc/elasticsearch 9200:9200; sleep 1; end &
+set PF_PID (jobs --last --pid)
+```
+
+Stop the loop when the upgrade is done:
+
+```sh
+kill $PF_PID
 ```
 
 Alternatively, if running the script from a pod inside the cluster (e.g., a Job), point `POOLPARTY_INDEX_URL` at the in-cluster Service DNS name:
