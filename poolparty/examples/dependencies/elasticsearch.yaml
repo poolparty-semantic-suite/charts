@@ -28,6 +28,11 @@ spec:
               value: single-node
             - name: "xpack.security.enabled"
               value: "false"
+          resources:
+            requests:
+              memory: 2Gi
+            limits:
+              memory: 4Gi
 ---
 apiVersion: v1
 kind: Service

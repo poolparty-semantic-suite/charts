@@ -1,5 +1,11 @@
 # PoolParty Helm Chart Changelog
 
+## Version 0.3.1
+
+- Adds value for the license secret for convenience.
+- Adds `resources` settings for the `elasticsearch` and `keycloak` manifests in the examples.
+- Updates the documentation.
+
 ## Version 0.3.0
 
 ### Breaking
