@@ -114,7 +114,7 @@ image:
 license:
   # Reference to a secret containing 'poolparty.key' file that will be mounted in the PoolParty pod.
   # The value is processed as a Helm template.
-  existingSecret: ""
+  existingSecret: poolparty-license
 
   # Name of the PoolParty license file in the existing license secret.
   # The default is poolparty.key, but it can be changed to map to a different secret key.
