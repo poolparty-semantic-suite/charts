@@ -14,7 +14,7 @@ data:
     {{- if not (empty .Values.configuration.rdf4j.url) }}
     database.rdf.conf.url={{ .Values.configuration.rdf4j.url }}
     {{- else }}
-    database.rdf.conf.url={{ include "rdf4j.service.address" . }}/rdf4j-server
+    database.rdf.conf.url={{ include "rdf4j.service.address" . }}
     {{- end }}
     {{- if not ( empty .Values.configuration.rdf4j.platform) }}
     database.rdf.platform={{ .Values.configuration.rdf4j.platform }}
@@ -24,6 +24,18 @@ data:
     {{- end }}
     {{- if not ( empty .Values.configuration.rdf4j.user) }}
     database.rdf.conf.user={{ .Values.configuration.rdf4j.user }}
+    {{- end }}
+    {{- if .Values.configuration.sso.keycloak.enabled -}}
+    {{- $keycloakUrl := trimSuffix "/" .Values.configuration.sso.keycloak.url -}}
+    {{- $realm := required "A Keycloak realm is required when the SSO is enabled." .Values.configuration.sso.keycloak.realm }}
+    oidc.enabled=true
+    oidc.authorization-uri={{ $keycloakUrl }}/realms/{{ $realm }}/protocol/openid-connect/auth
+    oidc.token-uri={{ $keycloakUrl }}/realms/{{ $realm }}/protocol/openid-connect/token
+    oidc.user-info-uri={{ $keycloakUrl }}/realms/{{ $realm }}/protocol/openid-connect/userinfo
+    oidc.jwk-set-uri={{ $keycloakUrl }}/realms/{{ $realm }}/protocol/openid-connect/certs
+    oidc.logout-uri={{ $keycloakUrl }}/realms/{{ $realm }}/protocol/openid-connect/logout
+    oidc.admin.roles={{ join "," .Values.configuration.sso.keycloak.adminRoles }}
+    # This comment acts as workaround. There is something funny with our replacing logic which ignores the last property.
     {{- end }}
     {{- if .Values.configuration.properties }}
     ##### Overrides from values.yaml #####
