@@ -114,7 +114,7 @@ image:
 license:
   # Reference to a secret containing 'uv-license.key' file that will be mounted in the UnifiedViews pod.
   # The value is processed as a Helm template.
-  existingSecret: "uv-license"
+  existingSecret: uv-license
 
   # Name of the UnifiedViews license file in the existing license secret.
   # The default is poolparty.key, but it can be changed to map to a different secret key.
@@ -161,22 +161,38 @@ configuration:
 
     # A password provisioned as a secret, in case the RDF4J server is secured.
     passwordSecret:
-      key: ""
-      name: password
+      name: ""
+      key: password
+
+    # Configurations for the process of RDF4J repository initialization.
+    # The process will be executed only when the repository is not available and the SSO is enabled.
+    repoInit:
+      # Toggles the initialization of the RDF4J repository.
+      enabled: true
+
+      # Timeout for the initContainer used for the initialization of the RDF4J repository.
+      timeout: 1m
 
   # SSO configuration.
   sso:
     # Keycloak configuration.
     keycloak:
-      # Enable Keycloak (default: disabled)
+      # Toggle for the Keycloak SSO integration.
+      # When enabled, the settings should be updated accordingly.
       enabled: false
+
+      # Keycloak address.
+      url: http://keycloak.127.0.0.1.nip.io/auth
+
+      # Keycloak realm that should be used.
+      realm: ""
 
       # The Kubernetes secret corresponding to the OIDC Client Secret.
       # Maps to oidc.client-secret.
       # Note: the field must not contain the actual secret value.
       oidcClientSecret:
-        key: ""
-        name: secret
+        name: uv-keycloak-sso-secret
+        key: token
 
       # The Client ID for Keycloak SSO.
       # Maps to oidc.client-id.
@@ -185,6 +201,10 @@ configuration:
       # The Client Name for Keycloak SSO.
       # Maps to oidc.client-name.
       oidcClientName: ""
+
+      # Name of the admin roles that are mapped into UV Admin.
+      adminRoles:
+        - Administrator
 
   # Additional UnifiedViews configurations that will be appended to uv.properties, effectively overriding
   # anything configured in the default uv.properties ConfigMap.

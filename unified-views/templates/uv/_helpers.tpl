@@ -57,10 +57,10 @@ Defines the internal service address of RDF4J Workbench.
 {{- define "rdf4j.service.address"}}
   {{- if .Values.rdf4j.enabled -}}
     {{- if and .Values.rdf4j.service.enabled (not .Values.configuration.rdf4j.url) -}}
-      http://{{ include "rdf4j.fullname" . }}-0.{{ include "rdf4j.fullname" . }}.{{ include "unified-views.namespace" . }}:{{ .Values.rdf4j.service.ports.http }}
+      http://{{ include "rdf4j.fullname" . }}-0.{{ include "rdf4j.fullname" . }}.{{ include "unified-views.namespace" . }}:{{ .Values.rdf4j.service.ports.http }}/rdf4j-server
     {{- else if .Values.configuration.rdf4j.url -}}
       {{- $rdf4jUrl := urlParse .Values.configuration.rdf4j.url }}
-      {{- printf "%s://%s" $rdf4jUrl.scheme  $rdf4jUrl.host -}}
+      {{- printf "%s://%s" $rdf4jUrl.scheme $rdf4jUrl.host -}}
     {{- else -}}
       {{- fail "There is no service for the internal RDF4J or external one configured." }}
     {{- end -}}

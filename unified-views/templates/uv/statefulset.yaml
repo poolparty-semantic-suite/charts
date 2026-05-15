@@ -151,16 +151,92 @@ spec:
           command: [ "bash", "-c" ]
           env:
             - name: SERVICE_FQDN
-              value: '{{ include "rdf4j.service.address" . }}'
+              value: "{{ include "rdf4j.service.address" . }}"
+            {{- if not ( empty .Values.configuration.rdf4j.passwordSecret.name ) }}
+            - name: RDF4J_USER
+              value: "{{ .Values.configuration.rdf4j.user }}"
+            - name: RDF4J_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.configuration.rdf4j.passwordSecret.name }}
+                  key: {{ .Values.configuration.rdf4j.passwordSecret.key }}
+            {{- end }}
           args:
             - |
               sleep 5
-              while ! curl --connect-timeout 1 --max-time 2 -f ${SERVICE_FQDN}/rdf4j-server; do
+              curl_args=("-f" "${SERVICE_FQDN}" "--connect-timeout" "1" "--max-time" "2")
+              if [[ ! -z "${RDF4J_USER_PASSWORD}" ]]; then
+                curl_args+=("-u" "${RDF4J_USER}:${RDF4J_USER_PASSWORD}")
+              fi
+
+              while ! curl "${curl_args[@]}"; do
               echo "Waiting for RDF4J Workbench to be ready..."
               sleep 5
               done
-              echo "RDF4J Workbench is ready. Sleeping for 5 seconds and proceeding..."
-              sleep 5
+              echo "RDF4J Workbench is ready. Sleeping for 10 seconds and proceeding..."
+              sleep 10
+        {{- if and .Values.configuration.sso.keycloak.enabled .Values.configuration.rdf4j.repoInit.enabled }}
+        # Initializes the configured RDF4J repository if it doesn't exist. When the SSO is enabled, the UV fails to
+        # init the repository and therefore start properly. This is used as workaround as it basically runs the UV
+        # without enabled SSO.
+        # Note that if the repository is present, the process will just exit.
+        - name: {{ .Chart.Name }}-init-rdf4j
+          image: {{ include "unified-views.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.resources }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.initContainerDataPermissions.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: SERVICE_FQDN
+              value: "{{ include "rdf4j.service.address" . }}"
+            - name: RDF4J_REPO
+              value: "{{ .Values.configuration.rdf4j.repositoryName }}"
+            - name: TIMEOUT
+              value: "{{ .Values.configuration.rdf4j.repoInit.timeout }}"
+            {{- if not ( empty .Values.configuration.rdf4j.passwordSecret.name ) }}
+            - name: RDF4J_USER
+              value: "{{ .Values.configuration.rdf4j.user }}"
+            - name: RDF4J_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.configuration.rdf4j.passwordSecret.name }}
+                  key: {{ .Values.configuration.rdf4j.passwordSecret.key }}
+            {{- end }}
+          volumeMounts:
+            - name: uv-license
+              mountPath: /unified-views/license
+              readOnly: {{ .Values.license.readOnly }}
+          command: [ "bash", "-c" ]
+          args:
+            - |
+              echo "Checking if repository ${RDF4J_REPO} exists..."
+              curl_args=("-s" "${SERVICE_FQDN}/repositories")
+              if [[ ! -z "${RDF4J_USER_PASSWORD}" ]]; then
+                curl_args+=("-u" "${RDF4J_USER}:${RDF4J_USER_PASSWORD}")
+              fi
+
+              repo_url="${SERVICE_FQDN}/repositories/${RDF4J_REPO}"
+              curl "${curl_args[@]}" | grep -q "${repo_url}" && echo "Repo available." && exit 0 || echo "Repo not available"
+
+              echo "Initializing ${RDF4J_REPO} repository in RDF4J..."
+              sed -i -e "s|database\.rdf\.conf\.url\s*=.*|database\.rdf\.conf\.url=${SERVICE_FQDN}|g" /unified-views/configs/uv.properties
+              sed -i -e "s|database\.rdf\.conf\.repository\s*=.*|database\.rdf\.conf\.repository=${RDF4J_REPO}|g" /unified-views/configs/uv.properties
+
+              if [[ ! -z "${RDF4J_USER_PASSWORD}" ]]; then
+                if grep "database.rdf.conf.password\s*=" > /dev/null /unified-views/configs/uv.properties; then
+                  sed -i -e "s|database\.rdf\.conf\.user\s*=.*|database\.rdf\.conf\.user=${RDF4J_USER}|g" /unified-views/configs/uv.properties
+                  sed -i -e "s|database\.rdf\.conf\.password\s*=.*|database\.rdf\.conf\.password=${RDF4J_USER_PASSWORD}|g" /unified-views/configs/uv.properties
+                else
+                  echo "database.rdf.conf.user=${RDF4J_USER}" >> /unified-views/configs/uv.properties
+                  echo "database.rdf.conf.password=${RDF4J_USER_PASSWORD}" >> /unified-views/configs/uv.properties
+                fi
+              fi
+
+              timeout ${TIMEOUT} bash /unified-views/run-uv.sh | grep -iq 'exception' && exit 1 || exit 0
+        {{- end }}
         {{- if and .Values.persistence.enabled .Values.initContainerDataPermissions.enabled }}
         - name: {{ .Chart.Name }}-provision-data
           image: {{ include "unified-views.image" . }}
@@ -170,29 +246,23 @@ spec:
               value: {{ coalesce .Values.securityContext.runAsUser .Values.podSecurityContext.runAsUser | quote }}
             - name: GROUP_ID
               value: {{ coalesce .Values.securityContext.runAsGroup .Values.podSecurityContext.runAsGroup | quote }}
-            - name: PROPERTIES_FILE_CHECKSUM
-              value: {{ include (print .Template.BasePath "/uv/config-properties.yaml") . | sha256sum }}
-            {{- if not ( empty .Values.configuration.rdf4j.passwordSecret.key ) }}
+            {{- if not ( empty .Values.configuration.rdf4j.passwordSecret.name ) }}
             - name: RDF4J_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.configuration.rdf4j.passwordSecret.key }}
                   name: {{ .Values.configuration.rdf4j.passwordSecret.name }}
+                  key: {{ .Values.configuration.rdf4j.passwordSecret.key }}
             {{- end }}
             {{- if .Values.configuration.sso.keycloak.enabled }}
             - name: OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.configuration.sso.keycloak.oidcClientSecret.key }}
                   name: {{ .Values.configuration.sso.keycloak.oidcClientSecret.name }}
-            {{- if not ( empty .Values.configuration.sso.keycloak.oidcClientId ) }}
+                  key: {{ .Values.configuration.sso.keycloak.oidcClientSecret.key }}
             - name: OIDC_CLIENT_ID
-              value: {{ .Values.configuration.sso.keycloak.oidcClientId | quote }}
-            {{- end }}
-            {{- if not ( empty .Values.configuration.sso.keycloak.oidcClientName ) }}
+              value: {{ required "oidcClientId is required when the SSO is enabled." .Values.configuration.sso.keycloak.oidcClientId | quote }}
             - name: OIDC_CLIENT_NAME
-              value: {{ .Values.configuration.sso.keycloak.oidcClientName | quote }}
-            {{- end }}
+              value: {{ required "oidcClientName is required when the SSO is enabled." .Values.configuration.sso.keycloak.oidcClientName | quote }}
             {{- end }}
           volumeMounts:
             - name: {{ .Values.persistence.volumeClaimTemplate.name }}
@@ -211,71 +281,59 @@ spec:
           command: [ "bash", "-c" ]
           args:
             - |
-              if [[ ! -f /unified-views-new/.initialized-${PROPERTIES_FILE_CHECKSUM} ]] ;then
-                echo "Copying data"
-                cp -rv /unified-views/* /unified-views-new/
-                echo "Done. Parsing and adding properties from /tmp/uv/uv.properties to /unified-views-new/configs/uv.properties"
-                while IFS= read -r line; do
-                  if echo "$line" | grep "=" > /dev/null; then
-                    echo "IN. Reading"
-                    IFS="=" read -r key value <<< "$line"
-                    echo "READ $key $value"
-                    if grep "${key}\s*=" >/dev/null /unified-views-new/configs/uv.properties; then
-                      sed -i -e "s|$key\s*=.*|$key=$value|g" /unified-views-new/configs/uv.properties
-                    else
-                      echo "${key}=${value}" >> /unified-views-new/configs/uv.properties
-                    fi
-                  fi
-                done < /tmp/uv/uv.properties
-                if [[ ! -z "${OIDC_CLIENT_SECRET}" ]]; then
-                  if grep "oidc.client-secret\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
-                    sed -i -e "s|oidc\.client-secret\s*=.*|oidc.client-secret=${OIDC_CLIENT_SECRET}|g" /unified-views-new/configs/uv.properties
+              echo "Copying data"
+              cp -rv /unified-views/* /unified-views-new/
+              echo "Done. Parsing and adding properties from /tmp/uv/uv.properties to /unified-views-new/configs/uv.properties"
+              while IFS= read -r line; do
+                if echo "$line" | grep "=" > /dev/null; then
+                  echo "IN. Reading"
+                  IFS="=" read -r key value <<< "$line"
+                  echo "READ $key $value"
+                  if grep "${key}\s*=" >/dev/null /unified-views-new/configs/uv.properties; then
+                    sed -i -e "s|$key\s*=.*|$key=$value|g" /unified-views-new/configs/uv.properties
                   else
-                    echo "oidc.client-secret=${OIDC_CLIENT_SECRET}" >> /unified-views-new/configs/uv.properties
+                    echo "${key}=${value}" >> /unified-views-new/configs/uv.properties
                   fi
                 fi
-
-                if [[ ! -z "${RDF4J_USER_PASSWORD}" ]]; then
-                  if grep "database.rdf.conf.password\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
-                    sed -i -e "s|database\.rdf\.conf\.password\s*=.*|database\.rdf\.conf\.password=${RDF4J_USER_PASSWORD}|g" /unified-views-new/configs/uv.properties
-                  else
-                    echo "database.rdf.conf.password=${RDF4J_USER_PASSWORD}" >> /unified-views-new/configs/uv.properties
-                  fi
+              done < /tmp/uv/uv.properties
+              if [[ ! -z "${OIDC_CLIENT_SECRET}" ]]; then
+                if grep "oidc.client-secret\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                  sed -i -e "s|oidc\.client-secret\s*=.*|oidc.client-secret=${OIDC_CLIENT_SECRET}|g" /unified-views-new/configs/uv.properties
+                else
+                  echo "oidc.client-secret=${OIDC_CLIENT_SECRET}" >> /unified-views-new/configs/uv.properties
                 fi
-                if [[ ! -z "${OIDC_CLIENT_ID}" ]]; then
-                  if grep "oidc.client-id\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
-                    sed -i -e "s|oidc\.client-id\s*=.*|oidc\.client-id=${OIDC_CLIENT_ID}|g" /unified-views-new/configs/uv.properties
-                  else
-                    echo "oidc.client-id=${OIDC_CLIENT_ID}" >> /unified-views-new/configs/uv.properties
-                  fi
-                fi
-                if [[ ! -z "${OIDC_CLIENT_NAME}" ]]; then
-                  if grep "oidc.client-name\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
-                    sed -i -e "s|oidc\.client-name\s*=.*|oidc\.client-name=${OIDC_CLIENT_NAME}|g" /unified-views-new/configs/uv.properties
-                  else
-                    echo "oidc.client-name=${OIDC_CLIENT_NAME}" >> /unified-views-new/configs/uv.properties
-                  fi
-                fi
-
-                echo "Changing ownership to ${USER_ID}:${GROUP_ID}"
-                chown -R ${USER_ID}:${GROUP_ID} /unified-views-new/
-                rm -f /unified-views-new/.initialized*
-                touch /unified-views-new/.initialized-${PROPERTIES_FILE_CHECKSUM}
-                echo "Done."
-              else
-                echo "Volume already initialized"
               fi
 
-              if [[ ! -f /usr/local/tomcat/.initialized ]] ;then
-                echo "initializing tomcat volume"
-                cp -rvf /usr/local/tomcat/* /tomcat
-                touch /tomcat/.initialized
-                chown -R ${USER_ID}:${GROUP_ID} /tomcat/
-                echo "Done."
-              else
-                echo "Volume already initialized"
+              if [[ ! -z "${RDF4J_USER_PASSWORD}" ]]; then
+                if grep "database.rdf.conf.password\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                  sed -i -e "s|database\.rdf\.conf\.password\s*=.*|database\.rdf\.conf\.password=${RDF4J_USER_PASSWORD}|g" /unified-views-new/configs/uv.properties
+                else
+                  echo "database.rdf.conf.password=${RDF4J_USER_PASSWORD}" >> /unified-views-new/configs/uv.properties
+                fi
+              fi
+              if [[ ! -z "${OIDC_CLIENT_ID}" ]]; then
+                if grep "oidc.client-id\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                  sed -i -e "s|oidc\.client-id\s*=.*|oidc\.client-id=${OIDC_CLIENT_ID}|g" /unified-views-new/configs/uv.properties
+                else
+                  echo "oidc.client-id=${OIDC_CLIENT_ID}" >> /unified-views-new/configs/uv.properties
+                fi
+              fi
+              if [[ ! -z "${OIDC_CLIENT_NAME}" ]]; then
+                if grep "oidc.client-name\s*=" > /dev/null /unified-views-new/configs/uv.properties; then
+                  sed -i -e "s|oidc\.client-name\s*=.*|oidc\.client-name=${OIDC_CLIENT_NAME}|g" /unified-views-new/configs/uv.properties
+                else
+                  echo "oidc.client-name=${OIDC_CLIENT_NAME}" >> /unified-views-new/configs/uv.properties
+                fi
               fi
 
+              echo "Changing ownership to ${USER_ID}:${GROUP_ID}"
+              chown -R ${USER_ID}:${GROUP_ID} /unified-views-new/
+              echo "Done."
+
+              echo "initializing tomcat volume"
+              cp -rvf /usr/local/tomcat/* /tomcat
+              chown -R ${USER_ID}:${GROUP_ID} /tomcat/
+              echo "Done."
         {{- end }}
         {{- with .Values.extraInitContainers }}
           {{- toYaml . | nindent 8 }}
@@ -312,11 +370,9 @@ spec:
               mountPath: /usr/local/tomcat
             - name: temp-dir
               mountPath: /tmp
-            {{- if .Values.license.existingSecret }}
             - name: uv-license
               mountPath: /unified-views/license
               readOnly: {{ .Values.license.readOnly }}
-            {{- end }}
             {{- if .Values.configuration.logback.existingConfigmap }}
             - name: unifiedviews-logback-config
               mountPath: /unified-views/configs/logback.xml
