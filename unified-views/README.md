@@ -1,8 +1,8 @@
 # Helm Chart for UnifiedViews
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square)
-![AppVersion: 10.2.1](https://img.shields.io/badge/AppVersion-10.2.1-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square)
+![AppVersion: 10.2.2](https://img.shields.io/badge/AppVersion-10.2.2-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for
 [PoolParty's UnifiedViews](https://www.poolparty.biz/poolparty-unifiedviews)!
