@@ -1,5 +1,9 @@
 # UnifiedViews Helm Chart Changelog
 
+## Version 0.1.3
+
+- Bumps the version of the UnifiedViews application to **10.2.2**, which contains fixes for some of the default DPUs.
+
 ## Version 0.1.2
 
 - Added few additional settings for the Keycloak SSO in order to ease the integration.
