@@ -1,5 +1,9 @@
 # UnifiedViews Helm Chart Changelog
 
+## Version 0.1.4
+
+- Bumps the version of the UnifiedViews application to **10.2.3**. It provides more fixes for a broken DPUs.
+
 ## Version 0.1.3
 
 - Bumps the version of the UnifiedViews application to **10.2.2**, which contains fixes for some of the default DPUs.
