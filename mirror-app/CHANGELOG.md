@@ -1,5 +1,10 @@
 # Mirror App Helm Chart Changelog
 
+## Version 1.1.0
+
+- Updates the version of the Mirror App image to `2.5.0`. It contains couple of functionality improvements. Additionally
+  the base image used for the container was completely replaced due to security vulnerabilities.
+
 ## Version 1.0.1
 
 - Bumped the version of the Mirror App image to `2.4.2`. It contains couple of minor bug fixes.
