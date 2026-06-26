@@ -154,6 +154,28 @@ entries:
     version: 0.1.0
   mirror-app:
   - apiVersion: v2
+    appVersion: 2.5.0
+    created: "2026-06-26T07:47:10.592620732Z"
+    description: 'The Mirror application allows one-way synchronization of project
+      data from source PoolParty to one or more target PoolParty instances. '
+    digest: f3b124cec8825ca25222731fae89c2074b37e3fb8647d8967c789499fbe31ba8
+    home: https://help.poolparty.biz/en/administrator-guide/poolparty-administration/example-for-a-thesaurus-curation-workflow/how-to-mirror-a-project-with-the-mirror-app.html
+    keywords:
+    - graphwise
+    - poolparty
+    - synchronization
+    kubeVersion: ^1.32.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: mirror-app
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/mirror-app-1.1.0/mirror-app-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
     appVersion: 2.4.2
     created: "2026-04-16T12:06:52.47750001Z"
     description: 'The Mirror application allows one-way synchronization of project
@@ -745,4 +767,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/unified-views-0.1.0/unified-views-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-22T15:26:15.246946851Z"
+generated: "2026-06-26T07:47:10.592712152Z"
