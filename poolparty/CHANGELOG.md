@@ -1,5 +1,10 @@
 # PoolParty Helm Chart Changelog
 
+## Version 0.3.3
+
+- Updates Graph Modeler (PoolParty) to **10.2.2**. The version contains couple of important security patches and
+  improvements.
+
 ## Version 0.3.2
 
 - Updates Graph Modeler (PoolParty) to **10.2.1**. It provides couple of minor bug fixes, UI improvements and security
