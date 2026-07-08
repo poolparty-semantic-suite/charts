@@ -1,5 +1,11 @@
 # ADF Helm Chart Changelog
 
+## Version 0.2.0
+
+- Bumped the version of the ADF application to `1.9.0`.
+- Introduced new properties for communication with Keycloak. Check the [Migration Guide](./UPGRADE.md) or the
+  [examples](./examples/) for more details.
+
 ## Version 0.1.3
 
 - Bumped the version of the ADF application to `1.8.2`.

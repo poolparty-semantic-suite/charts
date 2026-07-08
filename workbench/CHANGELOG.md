@@ -1,5 +1,10 @@
 # Semantic Workbench Helm Chart Changelog
 
+## Version 0.2.0
+
+- Bumped the version of the Semantic Workbench application to `2.5.0`.
+- Introduced new properties for communication with Keycloak. Check the [Migration Guide](./UPGRADE.md) for more details.
+
 ## Version 0.1.3
 
 - Bumped the version of the Semantic Workbench application to `2.4.2`.
