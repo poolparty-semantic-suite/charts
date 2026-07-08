@@ -1,13 +1,13 @@
 configuration:
-  # The URL at which the ADF application is accessible.
-  externalUrl: http://poolparty.172.17.0.1.nip.io/ADF
+  # The URL at which the Semantic Workbench application is accessible.
+  externalUrl: http://semantic-workbench.127.0.0.1.nip.io/SemanticWorkbench
 
   properties:
     # The URL of PoolParty. Note that this address should not contain the /PoolParty context path.
-    POOLPARTY_URL: http://poolparty.172.17.0.1.nip.io/
+    POOLPARTY_URL: http://poolparty.127.0.0.1.nip.io
 
     # The public URL of the Keycloak.
-    KEYCLOAK_PUBLIC_URL: http://keycloak.172.17.0.1.nip.io/auth
+    KEYCLOAK_PUBLIC_URL: http://keycloak.127.0.0.1.nip.io/auth
 
     # The internal URL of the Keycloak in the cluster.
     # Format: http://<service-name>.<namespace>:<port>/<context-path>

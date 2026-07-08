@@ -10,5 +10,5 @@ for proper communication with PoolParty and Keycloak.
 ## Installation
 
 ```shell
-helm upgrade --install --values values.yaml adf poolparty-semantic-suite/adf
+helm upgrade --install --values values.yaml adf poolparty-semantic-suite/semantic-workbench
 ```

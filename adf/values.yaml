@@ -130,8 +130,8 @@ configuration:
   # The ConfigMap serves as source for environment variables passed to the ADF.
   # Values are processed as Helm templates.
   #
-  properties:
-    # Review ./examples/values.yaml for a minimal set of configuration values.
+  # Review ./examples/values.yaml for a minimal set of configuration values.
+  properties: {}
 
   # ADF configurations settings to use instead of the ones defined into the default adf.properties ConfigMap.
   #
