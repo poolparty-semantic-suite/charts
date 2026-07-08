@@ -25,13 +25,14 @@ the Helm chart.
 The chart has it's own version and it's not the same as the version of ADF.
 The table bellow highlights the version mapping between the Helm chart and ADF.
 
-| Helm chart version | ADF version |
-|--------------------|-------------|
-| 0.1.x              | 1.8.0       |
+| Helm chart version | ADF version | Notes                    |
+|--------------------|-------------|--------------------------|
+| 0.1.x              | 1.8.x       |                          |
+| 1.0.x              | 1.9.x       | ⚠️ Configuration changes |
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 
@@ -72,8 +73,9 @@ The configurations are provided as environment variables to the application, whe
 ```yaml
 configuration:
   properties:
-    KEYCLOAK_URL: http://keycloak.example.com/auth
-    POOLPARTY_URL: "http://poolparty.example.com"
+    POOLPARTY_URL: http://poolparty.example.com
+    KEYCLOAK_PUBLIC_URL: http://keycloak.example.com/auth
+    KEYCLOAK_INTERNAL_URL: http://keycloak-service.keycloak:8080/auth
 ```
 
 ### Provisioning Additional Properties and Settings
