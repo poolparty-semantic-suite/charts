@@ -1,5 +1,14 @@
 # UnifiedViews Helm Chart Changelog
 
+## Version 0.2.0
+
+- Updates the chart so that it allows the users to configure the size of the Tomcat server directory for the
+  UnifiedViews and RDF4J Workbench.
+
+  The Tomcat directories are used to persist server logs and in case of the UnifiedViews, some temporary files.
+
+  The default size of all volumes for both services is now adjusted.
+
 ## Version 0.1.4
 
 - Bumps the version of the UnifiedViews application to **10.2.3**. It provides more fixes for a broken DPUs.
