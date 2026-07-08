@@ -20,7 +20,6 @@ spec:
   selector:
     matchLabels:
       {{- include "rdf4j.selectorLabels" . | nindent 6 }}
-  {{- if or .Values.rdf4j.persistence.enabled .Values.extraVolumeClaimTemplates }}
   volumeClaimTemplates:
     {{- if .Values.rdf4j.persistence.enabled }}
     - metadata:
@@ -35,16 +34,18 @@ spec:
         {{- toYaml .Values.rdf4j.persistence.volumeClaimTemplate.spec | nindent 8 }}
     {{- end }}
     - metadata:
-        name: tomcat
+        name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
+        {{- with .Values.rdf4j.tomcatVolume.volumeClaimTemplate.labels }}
+        labels: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.rdf4j.tomcatVolume.volumeClaimTemplate.annotations }}
+        annotations: {{ tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
       spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 2Gi
+        {{- toYaml .Values.rdf4j.tomcatVolume.volumeClaimTemplate.spec | nindent 8 }}
     {{- with .Values.extraVolumeClaimTemplates }}
       {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
-  {{- end }}
   template:
     metadata:
       labels:
@@ -78,7 +79,7 @@ spec:
         - name: {{ .Values.rdf4j.persistence.volumeClaimTemplate.name }}
           emptyDir: {{ .Values.rdf4j.persistence.emptyDir | toYaml | nindent 12 }}
         {{- end }}
-        - name: tomcat
+        - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
       {{- with .Values.rdf4j.nodeSelector }}
       nodeSelector: {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
@@ -129,7 +130,7 @@ spec:
             - name: GROUP_ID
               value: {{ coalesce .Values.rdf4j.securityContext.runAsGroup .Values.rdf4j.podSecurityContext.runAsGroup | quote }}
           volumeMounts:
-            - name: tomcat
+            - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
               mountPath: /tomcat
           {{- with .Values.rdf4j.initContainerResources }}
           resources: {{ toYaml . | nindent 12 }}
@@ -184,7 +185,7 @@ spec:
             {{- with .Values.rdf4j.extraVolumeMounts }}
               {{- tpl (toYaml .) $ | nindent 12 }}
             {{- end }}
-            - name: tomcat
+            - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
               mountPath: /usr/local/tomcat
           {{- with .Values.rdf4j.resources }}
           resources: {{ toYaml . | nindent 12 }}

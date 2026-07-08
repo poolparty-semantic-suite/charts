@@ -387,7 +387,7 @@ persistence:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 5Gi
+          storage: 10Gi
 
   # Overrides the retention policy of the StatefulSet's PVC.
   # This requires Kubernetes v1.27 or greater.
@@ -404,7 +404,33 @@ persistence:
   # Ref: https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/
   emptyDir:
     # Default emptyDir limit, override to your needs.
-    sizeLimit: 1Gi
+    sizeLimit: 2Gi
+
+# Configures the volume for the tomcat directory.
+# The directory is used to persist the logs from the server and some temporary data for the UnifiedViews itself.
+tomcatVolume:
+  # Configurations for PVC based persistence.
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
+  # Ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  volumeClaimTemplate:
+    # Prefix used when naming the PVCs for the StatefulSet.
+    name: "tomcat"
+
+    # Additional labels to add to the PVC template.
+    # Values are processed as Helm templates.
+    labels: {}
+
+    # Additional annotations to add to the PVC template.
+    # Values are processed as Helm templates.
+    annotations: {}
+
+    # Specification for a PVC to be created by the StatefulSet.
+    # Tune according to your needs.
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
 
 # Configurations for an emptyDir volume for the /tmp folder in each UnifiedViews container.
 # Because the default security context in .Values.securityContext configures the root filesystem to be in read-only
@@ -842,7 +868,7 @@ rdf4j:
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            storage: 500Mi
+            storage: 10Gi
 
     # Overrides the retention policy of the StatefulSet's PVC.
     # This requires Kubernetes v1.27 or greater.
@@ -859,7 +885,33 @@ rdf4j:
     # Ref: https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/
     emptyDir:
       # Default emptyDir limit, override to your needs.
-      sizeLimit: 500Mi
+      sizeLimit: 2Gi
+
+  # Configures the volume for the RDF4J tomcat directory.
+  # The directory is used to persist the logs from the server.
+  tomcatVolume:
+    # Configurations for PVC based persistence.
+    # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
+    # Ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+    volumeClaimTemplate:
+      # Prefix used when naming the PVCs for the StatefulSet.
+      name: "tomcat"
+
+      # Additional labels to add to the PVC template.
+      # Values are processed as Helm templates.
+      labels: {}
+
+      # Additional annotations to add to the PVC template.
+      # Values are processed as Helm templates.
+      annotations: {}
+
+      # Specification for a PVC to be created by the StatefulSet.
+      # Tune according to your needs.
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
 
   # Configures the strategy of updating the proxy's StatefulSet Pods.
   # The default type of RollingUpdate ensures that there will always be .Values.replicas amount of running nodes at the same time.
