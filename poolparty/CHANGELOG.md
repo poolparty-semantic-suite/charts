@@ -1,5 +1,10 @@
 # PoolParty Helm Chart Changelog
 
+## Version XXX (Unreleased)
+
+- Updated the [examples/](examples) to use `ontotext/poolparty-elasticsearch:9.3.8`. The new version of Elasticsearch
+  contains security patches.
+
 ## Version 0.3.3
 
 - Updates Graph Modeler (PoolParty) to **10.2.2**. The version contains couple of important security patches and
