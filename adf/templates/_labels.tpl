@@ -39,7 +39,7 @@ helm.sh/chart: {{ include "adf.chart" . }}
 app.kubernetes.io/version: {{ coalesce .Values.image.tag .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: adf
-app.kubernetes.io/part-of: adf
+app.kubernetes.io/part-of: graphwise-platform
 {{- if .Values.labels }}
 {{ tpl (toYaml .Values.labels) . }}
 {{- end }}

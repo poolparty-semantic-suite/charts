@@ -6,13 +6,12 @@
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for
 [ADF](https://help.poolparty.biz/en/poolparty-application-development-framework-documentation.html)!  
-This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
+This Helm chart makes it easy to deploy and manage ADF on your [Kubernetes](https://kubernetes.io/) cluster.
 
 # About ADF
 
-The PoolParty Application Development Framework (ADF) is a low-code platform for the PoolParty Semantic Suite. ADF
-allows you to easily create semantic AI applications on top of the PoolParty Semantic Middleware. The framework works on
-top of PoolParty API and provides an additional layer of customization and integration mechanisms.
+The Graphwise Application Development Framework (ADF) is a low-code development framework for the Graphwise Platform.
+The framework allows you to easily create and train semantic AI applications.
 
 # Versioning
 
@@ -31,7 +30,7 @@ The table bellow highlights the version mapping between the Helm chart and ADF.
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 
@@ -39,8 +38,8 @@ The table bellow highlights the version mapping between the Helm chart and ADF.
 
 ## Dependencies
 
-ADF requires running PoolParty, to which it will connect and extend. For more details about PoolParty installation,
-please check the `/poolparty` directory and the [README.md](../poolparty/README.md) file there.
+ADF requires running Graph Modeling, which it extend and uses as basis. For more details about Graph Modeling
+installation, please check the `/poolparty` directory and the [README.md](../poolparty/README.md) file there. # TODO
 
 ## ADF
 
@@ -73,7 +72,7 @@ The configurations are provided as environment variables to the application, whe
 configuration:
   properties:
     KEYCLOAK_URL: http://keycloak.example.com/auth
-    POOLPARTY_URL: "http://poolparty.example.com"
+    POOLPARTY_URL: "http://graph-modeling.example.com"
 ```
 
 ### Provisioning Additional Properties and Settings
@@ -84,8 +83,8 @@ to provide existing configuration file, which contains the properties that shoul
 
 ### Networking
 
-By default, ADF's Helm chart comes with a default Ingress.
-The Ingress can be disabled by switching `ingress.enabled` to false.
+By default, ADF's Helm chart comes with a default Ingress. The Ingress can be disabled by switching `ingress.enabled` to
+`false`.
 
 ### Deployment
 
@@ -95,9 +94,9 @@ Some important properties to update according to your deployment are:
 
 ### Resources
 
-Default resource limits that are sufficient to deploy the chart and use it with small
-sets of data. However, for production deployments it is obligatory to revise these resource limits and tune them for
-your environment. You should consider common requirements like amount of data, users, expected traffic.
+Default resource limits that are sufficient to deploy the chart and use it with small sets of data. However, for
+production deployments it is obligatory to revise these resource limits and tune them for your environment. You should
+consider common requirements like amount of data, users, expected traffic.
 
 See the Kubernetes documentation
 [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
@@ -125,10 +124,10 @@ common issue with Minikube between system restarts or when inappropriate Minikub
 
 **Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
 
-When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty instances across
-multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These issues
-are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need to
-adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
+When expanding your Minikube cluster from one to two or more nodes to deploy different ADF instances across multiple
+nodes, you may encounter errors when setting up persistent storage. These issues are due to implementation problems with
+the storage provisioner included with Minikube. To resolve this, you need to adjust your environment accordingly. Follow
+the steps outlined in the official Minikube documentation under the
 ["CSI Driver and Volume Snapshots"](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/) section,
 specifically in the "Multi-Node Clusters" chapter.
 

@@ -1,16 +1,16 @@
-# Helm Chart for PoolParty
+# Helm Chart for Graph Modeling (ex. PoolParty)
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
 {{ template "chart.versionBadge" . }}
 {{ template "chart.appVersionBadge" . }}
 
-Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty](https://www.poolparty.biz/)!
-This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
+Welcome to the official [Helm](https://helm.sh/) chart repository for [Graph Modeling](https://graphwise.ai/components/graph-modeling/)!
+This Helm chart makes it easy to deploy and manage Graph Modeling on your [Kubernetes](https://kubernetes.io/) cluster.
 
-# About PoolParty
+# About Graph Modeling
 
-The PoolParty Semantic Suite is a comprehensive middleware software. It includes browser-based taxonomy management,
-thesaurus management, linked data frontend, ontology management, corpus management, extractor and a semantic middleware configurator.
+Graphwise Graph Modeling is a taxonomy and ontology management tool that streamlines how enterprises organize and
+connect data—ensuring AI agents have a clean, governed, and reliable foundation to drive real ROI.
 
 # Versioning
 
@@ -20,18 +20,19 @@ MAJOR versions of the chart.
 Please, always check out the migration guides in [UPGRADE.md](UPGRADE.md), before switching to another major version of
 the Helm chart.
 
-The chart has its own version, and it's not the same as the version of PoolParty.
-The table bellow highlights the version mapping between the Helm chart and PoolParty.
+The chart has its own version, and it's not the same as the version of Graph Modeling application.
+The table bellow highlights the version mapping between the Helm chart and Graph Modeling.
 
-| Helm chart version | PoolParty version |
-|--------------------|-------------------|
-| 0.1.x              | 10.0.x            |
-| 0.2.x              | 10.1.x            |
-| 0.3.x              | 10.2.x            |
+| Helm chart version | Graph Modeling version |
+|--------------------|------------------------|
+| 0.1.x              | 10.0.x                 |
+| 0.2.x              | 10.1.x                 |
+| 0.3.x              | 10.2.x                 |
+| 1.0.0              | XXX                    |
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 
@@ -39,18 +40,20 @@ The table bellow highlights the version mapping between the Helm chart and PoolP
 
 ## Dependencies
 
-PoolParty depends on several services than need to be installed before PoolParty.
+Graph Modeling depends on several services that have to be preinstalled as a prerequisite.
 
 ### GraphDB
 
-PoolParty requires at least version 11.1 of GraphDB. To install it, consult the chart for
+Graph Modeling requires at least **11.1** version of GraphDB. To install it, consult the chart for
 [GraphDB](https://github.com/Ontotext-AD/graphdb-helm).
 
 The basic steps to install GraphDB using the official Helm chart are:
+
 1. Create a secret with the GraphDB license
 
     ```shell
-    kubectl create secret generic graphdb-license --from-file graphdb.license=/path/to/graphdb.license
+    kubectl create secret generic graphdb-license \
+      --from-file graphdb.license=/path/to/graphdb.license
     ```
 
 2. Add the Helm repository
@@ -69,7 +72,7 @@ The basic steps to install GraphDB using the official Helm chart are:
 
 ### Elasticsearch
 
-Elasticsearch instance at version 9.x is required. Additionally, the instance needs to have the
+The Elasticsearch instance needs to have the
 [MAT](https://www.elastic.co/docs/reference/elasticsearch/plugins/mapper-annotated-text) plugin installed.
 
 The [elasticsearch.yaml](examples/dependencies/elasticsearch.yaml) file provides a minimal example to install an
@@ -87,11 +90,18 @@ kubectl apply --filename examples/dependencies/elasticsearch.yaml
 > [Elasticsearch documentation](https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s) for deploying a
 > production grade instance in Kubernetes.
 
+#### Versions Compatibility 
+
+| Graph Modeling version | Elasticsearch version |
+|------------------------|-----------------------|
+| 10.0 - 10.1.x          | 8.17.x                |
+| 10.2.x                 | 9.3.x                 |
+
 ### Keycloak
 
-PoolParty uses a custom image for Keycloak. This image includes Graphwise developed extensions, that make their
+Graph Modeling uses a custom image for Keycloak. This image includes Graphwise developed extensions, that make their
 integration smoother, as well as a parameterized Keycloak realm JSON file, that is used when initializing the realm
-used by PoolParty.
+required by Graph Modeling and its extensions/addons.
 
 The [keycloak.yaml](examples/dependencies/keycloak.yaml) file provides a minimal example to install a
 Keycloak instance in your cluster. This example uses a Graphwise provided image that has extensions pre-installed.
@@ -114,56 +124,61 @@ sed "s/\[KEYCLOAK_FQDN\]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | 
 > [Keycloak Operator](https://www.keycloak.org/guides#operator) documentation for deploying a production grade
 > instance in Kubernetes.
 
-## PoolParty
+#### Versions Compatibility 
 
-With all dependencies in place, PoolParty can be installed.
+| Graph Modeling version | Keycloak version |
+|------------------------|------------------|
+| 10.x                   | 25.x             |
+
+## Graph Modeling
+
+With all dependencies in place, Graph Modeling can be installed.
 
 > [!NOTE]
-> PoolParty requires a license. You need to obtain a license file before installing.
+> Graph Modeling requires a license that needs to be obtained before installing.
 
-1. Create a secret for the PoolParty license
+1. Create a secret for the Graph Modeling license
 
     ```shell
-    kubectl create secret generic poolparty-license --from-file poolparty.key=/path/to/poolparty.key
+    kubectl create secret generic graph-modeling-license --from-file graph-modeling.key=/path/to/graph-modeling.key
     ```
 
-2. Add the PoolParty Helm repository
+2. Add the Graph Modeling Helm repository
 
     ```shell
-    helm repo add poolparty-semantic-suite https://poolparty-semantic-suite.github.io/charts
+    helm repo add graph-modeling-charts https://poolparty-semantic-suite.github.io/charts
     helm repo update
     ```
 
-3. Install PoolParty
+3. Install Graph Modeling
 
     ```shell
-    helm install poolparty \
+    helm install graph-modeling \
       --set configuration.properties.POOLPARTY_GRAPHDB_URL=http://graphdb.default.svc.cluster.local:7200 \
       --set configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL=http://$KEYCLOAK_FQDN/auth \
       --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
-      poolparty-semantic-suite/poolparty
+      graph-modeling-charts/graph-modeling
     ```
 
-See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty deployment.
+See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your Graph Modeling deployment.
 
 ### Uninstall
 
-To remove the deployed PoolParty, use:
+To remove the deployed Graph Modeling, use:
 
 ```shell
-helm uninstall poolparty
+helm uninstall graph-modeling
 ```
 
 > [!NOTE]
-> It is important to note that this will not remove any data, so the next time it is installed, the data will be
+> It is important to note that the command will not remove any data, so the next time it is installed, the data will be
 > loaded by its components.
 
 ## Configuration
 
-Most configuration properties have default values, but as shown in the example above, the URLs to the PoolParty
-dependencies must be provided, along with the name of the secret containing the PoolParty license.
-If you don't want to specify these on the command line, you can create a file name `values_overrides.yaml` with the
-following content:
+Most configuration properties have default values, but as shown in the example above, the URLs to the Graph Modeling
+dependencies must be provided. If you don't want to specify these on the command line, you can create a file name
+`values_overrides.yaml` with the following content:
 
 ```yaml
 configuration:
@@ -176,33 +191,34 @@ configuration:
 Then install with:
 
 ```shell
-helm install poolparty poolparty-semantic-suite/poolparty -f values_overrides.yaml
+helm install graph-modeling graph-modeling-charts/graph-modeling -f values_overrides.yaml
 ```
 
 ### Provisioning Additional Properties and Settings
 
-Most of PoolParty's properties can be passed through `configuration.properties` or `configuration.javaArguments`.
-The `configuration` section holds subsections for some of the specific and external components, required by PoolParty.
+Most of the Graph Modeling properties can be passed through `configuration.properties` or `configuration.javaArguments`.
+The `configuration` section holds subsections for some of the specific and external components.
 
-PoolParty uses Logback to configure logging using the `logback.xml` file.
-The file can be provisioned before PoolParty's startup with the `configuration.logback.existingConfigmap` configuration.
+Graph Modeling uses Logback to configure logging. It is done via `logback.xml` file. The file can be provisioned before
+startup with the `configuration.logback.existingConfigmap` configuration.
 
 ### Networking
 
-By default, PoolParty's Helm chart comes with a default Ingress.
-The Ingress can be disabled by switching `ingress.enabled` to false.
+By default, Graph Modeling's Helm chart comes with a default Ingress. It can be disabled by switching `ingress.enabled`
+to `false`.
 
 ### Deployment
 
 Some important properties to update according to your deployment are:
 
-* `configuration.externalUrl` - Configures the address at which the Ingress controller and PoolParty are accessible.
+* `configuration.externalUrl` - Configures the address at which the Ingress controller and Graph Modeling are
+  accessible.
 
 ### Resources
 
-Default resource limits that are sufficient to deploy the chart and use it with small
-sets of data. However, for production deployments it is obligatory to revise these resource limits and tune them for
-your environment. You should consider common requirements like amount of data, users, expected traffic.
+The chart sets default resource limits that are sufficient to deploy it and use the Graph Modeling with small sets of
+data. However, for production deployments it is obligatory to revise these resource limits and tune them for your
+environment. You should consider common requirements like amount of data, users, expected traffic.
 
 See the Kubernetes documentation
 [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
@@ -210,7 +226,7 @@ about defining resource limits.
 
 ## Examples
 
-Checkout the [examples/](examples) folder in this repository.
+Checkout the [examples/](examples) folder in the current directory.
 
 ## Values
 
@@ -230,10 +246,10 @@ common issue with Minikube between system restarts or when inappropriate Minikub
 
 **Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
 
-When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty instances across
-multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These issues
-are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need to
-adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
+When expanding your Minikube cluster from one to two or more nodes to deploy different Graph Modeling instances across
+multiple nodes, you may encounter errors when setting up persistent storage. These issues are due to implementation
+problems with the storage provisioner included with Minikube. To resolve this, you need to adjust your environment
+accordingly. Follow the steps outlined in the official Minikube documentation under the
 ["CSI Driver and Volume Snapshots"](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/) section,
 specifically in the "Multi-Node Clusters" chapter.
 

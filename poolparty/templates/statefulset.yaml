@@ -89,16 +89,16 @@ spec:
         - name: {{ .Values.tempVolume.volumeClaimTemplate.name }}
           emptyDir: {{ .Values.tempVolume.emptyDir | toYaml | nindent 12 }}
         {{- end }}
-        {{- if .Values.configuration.logback.existingConfigmap }}
-        - name: poolparty-logback-config
-          configMap:
-            name: {{ tpl .Values.configuration.logback.existingConfigmap . }}
-        {{- end }}
         {{- if .Values.license.existingSecret }}
-        - name: poolparty-license
+        - name: {{ include "license.volume.name" . }}
           secret:
             secretName: {{ tpl .Values.license.existingSecret . }}
             optional: {{ .Values.license.optional }}
+        {{- end }}
+        {{- if .Values.configuration.logback.existingConfigmap }}
+        - name: {{ include "logback.volume.name" . }}
+          configMap:
+            name: {{ tpl .Values.configuration.logback.existingConfigmap . }}
         {{- end }}
         {{- with .Values.extraVolumes }}
           {{- tpl (toYaml .) $ | nindent 8 }}
@@ -188,12 +188,12 @@ spec:
             - name: {{ .Values.tempVolume.volumeClaimTemplate.name }}
               mountPath: /tmp
             {{- if .Values.license.existingSecret }}
-            - name: poolparty-license
+            - name: {{ include "license.volume.name" . }}
               mountPath: /usr/share/poolparty/config/licenses
               readOnly: {{ .Values.license.readOnly }}
             {{- end }}
             {{- if .Values.configuration.logback.existingConfigmap }}
-            - name: poolparty-logback-config
+            - name: {{ include "logback.volume.name" . }}
               mountPath: /var/lib/poolparty/config/logback.xml
               subPath: {{ .Values.configuration.logback.configmapKey }}
             {{- end }}
