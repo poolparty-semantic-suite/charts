@@ -5,14 +5,14 @@
 ![AppVersion: 10.2.3](https://img.shields.io/badge/AppVersion-10.2.3-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for
-[PoolParty's UnifiedViews](https://www.poolparty.biz/poolparty-unifiedviews)!
+[UnifiedViews](https://help.graphwise.ai/en/graph-automation/graphwise-unifiedviews.html)!
 This Helm chart makes it easy to deploy and manage UnifiedViews on your [Kubernetes](https://kubernetes.io/) cluster.
 
 # About UnifiedViews
 
-PoolParty's UnifiedViews is an Extract-Transform-Load (ETL) framework that natively supports RDF data and ontologies.
-It helps organizations to integrate different data types and connect them in a knowledge graph so that enterprise data
-and content can be searched for and used effectively.
+The Graphwise UnifiedViews (UV) is an ETL tool designed to extract, transform, and load data across various data sources
+including graph databases. It connects seamlessly with one or more Graphwise Platform instances, enabling efficient data
+integration and management.
 
 # Versioning
 
@@ -32,7 +32,7 @@ The table bellow highlights the version mapping between the Helm chart and Unfie
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 
@@ -75,14 +75,14 @@ rdf4j:
 2. Add the UnfieldViews Helm repository
 
     ```shell
-    helm repo add poolparty-semantic-suite https://poolparty-semantic-suite.github.io/charts
+    helm repo add graph-modeling-charts https://poolparty-semantic-suite.github.io/charts
     helm repo update
     ```
 
 3. Install UnfieldViews
 
     ```shell
-    helm install unified-views poolparty-semantic-suite/unified-views
+    helm install unified-views graph-modeling-charts/unified-views
     ```
 
 See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your UnifiedViews deployment.
@@ -113,7 +113,7 @@ configuration:
 Install with:
 
 ```shell
-helm install unified-views poolparty-semantic-suite/unified-views -f values_overrides.yaml
+helm install unified-views graph-modeling-charts/unified-views -f values_overrides.yaml
 ```
 
 ### Provisioning Additional Properties and Settings
@@ -422,10 +422,10 @@ common issue with Minikube between system restarts or when inappropriate Minikub
 
 **Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
 
-When expanding your Minikube cluster from one to two or more nodes to deploy different PoolParty instances across
-multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These issues
-are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need to
-adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
+When expanding your Minikube cluster from one to two or more nodes to deploy different UnifiedViews instances across
+multiple nodes, you may encounter errors when setting up persistent storage. These issues are due to implementation
+problems with the storage provisioner included with Minikube. To resolve this, you need to adjust your environment
+accordingly. Follow the steps outlined in the official Minikube documentation under the
 ["CSI Driver and Volume Snapshots"](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/) section,
 specifically in the "Multi-Node Clusters" chapter.
 

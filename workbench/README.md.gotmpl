@@ -4,17 +4,19 @@
 {{ template "chart.versionBadge" . }}
 {{ template "chart.appVersionBadge" . }}
 
-Welcome to the official [Helm](https://helm.sh/) chart repository for [Semantic Workbench](https://www.poolparty.biz/)!
+Welcome to the official [Helm](https://helm.sh/) chart repository for Semantic Workbench!
+
 This Helm chart makes it easy to deploy and manage Semantic Workbench on your [Kubernetes](https://kubernetes.io/)
 cluster.
 
 # About Semantic Workbench
 
-The Workbench supports subject matter experts in finding the optimal combination of parameters for inference tagging and semantic recommender features.
-The Workbench is a useful tool allowing subject matter experts to define specific settings for the required
-calls(which can be extraction, expansion and recommendation); these calls are stored together in a configuration in a DB and can be loaded to be edited or tested at any point using the Workbench.
+The Workbench supports subject matter experts in finding the optimal combination of parameters for inference tagging and
+semantic recommender features. The Workbench is a useful tool allowing subject matter experts to define specific
+settings for the required calls (which can be extraction, expansion and recommendation); these calls are stored together
+in a configuration in a DB and can be loaded to be edited or tested at any point using the Workbench.
 
-[Learn more](https://help.poolparty.biz/en/poolparty-quick-start-guides/workbench-quick-start-guide.html)
+[Learn more](https://help.graphwise.ai/en/graphwise-platform-overview/graphwise-sub-components-at-a-glance/semantic-workbench-at-a-glance.html)
 
 # Versioning
 
@@ -33,7 +35,7 @@ The table bellow highlights the version mapping between the Helm chart and Seman
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 
@@ -41,8 +43,9 @@ The table bellow highlights the version mapping between the Helm chart and Seman
 
 ## Dependencies
 
-Semantic Workbench requires running PoolParty, to which it will connect and basically extend. For more details about
-PoolParty installation, please check the `/poolparty` directory and the [README.md](../poolparty/README.md) file there.
+Semantic Workbench requires running Graph Modeling, to which it will connect and basically extend. For more details
+about Graph Modeling installation, please check the `/poolparty` directory and the [README.md](../poolparty/README.md) # TODO
+file there.
 
 ## Semantic Workbench
 
@@ -51,25 +54,23 @@ With all dependencies in place, the Workbench can be installed.
 > [!NOTE]
 > Semantic Workbench requires a license. You need to obtain a license file before installing.
 
-1. Create a secret for the PoolParty license
+1. Create a secret for the Graph Modeling license
 
     ```shell
-    kubectl create secret generic poolparty-license --from-file poolparty.key=/path/to/poolparty.key
+    kubectl create secret generic graph-modeling-license --from-file graph-modeling.key=/path/to/graph-modeling.key
     ```
 
 2. Add the Semantic Workbench Helm repository
 
     ```shell
-    helm repo add poolparty-semantic-suite https://poolparty-semantic-suite.github.io/charts
+    helm repo add graph-modeling-charts https://poolparty-semantic-suite.github.io/charts
     helm repo update
     ```
 
 3. Install Semantic Workbench
 
     ```shell
-    helm install semantic-workbench \
-      --set license.existingSecret=poolparty-license \
-      poolparty-semantic-suite/workbench
+    helm install semantic-workbench graph-modeling-charts/workbench
     ```
 
 See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your Semantic Workbench
@@ -89,17 +90,18 @@ helm uninstall semantic-workbench
 
 ## Configuration
 
-Most configuration properties have default values, but as shown in the example above, the URLs to the PoolParty
-dependencies must be provided, along with the name of the secret containing the PoolParty license.
+Most configuration properties have default values, but as shown in the example below, the URLs to the Graph Modeling
+dependencies must be provided, along with the name of the secret containing the license.
+
 If you don't want to specify these on the command line, you can create a file name `values_overrides.yaml` with the
 following content:
 
 ```yaml
 license:
-  existingSecret: ppw-license
+  existingSecret: graph-modeling-license
 configuration:
   properties:
-    POOLPARTY_URL: http://localhost:8081
+    POOLPARTY_URL: http://graph-modeling:8081
     POOLPARTY_LICENSE_PATH: /usr/share/semantic-workbench/licenses/
     KEYCLOAK_URL: http://keycloak.127.0.0.1.nip.io:8080/auth
     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: ohIP3x4XuoCsGDsGlZRvNvO5VN6veFb5
@@ -109,7 +111,7 @@ configuration:
 Then install with:
 
 ```shell
-helm install semantic-workbench poolparty-semantic-suite/semantic-workbench -f values_overrides.yaml
+helm install semantic-workbench graph-modeling-charts/workbench -f values_overrides.yaml
 ```
 
 ### Provisioning Additional Properties and Settings
@@ -179,9 +181,9 @@ common issue with Minikube between system restarts or when inappropriate Minikub
 **Filesystem provisioning errors (in Multi-Node Minikube Cluster)**
 
 When expanding your Minikube cluster from one to two or more nodes to deploy different Semantic Workbench instances
-across multiple nodes to ensure high availability, you may encounter errors when setting up persistent storage. These
-issues are due to implementation problems with the storage provisioner included with Minikube. To resolve this, you need
-to adjust your environment accordingly. Follow the steps outlined in the official Minikube documentation under the
+across multiple nodes, you may encounter errors when setting up persistent storage. These issues are due to
+implementation problems with the storage provisioner included with Minikube. To resolve this, you need to adjust your
+environment accordingly. Follow the steps outlined in the official Minikube documentation under the
 ["CSI Driver and Volume Snapshots"](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/) section,
 specifically in the "Multi-Node Clusters" chapter.
 

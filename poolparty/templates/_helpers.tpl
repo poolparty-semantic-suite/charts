@@ -7,7 +7,7 @@ Combined image pull secrets.
 {{- end -}}
 
 {{/*
-Renders the container image for PoolParty.
+Renders the container image for Graph Modeling.
 */}}
 {{- define "poolparty.image" -}}
   {{- $repository := .Values.image.repository -}}
@@ -26,7 +26,7 @@ Renders the container image for PoolParty.
 {{- end -}}
 
 {{/*
-Renders the external PoolParty URL.
+Renders the external Graph Modeling URL.
 */}}
 {{- define "poolparty.external-url" -}}
 {{- tpl .Values.configuration.externalUrl . -}}
@@ -38,10 +38,10 @@ Checks for potential issues and prints warning messages.
 {{- define "poolparty.notes.warnings" -}}
   {{- $warnings := list -}}
   {{- if not .Values.persistence.enabled -}}
-    {{- $warnings = append $warnings "WARNING: Persistence is disabled! You will lose your data when PoolParty pods are restarted or terminated!" -}}
+    {{- $warnings = append $warnings "WARNING: Persistence is disabled! You will lose your data when Graph Modeling (ex. PoolParty) pods are restarted or terminated!" -}}
   {{- end -}}
   {{- if not .Values.license.existingSecret -}}
-    {{- $warnings = append $warnings "WARNING: You are deploying PoolParty without a license! You should obtain one before trying again." -}}
+    {{- $warnings = append $warnings "WARNING: You are deploying Graph Modeling (ex. PoolParty) without a license! You should obtain one before trying again." -}}
   {{- end -}}
   {{- if gt (len $warnings) 0 }}
     {{- print "\n" }}

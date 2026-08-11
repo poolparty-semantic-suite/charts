@@ -39,7 +39,7 @@ helm.sh/chart: {{ include "semantic-workbench.chart" . }}
 app.kubernetes.io/version: {{ coalesce .Values.image.tag .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: semantic-workbench
-app.kubernetes.io/part-of: semantic-workbench
+app.kubernetes.io/part-of: graphwise-platform
 {{- if .Values.labels }}
 {{ tpl (toYaml .Values.labels) . }}
 {{- end }}

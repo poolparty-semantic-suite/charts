@@ -2,10 +2,10 @@
 
 ## Prerequisites
 
-* PoolParty is deployed
+* Graph Modeling is deployed
 
 ## Installation
 
 ```shell
-helm upgrade --install --values values.yaml adf poolparty-semantic-suite/adf
+helm upgrade --install --values values.yaml adf graph-modeling-charts/adf
 ```

@@ -117,11 +117,10 @@ license:
   existingSecret: uv-license
 
   # Name of the UnifiedViews license file in the existing license secret.
-  # The default is poolparty.key, but it can be changed to map to a different secret key.
   licenseFilename: uv-license.key
 
   # Defines the secret volume as optional or not.
-  # Note: Useful if the PoolParty license has not yet been provisioned but will be, for example by an external system or
+  # Note: Useful if the license has not yet been provisioned but will be, for example by an external system or
   # an operator such as External Secret Operator.
   optional: false
 

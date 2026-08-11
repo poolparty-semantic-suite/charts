@@ -1,11 +1,11 @@
-# Graph Modeler and OAuth 2.0
+# Graph Modeling and OAuth 2.0
 
 The [values.yaml](values.yaml) example shows the required reconfiguration to enable Client Credentials authentication
-flow between Graph Modeler and GraphDB.
+flow between Graph Modeling and GraphDB.
 
 ## GraphDB
 
-GraphDB needs to be properly configured with the following properties in order for Graph Modeler to authenticate with
+GraphDB needs to be properly configured with the following properties in order for Graph Modeling to authenticate with
 Client Credentials:
 
 ```properties
