@@ -30,6 +30,7 @@ The table bellow highlights the version mapping between the Helm chart and Seman
 | Helm chart version | Semantic Workbench version  |
 |--------------------|-----------------------------|
 | 0.1.x              | 2.4.x                       |
+| 0.2.x              | 2.5.x                       |
 
 # Prerequisites
 
@@ -101,7 +102,8 @@ configuration:
   properties:
     POOLPARTY_URL: http://localhost:8081
     POOLPARTY_LICENSE_PATH: /usr/share/semantic-workbench/licenses/
-    KEYCLOAK_URL: http://keycloak.127.0.0.1.nip.io:8080/auth
+    KEYCLOAK_PUBLIC_URL: http://keycloak.127.0.0.1.nip.io:8080/auth
+    KEYCLOAK_INTERNAL_URL: http://keycloak-service.keycloak:8080/auth
     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: ohIP3x4XuoCsGDsGlZRvNvO5VN6veFb5
     SPRING_DATASOURCE_URL: jdbc:sqlite:/app/data/sqlite_semantic_workbench.db
 ```

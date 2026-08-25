@@ -1,8 +1,8 @@
 # Helm Chart for ADF
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square)
-![AppVersion: 1.8.2](https://img.shields.io/badge/AppVersion-1.8.2-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square)
+![AppVersion: 1.9.0](https://img.shields.io/badge/AppVersion-1.9.0-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for
 [ADF](https://help.poolparty.biz/en/poolparty-application-development-framework-documentation.html)! 
@@ -27,7 +27,8 @@ The table bellow highlights the version mapping between the Helm chart and ADF.
 
 | Helm chart version | ADF version |
 |--------------------|-------------|
-| 0.1.x              | 1.8.0       |
+| 0.1.x              | 1.8.x       |
+| 0.2.x              | 1.9.x       |
 
 # Prerequisites
 
@@ -72,8 +73,9 @@ The configurations are provided as environment variables to the application, whe
 ```yaml
 configuration:
   properties:
-    KEYCLOAK_URL: http://keycloak.example.com/auth
-    POOLPARTY_URL: "http://poolparty.example.com"
+    KEYCLOAK_PUBLIC_URL: http://keycloak.example.com/auth
+    KEYCLOAK_INTERNAL_URL: http://keycloak-service.keycloak:8080/auth
+    POOLPARTY_URL: http://poolparty.example.com
 ```
 
 ### Provisioning Additional Properties and Settings

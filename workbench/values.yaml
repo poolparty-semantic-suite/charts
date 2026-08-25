@@ -156,7 +156,8 @@ configuration:
   # Values are processed as Helm templates.
   properties:
     POOLPARTY_URL: http://poolparty.127.0.0.1.nip.io
-    KEYCLOAK_URL: http://keycloak.127.0.0.1.nip.io/auth
+    KEYCLOAK_PUBLIC_URL: http://keycloak.127.0.0.1.nip.io/auth
+    KEYCLOAK_INTERNAL_URL: http://keycloak-service.keycloak:8080/auth
     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u
 
   # Semantic Workbench configurations settings to use instead of the ones defined into the default

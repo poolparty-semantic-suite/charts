@@ -27,7 +27,8 @@ The table bellow highlights the version mapping between the Helm chart and ADF.
 
 | Helm chart version | ADF version |
 |--------------------|-------------|
-| 0.1.x              | 1.8.0       |
+| 0.1.x              | 1.8.x       |
+| 0.2.x              | 1.9.x       |
 
 # Prerequisites
 
@@ -72,8 +73,9 @@ The configurations are provided as environment variables to the application, whe
 ```yaml
 configuration:
   properties:
-    KEYCLOAK_URL: http://keycloak.example.com/auth
-    POOLPARTY_URL: "http://poolparty.example.com"
+    KEYCLOAK_PUBLIC_URL: http://keycloak.example.com/auth
+    KEYCLOAK_INTERNAL_URL: http://keycloak-service.keycloak:8080/auth
+    POOLPARTY_URL: http://poolparty.example.com
 ```
 
 ### Provisioning Additional Properties and Settings
