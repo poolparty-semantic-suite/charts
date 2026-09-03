@@ -1,0 +1,39 @@
+configuration:
+  properties:
+    ##### Encryption Settings #####
+    _POOLPARTY_ENCRYPTION_PASSWORD: 6wFdqOjvxuyeDvh1ENTm
+
+    ##### GraphDB Settings #####
+    POOLPARTY_GRAPHDB_URL: http://graphdb:7200
+    POOLPARTY_GRAPHDB_USERNAME: admin
+    POOLPARTY_GRAPHDB_PASSWORD: root
+
+    ##### Keycloak Settings #####
+    POOLPARTY_KEYCLOAK_AUTHURL: http://keycloak:8080/auth
+
+    POOLPARTY_KEYCLOAK_ADMIN_REALM: master
+    POOLPARTY_KEYCLOAK_LOGIN_REALM: poolparty
+  
+    POOLPARTY_KEYCLOAK_ADMIN_USERNAME: admin
+    POOLPARTY_KEYCLOAK_ADMIN_PASSWORD: admin
+    POOLPARTY_KEYCLOAK_ADMIN_CLIENTID: admin-cli
+
+    # PPT client configs
+    POOLPARTY_PPT_KEYCLOAK_LOGIN_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u
+    POOLPARTY_PPT_KEYCLOAK_LOGIN_CLIENTID: ppt
+    # PPGS client configs
+    POOLPARTY_PPGS_KEYCLOAK_LOGIN_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u
+    POOLPARTY_PPGS_KEYCLOAK_LOGIN_CLIENTID: ppgs
+    # PPX client configs
+    POOLPARTY_PPX_KEYCLOAK_LOGIN_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u
+    POOLPARTY_PPX_KEYCLOAK_LOGIN_CLIENTID: extractor
+
+    RECOMMENDER_KEYCLOAK_LOGIN_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u
+
+    # Can be set to 'true' to enable audience mapping validation for more granular access control, only if you are using
+    # core PoolParty without addons like ADF, GraphViews, Semantic Workbench, etc.
+    POOLPARTY_AUTH_OPENID_REQUIRE_AUDIENCE: false
+
+    ##### Index Settings #####
+    POOLPARTY_INDEX_TYPE: elasticsearch
+    POOLPARTY_INDEX_URL: http://elasticsearch:9200

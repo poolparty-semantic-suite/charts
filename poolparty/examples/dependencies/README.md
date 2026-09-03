@@ -7,15 +7,15 @@ Both examples use Graphwise provided images that have all dependencies pre-insta
 
 ## Elasticsearch
 
-PoolParty needs an Elasticsearch instance at version 9.x with the
+PoolParty needs an Elasticsearch instance at version `9.x` with the
 [MAT](https://www.elastic.co/docs/reference/elasticsearch/plugins/mapper-annotated-text) plugin installed. The
 [ontotext/poolparty-elasticsearch](https://hub.docker.com/r/ontotext/poolparty-elasticsearch) can be used.
 
 ## Keycloak
 
-PoolParty requires a Keycloak at version 25.0. The
-[ontotext/poolparty-keycloak](https://hub.docker.com/r/ontotext/poolparty-keycloak) image must be used because it also
-installs extension, needed by PoolParty, as well as a custom login theme and a realm JSON file used to provision the
+PoolParty requires a Keycloak at version `25.0.x` The
+[ontotext/poolparty-keycloak](https://hub.docker.com/r/ontotext/poolparty-keycloak) image must be used, because it also
+installs extension needed by PoolParty, as well as a custom login theme and a realm JSON file used to provision the
 PoolParty realm.
 
 ### Import Realm
@@ -25,3 +25,8 @@ import the PoolParty realm.
 
 The JSON file has environment variable placeholders that are used to provide different values, various secrets and names.
 Check the example YAML file for the available variables.
+
+### Migration
+
+If you are migrating from lower version to `ontotext/poolparty-keycloak:2.6.0`, please refer to
+[poolparty/UPGRADE.md](../../UPGRADE.md) for more details and available configurations.
