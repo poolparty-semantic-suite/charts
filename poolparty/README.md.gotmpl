@@ -23,15 +23,16 @@ the Helm chart.
 The chart has its own version, and it's not the same as the version of PoolParty.
 The table bellow highlights the version mapping between the Helm chart and PoolParty.
 
-| Helm chart version | PoolParty version |
-|--------------------|-------------------|
-| 0.1.x              | 10.0.x            |
-| 0.2.x              | 10.1.x            |
-| 0.3.x              | 10.2.x            |
+| Helm chart version | PoolParty version | Notes                      |
+|--------------------|-------------------|----------------------------|
+| 0.1.x              | 10.0.x            |                            |
+| 0.2.x              | 10.1.x            |                            |
+| 0.3.x              | 10.2.x            | ⚠️ Elasticsearch migration |
+| 1.0.x              | 10.3.x            | ⚠️ Keycloak migration      |
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 
@@ -104,7 +105,17 @@ Install this example, first determine the IP address of your host machine, and:
 
 ```shell
 export KEYCLOAK_FQDN="keycloak.[your ip address].nip.io"
-sed "s/\[KEYCLOAK_FQDN\]/$KEYCLOAK_FQDN/" examples/dependencies/keycloak.yaml | \
+
+# Alternatively - https://keycloak.[your ip address].nip.io/auth
+export KEYCLOAK_URL="http://$KEYCLOAK_FQDN/auth"
+
+# Alternatively - https://graphdb.[your ip address].nip.io
+export GRAPHDB_URL="http://graphdb.[your ip address].nip.io"
+
+# Replace the Keycloak and GraphDB addresses and apply the keycloak.yaml
+sed -e "s/\[KEYCLOAK_FQDN\]/$KEYCLOAK_FQDN/" \
+    -e "s/\[KEYCLOAK_URL\]/$KEYCLOAK_URL/" \
+    -e "s/\[GRAPHDB_URL\]/$GRAPHDB_URL/" examples/dependencies/keycloak.yaml | \
   kubectl apply --filename -
 ```
 
@@ -136,12 +147,11 @@ With all dependencies in place, PoolParty can be installed.
 
 3. Install PoolParty
 
+   Use [default-properties/values.yaml](examples/default-properties/values.yaml) to create `values_overrides.yaml` and
+   adjust the properties. Afterward, it can be used to install the PoolParty.
+
     ```shell
-    helm install poolparty \
-      --set configuration.properties.POOLPARTY_GRAPHDB_URL=http://graphdb.default.svc.cluster.local:7200 \
-      --set configuration.properties.POOLPARTY_KEYCLOAK_AUTHURL=http://$KEYCLOAK_FQDN/auth \
-      --set configuration.properties.POOLPARTY_INDEX_URL=http://elasticsearch.default.svc.cluster.local:9200 \
-      poolparty-semantic-suite/poolparty
+    helm install poolparty --values values_overrides.yaml poolparty-semantic-suite/poolparty
     ```
 
 See [Configuration](#configuration) and [values.yaml](values.yaml) on how to customize your PoolParty deployment.
