@@ -133,6 +133,29 @@ entries:
     version: 0.1.0
   graphviews:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2026-09-09T10:27:52.946407636Z"
+    description: With PoolParty GraphViews you can discover the many hidden connections,
+      develop a view of the big picture and view your data with the help of graph
+      visualizations.
+    digest: 32832626084a787c5ac3bdb262688e05b8e5c635a84b18ec86060cbb5ced8f7e
+    home: https://help.poolparty.biz/pp2024r1/en/user-guide-for-knowledge-engineers/add-on/poolparty-graphviews.html
+    keywords:
+    - graphwise
+    - poolparty
+    - visualization
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: graphviews
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/graphviews-0.2.0/graphviews-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2026-02-09T08:32:13.632160909Z"
     description: With PoolParty GraphViews you can discover the many hidden connections,
@@ -870,4 +893,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/unified-views-0.1.0/unified-views-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-09T08:36:12.671370854Z"
+generated: "2026-09-09T10:27:52.946465843Z"
