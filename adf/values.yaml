@@ -123,7 +123,7 @@ configuration:
   #
   # Note: When deploying on a context path different from /, you need to properly configure the Ingress according to the
   # requirements of the Ingress controller implementation.
-  externalUrl: http://poolparty.127.0.0.1.nip.io/ADF
+  externalUrl: http://graph-modeling.127.0.0.1.nip.io/ADF
 
   # Additional ADF configurations that will be appended to adf.properties, effectively overriding anything
   # configured in the default adf.properties ConfigMap.

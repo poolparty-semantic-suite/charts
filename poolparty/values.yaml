@@ -34,10 +34,11 @@ global:
 # Naming and labels overrides #
 ###############################
 
-# Overrides the name of the chart affecting the names of PoolParty resources.
+# Overrides the name of the chart affecting the names of Graph Modeling resources.
 nameOverride: ""
 
-# Overrides the naming of all PoolParty resources, effectively removing the chart's name and the release name prefix.
+# Overrides the naming of all Graph Modeling resources, effectively removing the chart's name and the release name
+# prefix.
 # This override takes precedence over anything in .Values.nameOverride
 fullnameOverride: ""
 
@@ -47,7 +48,7 @@ fullnameOverride: ""
 # The default value is .Release.Namespace if this is left unspecified.
 namespaceOverride: ""
 
-# Additional common labels to add to all resources of PoolParty.
+# Additional common labels to add to all resources of Graph Modeling.
 # Values are processed as Helm templates.
 # Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 #
@@ -57,7 +58,7 @@ namespaceOverride: ""
 #   some-label: {{ .Values.someValue }}
 labels: {}
 
-# Additional common annotations to add to all resources of PoolParty.
+# Additional common annotations to add to all resources of Graph Modeling.
 # Values are processed as Helm templates.
 # Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
 #
@@ -67,29 +68,29 @@ labels: {}
 #   some-annotation: {{ .Values.someValue }}
 annotations: {}
 
-##################################
-# PoolParty Image Configurations #
-##################################
+########################
+# Image Configurations #
+########################
 
-# Image configurations for PoolParty.
-# All containers in this chart use the PoolParty image, all init containers and any Jobs as well.
+# Image configurations for the Graph Modeling.
+# All containers in this chart use the Graph Modeling image, all init containers and any Jobs as well.
 # Ref: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  # The registry that hosts the PoolParty image.
+  # The registry that hosts the Graph Modeling image.
   # The default is to pull it from the official Docker registry, but this can be overridden to pull from other public or
   # private registries.
   registry: docker.io
 
-  # The repository name of the PoolParty image.
+  # The repository name of the Graph Modeling image.
   repository: ontotext/poolparty
 
-  # Image tag that corresponds to the version of PoolParty.
+  # Image tag that corresponds to the version of Graph Modeling.
   # By default, the chart uses .Chart.AppVersion to construct the full image name.
-  # Use this to override the value from .Chart.AppVersion and effectively deploy a custom PoolParty version.
+  # Use this to override the value from .Chart.AppVersion and effectively deploy a custom version.
   tag: ""
 
-  # Expected SHA256 digest of the used PoolParty image, e.g. "sha256@abc"
-  # Use the digest to make sure you are always deploying the exact same PoolParty image.
+  # Expected SHA256 digest of the used image, e.g. "sha256@abc"
+  # Use the digest to make sure you are always deploying the exact same image.
   # Defining this would override .Chart.AppVersion and image.tag
   digest: ""
 
@@ -97,7 +98,7 @@ image:
   # Ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
   pullPolicy: IfNotPresent
 
-  # Secrets for pulling PoolParty's Docker image from secured registries.
+  # Secrets for pulling Docker image from secured registries.
   # Values are processed as Helm templates.
   # Ref: https://kubernetes.io/docs/concepts/configuration/secret/#using-imagepullsecrets
   #
@@ -106,47 +107,46 @@ image:
   #   - name: my-pull-secret
   pullSecrets: []
 
-############################
-# PoolParty Configurations #
-############################
+#################################
+# Graph Modeling Configurations #
+#################################
 
-# Commercial license is required for using PoolParty.
+# Commercial license for Graph Modeling.
 license:
-  # Reference to a secret containing 'poolparty.key' file that will be mounted in the PoolParty pod.
+  # Reference to a secret containing 'graph-modeling.key' file that will be mounted in the Pod.
   # The value is processed as a Helm template.
-  existingSecret: poolparty-license
+  existingSecret: graph-modeling-license
 
-  # Name of the PoolParty license file in the existing license secret.
-  # The default is poolparty.key, but it can be changed to map to a different secret key.
-  licenseFilename: poolparty.key
+  # Name of the license file in the existing license secret.
+  licenseFilename: graph-modeling.key
 
   # Defines the secret volume as optional or not.
-  # Note: Useful if the PoolParty license has not yet been provisioned but will be, for example by an external system or
-  # an operator such as External Secret Operator.
+  # Note: Useful if the Graph Modeling license has not yet been provisioned but will be, for example by an external
+  # system or an operator such as External Secret Operator.
   optional: false
 
   # Marks the secret mount as read-only to prevent any modifications to the license file.
   readOnly: true
 
-# PoolParty runtime configuration settings.
-# Ref. TODO
+# Graph Modeling runtime configuration settings.
 configuration:
-  # The external URL at which PoolParty should be accessible.
+  # The external URL at which Graph Modeling should be accessible.
   # This can be a publicly available domain name, an internal one or even a Kubernetes service address.
   #
-  # This configures the address resolving in PoolParty, if enabled.
-  # It also configures the hostname in the default Ingress resource, if enabled.
-  # The value is processed as a Helm template.
+  # This configures the address resolving in Graph Modeling.
   #
+  # It also configures the hostname in the default Ingress resource, if enabled.
   # Note: If the external URL uses HTTPS and the default Ingress is enabled, you have to configure .Values.ingress.tls
+  #
+  # The value is processed as a Helm template.
   #
   # Note: When deploying on a context path different from /, you need to properly configure the Ingress according to the
   # requirements of the Ingress controller implementation.
-  externalUrl: http://poolparty.127.0.0.1.nip.io
+  externalUrl: http://graph-modeling.127.0.0.1.nip.io
 
-  # Additional PoolParty configurations that will be appended to poolparty.properties, effectively overriding anything
-  # configured in the default poolparty.properties ConfigMap.
-  # The ConfigMap serves as source for environment variables passed to the PoolParty.
+  # Additional configurations that will be appended to graph-modeling.properties, effectively overriding anything
+  # configured in the default ConfigMap object.
+  # The ConfigMap serves as source for environment variables for the Graph Modeling.
   # Values are processed as Helm templates.
   #
   # Example:
@@ -182,27 +182,27 @@ configuration:
     POOLPARTY_INDEX_TYPE: elasticsearch
     POOLPARTY_INDEX_URL: http://elasticsearch:9200
 
-  # PoolParty configurations settings to use instead of the ones defined into the default poolparty.properties ConfigMap.
+  # Graph Modeling configurations settings to use instead of the ones defined into the default graph-modeling.properties
+  # ConfigMap.
   #
   # Example:
   # propertiesOverrides:
-  #   existingConfigmap: my-poolparty-properties
-  #   existingSecret: my-secret-poolparty-properties
+  #   existingConfigmap: my-graph-modeling-properties
+  #   existingSecret: my-secret-graph-modeling-properties
   propertiesOverrides:
-    # Reference to an existing ConfigMap resource containing PoolParty configuration settings.
+    # Reference to an existing ConfigMap resource containing configuration settings.
     # Note: When providing override of the default ConfigMap, you need to provide all of the required properties!
     # The value is processed as a Helm template.
     existingConfigmap: ""
 
-    # Reference to an existing Secret resource containing sensitive PoolParty configuration settings.
+    # Reference to an existing Secret resource containing sensitive configuration settings.
     # Note: The recommended way to provide all password and sensitive configurations.
     # The value is processed as a Helm template.
     existingSecret: ""
 
-  # Default Java arguments with which PoolParty instances will be launched.
-  # PoolParty configuration properties can also be passed here in the format -Dproperty=value
+  # Default Java arguments with which Graph Modeling instances will be launched.
+  # Configuration properties can also be passed here in the format -Dproperty=value
   # The value is processed as a Helm template.
-  # Ref: TODO is there a documentation about specific Java Arguments for optimization of PP
   defaultJavaArguments: -XX:MaxRAMPercentage=85
 
   # Java arguments to append after .Values.configuration.defaultJavaArguments
@@ -210,12 +210,12 @@ configuration:
   # The value is processed as a Helm template.
   javaArguments: ""
 
-  # Configurations for PoolParty's Logback
-  # Ref: TODO
+  # Configurations for Graph Modeling's Logback.
   #
   # Example:
-  # logback:
-  #   existingConfigmap: custom-logback-config
+  #
+  #   logback:
+  #     existingConfigmap: custom-logback-config
   logback:
     # Reference to an existing ConfigMap containing a Logback XML configuration.
     # The value is processed as a Helm template.
@@ -228,7 +228,7 @@ configuration:
 # Ingress Configurations #
 ##########################
 
-# Configurations for the default Ingress resource for PoolParty.
+# Configurations for the default Ingress resource for Graph Modeling.
 #
 # The default Ingress in this chart makes no assumptions of what Ingress controller is being used, it's up to you to
 # define any specific annotations required by the controller implementation in your cluster.
@@ -284,7 +284,7 @@ ingress:
 # Service Configurations #
 ##########################
 
-# Configurations for PoolParty Service.
+# Configurations for the Graph Modeling Service.
 # Ref: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   # Enables or disables the Service deployment
@@ -305,7 +305,7 @@ service:
   # Ports exposed by the Service.
   # Note: If you want to add additional ports, use .Values.service.extraPorts.
   ports:
-    # Port mapped to PoolParty's HTTP API.
+    # Port mapped to Graph Modeling's HTTP API.
     http: 8081
 
   # Exposes the Service on a specific node port on the host machine when "serviceType: NodePort"
@@ -341,7 +341,7 @@ service:
 ##############################
 
 persistence:
-  # Toggles the persistence of PoolParty data.
+  # Toggles the persistence of Graph Modeling data.
   # - If enabled, the StatefulSet will use a PVC template and rely on the CSI to dynamically provision Persistent Volumes.
   # - If disabled, it falls back to an emptyDir volume.
   enabled: true
@@ -385,7 +385,7 @@ persistence:
     # Default emptyDir limit, override to your needs.
     sizeLimit: 1Gi
 
-# Configurations for the volume created for the /tmp folder in each PoolParty container.
+# Configurations for the volume created for the /tmp folder in each Graph Modeling container.
 tempVolume:
   # Toggles the temp folder volume creation.
   # - If enabled, the StatefulSet will use a PVC template and rely on the CSI to dynamically provision Persistent Volumes.
@@ -473,20 +473,20 @@ dnsPolicy: ""
 # Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
 priorityClassName: ""
 
-# Overrides the default PoolParty container command.
+# Overrides the default container command.
 # Use only for troubleshooting!
 # See https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
 command: []
 
-# Overrides the default PoolParty container command's arguments.
+# Overrides the default container command's arguments.
 # Use only for troubleshooting!
 # See https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
 args: []
 
-# Ports used by the PoolParty container
+# Ports used by the Graph Modeling container.
 # Note: If you want to add additional ports, use .Values.extraContainerPorts.
 containerPorts:
-  # Port mapped to PoolParty's HTTP API.
+  # Port mapped to Graph Modeling's HTTP API.
   http: 8081
 
 # Additional labels to append to the Pod definition.
@@ -503,7 +503,7 @@ podAnnotations: {}
 # Security Context Configurations #
 ###################################
 
-# Defines privilege and access control settings for all containers in the PoolParty Pod.
+# Defines privilege and access control settings for all containers in the Graph Modeling Pod.
 # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 podSecurityContext:
   runAsNonRoot: true
@@ -514,7 +514,7 @@ podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
 
-# Defines privilege and access control settings for the container running PoolParty.
+# Defines privilege and access control settings for the container running the Graph Modeling.
 # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 securityContext:
   allowPrivilegeEscalation: false
@@ -524,7 +524,7 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 
-# Defines privilege and access control settings for the init containers provisioning configurations for PoolParty.
+# Defines privilege and access control settings for the init containers, which are provisioning configurations.
 # See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 initContainerSecurityContext:
   allowPrivilegeEscalation: false
@@ -549,8 +549,7 @@ nodeSelector: {}
 # Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
 
-# Default podAntiAffinity rule ensuring that PoolParty pods are scheduled on different Kubernetes nodes.
-# Note that this would take effect when PoolParty is deployed in a cluster.
+# Default podAntiAffinity rule ensuring that the pods are scheduled on different Kubernetes nodes.
 #
 # Possible values for .Values.podAntiAffinity.preset are:
 # - "soft" (default) - Configures a preferredDuringSchedulingIgnoredDuringExecution rule.
@@ -576,8 +575,8 @@ topologySpreadConstraints: []
 # Resource Configuration #
 ##########################
 
-# Resource configurations for the PoolParty containers.
-# For resizing to your needs, refer to the PoolParty documentation TODO
+# Resource configurations for the Graph Modeling containers.
+# For resizing to your needs, refer to the official documentation - 
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
 
 resources:
@@ -591,7 +590,7 @@ resources:
 # Probes Configurations #
 #########################
 
-# Configurations for the PoolParty container startup probe.
+# Configurations for the application container startup probe.
 startupProbe:
   httpGet:
     path: /PoolParty/health/startup
@@ -600,7 +599,7 @@ startupProbe:
   timeoutSeconds: 1
   periodSeconds: 3
 
-# Configurations for the PoolParty container readiness probe.
+# Configurations for the application container readiness probe.
 readinessProbe:
   httpGet:
     path: /PoolParty/health/readiness
@@ -608,7 +607,7 @@ readinessProbe:
   timeoutSeconds: 5
   periodSeconds: 10
 
-# Configurations for the PoolParty container liveness probe.
+# Configurations for the application container liveness probe.
 livenessProbe:
   httpGet:
     path: /PoolParty/health/liveness
@@ -621,23 +620,23 @@ livenessProbe:
 # Additional StatefulSet Configurations #
 #########################################
 
-# Additional environment variables to be set for the PoolParty containers.
+# Additional environment variables to be set for the application containers.
 # Values are processed as Helm templates.
 extraEnvFrom: []
 
-# Additional environment variables to be set for the PoolParty containers.
+# Additional environment variables to be set for the application containers.
 # Values are processed as Helm templates.
 extraEnv: []
 
-# Additional volumes to be set for the PoolParty Pod.
+# Additional volumes to be set for the application Pod.
 # Values are processed as Helm templates.
 extraVolumes: []
 
-# Additional volume mounts to be set for the PoolParty containers.
+# Additional volume mounts to be set for the application containers.
 # Values are processed as Helm templates.
 extraVolumeMounts: []
 
-# Additional volume claim templates to be set in PoolParty's StatefulSet.
+# Additional volume claim templates to be set in the StatefulSet.
 # Values are processed as Helm templates.
 extraVolumeClaimTemplates: []
 
@@ -645,10 +644,10 @@ extraVolumeClaimTemplates: []
 # Values are processed as Helm templates.
 extraInitContainers: []
 
-# Additional PoolParty container ports to expose.
+# Additional container ports to expose.
 extraContainerPorts: {}
 
-# Additional containers to insert into the PoolParty Pod, e.g. sidecar containers
+# Additional containers to insert into the application Pod, e.g. sidecar containers
 # Values are processed as Helm templates.
 extraContainers: []
 
@@ -656,19 +655,19 @@ extraContainers: []
 # Service Account Configurations #
 ##################################
 
-# Configurations for the default ServiceAccount for PoolParty.
-# PoolParty by itself has no need to communicate with the Kubernetes API but the service account tokens can be used
+# Configurations for the default ServiceAccount.
+# Graph Modeling by itself has no need to communicate with the Kubernetes API but the service account tokens can be used
 # as ODIC federated web identity tokens for authentication in cloud APIs.
 # Ref: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
-  # Specifies whether a ServiceAccount should be created for PoolParty.
+  # Specifies whether a ServiceAccount should be created or not.
   create: false
 
   # The name of the ServiceAccount to use.
   #
   # There are three cases to be aware of when using this:
-  # - If not set and create is true, a name is generated using the fullname template
-  # - If set and create is true, it will use the provided name when creating the ServiceAccount
+  # - If not set and create is true, a name is generated using the fullname template.
+  # - If set and create is true, it will use the provided name when creating the ServiceAccount.
   # - If set but create is false, it will use the provided ServiceAccount.
   name: ""
 

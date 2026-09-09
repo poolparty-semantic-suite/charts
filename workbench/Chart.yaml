@@ -7,11 +7,11 @@ description: |
   The Workbench supports subject matter experts in finding the optimal combination of parameters for inference tagging
   and semantic recommender features.
 type: application
-version: 0.1.3
-appVersion: 2.4.2
-kubeVersion: ^1.32.0-0
-home: https://help.poolparty.biz/en/poolparty-quick-start-guides/poolparty-workbench-at-a-glance.html
-icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+version: 0.1.3 # TODO
+appVersion: 2.4.2 # TODO
+kubeVersion: ^1.34.0-0
+home: https://help.graphwise.ai/en/graphwise-platform-overview/graphwise-sub-components-at-a-glance/semantic-workbench-at-a-glance.html
+icon: https://graphwise.ai/wp-content/uploads/2024/10/graphwise-logo-horizontal-slogan.svg
 maintainers:
   - name: Graphwise
     email: dnd@graphwise.ai
@@ -19,6 +19,8 @@ sources:
   - https://github.com/poolparty-semantic-suite/charts
 keywords:
   - graphwise
-  - poolparty
+  - graph modeling
+  - workbench
   - graphdb
   - semantic
+  - poolparty

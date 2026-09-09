@@ -1,6 +1,6 @@
 configuration:
-  # Unique index name prefix for this PoolParty instance.
-  # Must be set (together with or instead of POOLPARTY_ELASTICSEARCH_INDEX_SUFFIX) when multiple PoolParty
+  # Unique index name prefix for this Graph Modeling instance.
+  # Must be set (together with or instead of POOLPARTY_ELASTICSEARCH_INDEX_SUFFIX) when multiple Graph Modeling
   # instances share the same Elasticsearch cluster, so that each instance operates on its own set of indices.
   properties:
     # Example: "instance1-" turns "conceptdata" into "instance1-conceptdata".

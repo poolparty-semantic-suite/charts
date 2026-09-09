@@ -3,12 +3,12 @@
 #
 # Helper script to create a local Kubernetes cluster using Kind.
 # The script will create a single node Kind cluster and map ports 80 and 443 and install ingress-nginx. Optionally,
-# it will create secrets for the poolparty and graphdb license.
+# it will create secrets for the Graph Modeling and GraphDB licenses.
 #
 # The following environment variables are supported:
 # KIND_CLUSTER_NAME: change the cluster name, default kind.
-# GRAPHDB_LICENSE: path a graphdb license file, that will be used for the graphdb license secret (optional)
-# POOLPARTY_LICENSE: path a poolparty license file, that will be used for the poolparty license secret (optional)
+# GRAPHDB_LICENSE: path a GraphDB license file, that will be used for the graphdb-license secret (optional)
+# GRAPH_MODELING_LICENSE: path a Graph Modeling license file, that will be used for the graph-modeling-license secret (optional)
 #
 
 set -eu
@@ -42,6 +42,6 @@ if [ -n "${GRAPHDB_LICENSE:-}" ]; then
   kubectl create secret generic graphdb-license --from-file graphdb.license="$GRAPHDB_LICENSE"
 fi
 
-if [ -n "${POOLPARTY_LICENSE:-}" ]; then
-  kubectl create secret generic poolparty-license --from-file poolparty.key="$POOLPARTY_LICENSE"
+if [ -n "${GRAPH_MODELING_LICENSE:-}" ]; then
+  kubectl create secret generic graph-modeling-license --from-file graph-modeling.key="$GRAPH_MODELING_LICENSE"
 fi

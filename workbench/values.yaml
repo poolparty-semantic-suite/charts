@@ -111,24 +111,24 @@ image:
 # Semantic Workbench Configurations #
 #####################################
 
-# The same configuration settings as the one for the PoolParty! The Workbench requires access to the license as well.
+# The same configuration settings as the one for the Graph Modeling! The Workbench requires access to the license as
+# well.
 
-# Commercial license is required for using PoolParty.
+# Commercial license is required for using Graph Modeling.
 license:
-  # Reference to a secret containing 'poolparty.key' file that will be mounted in the PoolParty pod.
+  # Reference to a secret containing 'graph-modeling.key' file that will be mounted in the Workbench pod.
   # The value is processed as a Helm template.
-  existingSecret: ""
+  existingSecret: graph-modeling-license
 
-  # Name of the PoolParty license file in the existing license secret.
-  # The default is poolparty.key, but it can be changed to map to a different secret key.
-  licenseFilename: poolparty.key
+  # Name of the license file in the existing license secret.
+  licenseFilename: graph-modeling.key
 
   # Directory where the license file will be mounted.
   # Can be used to place the license outside the persistence directory if needed.
   mountPath: /usr/share/semantic-workbench/licenses
 
   # Defines the secret volume as optional or not.
-  # Note: Useful if the PoolParty license has not yet been provisioned but will be, for example by an external system or
+  # Note: Useful if the license has not yet been provisioned but will be, for example by an external system or
   # an operator such as External Secret Operator.
   optional: false
 
@@ -148,16 +148,16 @@ configuration:
   #
   # Note: When deploying on a context path different from /, you need to properly configure the Ingress according to the
   # requirements of the Ingress controller implementation.
-  externalUrl: http://semantic-workbench.127.0.0.1.nip.io/SemanticWorkbench
+  externalUrl: http://graph-modeling.127.0.0.1.nip.io/SemanticWorkbench
 
   # Additional Semantic Workbench configurations that will be appended to semantic-workbench.properties, effectively
   # overriding anything configured in the default semantic-workbench.properties ConfigMap.
   # The ConfigMap serves as source for environment variables passed to the application.
   # Values are processed as Helm templates.
   properties:
-    POOLPARTY_URL: http://poolparty.127.0.0.1.nip.io
+    POOLPARTY_URL: http://graph-modeling.127.0.0.1.nip.io
     KEYCLOAK_URL: http://keycloak.127.0.0.1.nip.io/auth
-    SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u
+    SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_PPT_CLIENTSECRET: yaOd67b2HdQ28hmvuWvZMpn3TLrmhZ1u # TODO we should remove this
 
   # Semantic Workbench configurations settings to use instead of the ones defined into the default
   # semantic-workbench.properties ConfigMap.

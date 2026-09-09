@@ -1,5 +1,9 @@
 # UnifiedViews Helm Chart Changelog
 
+## TODO
+
+- TBD
+
 ## Version 0.2.0
 
 - Updates the chart so that it allows the users to configure the size of the Tomcat server directory for the

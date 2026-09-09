@@ -1,18 +1,24 @@
-# PoolParty Helm Chart Changelog
+# Graph Modeling Helm Chart Changelog
 
 ## Version XXX (Unreleased)
+
+### Breaking
+
+- Rename TODO
+
+### Other
 
 - Updated the [examples/](examples) to use `ontotext/poolparty-elasticsearch:9.3.8`. The new version of Elasticsearch
   contains security patches.
 
 ## Version 0.3.3
 
-- Updates Graph Modeler (PoolParty) to **10.2.2**. The version contains couple of important security patches and
+- Updates Graph Modeling to **10.2.2**. The version contains couple of important security patches and
   improvements.
 
 ## Version 0.3.2
 
-- Updates Graph Modeler (PoolParty) to **10.2.1**. It provides couple of minor bug fixes, UI improvements and security
+- Updates Graph Modeling to **10.2.1**. It provides couple of minor bug fixes, UI improvements and security
   patches.
 
 ## Version 0.3.1
@@ -26,19 +32,19 @@
 ### Breaking
 
 > [!CAUTION]
-> Graph Modeler (PoolParty) 10.2 uses Elasticsearch version 9.x, so you have to migrate any existing
+> Graph Modeling 10.2 uses Elasticsearch version 9.x, so you have to migrate any existing
 > Elasticsearch deployments to this major version. See the [UPGRADE.md](UPGRADE.md) guide for more information.
 
 ### Updates
 
-- Updated Graph Modeler (PoolParty) to
-  version [10.2.0](https://help.graphwise.ai/en/graph-modeling/graph-modeling-overview/release-notes/graph-modeling-10-2-release-notes.html)
+- Updated Graph Modeling to version
+  [10.2.0](https://help.graphwise.ai/en/graph-modeling/graph-modeling-overview/release-notes/graph-modeling-10-2-release-notes.html)
 - Updated the [examples/](examples) to use `ontotext/poolparty-elasticsearch:9.3.3` and
   `ontotext/poolparty-keycloak:2.3.0`
 
 ## Version 0.2.3
 
-- Updates the version of the PoolParty to `10.1.2`.
+- Updates the version of the Graph Modeling to `10.1.2`.
 
 ## Version 0.2.2
 
@@ -46,11 +52,11 @@
 
 ## Version 0.2.1
 
-- Updates the version of the PoolParty to `10.1.1`.
+- Updates the version of the Graph Modeling to `10.1.1`.
 
 ## Version 0.2.0
 
-- Updates the version of the PoolParty to `10.1.0`.
+- Updates the version of the Graph Modeling to `10.1.0`.
 - Updates the `tempVolume` configuration to support creation of standard volume instead of an `emptyDir`. The default
   behavior is kept, but now the users can switch to standard persistent volume with just a flag.
 
@@ -61,8 +67,8 @@
 
 ## Version 0.1.1
 
-- Update PoolParty to version 10.0.2
+- Update Graph Modeling to version 10.0.2
 
 ## Version 0.1.0
 
-- Added initial version of the PoolParty Helm Chart.
+- Added initial version of the Graph Modeling Helm Chart.

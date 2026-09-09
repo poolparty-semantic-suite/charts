@@ -38,8 +38,8 @@ helm.sh/chart: {{ include "poolparty.chart" . }}
 {{ include "poolparty.selectorLabels" . }}
 app.kubernetes.io/version: {{ coalesce .Values.image.tag .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/component: poolparty
-app.kubernetes.io/part-of: poolparty
+app.kubernetes.io/component: graph-modeling
+app.kubernetes.io/part-of: graphwise-platform
 {{- if .Values.labels }}
 {{ tpl (toYaml .Values.labels) . }}
 {{- end }}
@@ -72,16 +72,30 @@ Returns the namespace of the release.
 {{- end -}}
 
 {{/*
-Creates a name for the ConfigMap with the PoolParty Java arguments.
+Creates a name for the ConfigMap with the Graph Modeling Java arguments.
 */}}
 {{- define "poolparty.fullname.configmap.environment" -}}
   {{- printf "%s-%s" (include "poolparty.fullname" .) "environment" -}}
 {{- end -}}
 
 {{/*
-Creates a name for the default ConfigMap with the PoolParty configuration properties.
+Creates a name for the default ConfigMap with the Graph Modeling configuration properties.
 The properties will be provided as environment variables.
 */}}
 {{- define "poolparty.fullname.configmap.properties" -}}
   {{- printf "%s-%s" (include "poolparty.fullname" .) "properties" -}}
+{{- end -}}
+
+{{/*
+Creates a name for the logback volume.
+*/}}
+{{- define "logback.volume.name" -}}
+  {{- printf "%s-%s" (include "poolparty.fullname" .) "properties" -}}
+{{- end -}}
+
+{{/*
+Creates a name for the license volume.
+*/}}
+{{- define "license.volume.name" -}}
+  {{- printf "%s-%s" (include "poolparty.fullname" .) "license" -}}
 {{- end -}}
