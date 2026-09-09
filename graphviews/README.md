@@ -1,8 +1,8 @@
 # Helm Chart for GraphViews
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square)
-![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square)
+![AppVersion: 1.0.1](https://img.shields.io/badge/AppVersion-1.0.1-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for [GraphViews](https://help.poolparty.biz/pp2024r1/en/user-guide-for-knowledge-engineers/add-on/poolparty-graphviews.html)!
 This Helm chart makes it easy to deploy and manage GraphViews on your [Kubernetes](https://kubernetes.io/) cluster.
@@ -24,13 +24,14 @@ the Helm chart.
 The chart has its own version, and it's not the same as the version of GraphViews.
 The table bellow highlights the version mapping between the Helm chart and GraphViews.
 
-| Helm chart version | GraphViews version |
-|--------------------|--------------------|
-| 0.1.x              | 1.0.0              |
+| Helm chart version | GraphViews version | Notes |
+|--------------------|--------------------|-------|
+| 0.1.x              | 1.0.0              |       |
+| 0.2.x              | 1.0.1              |       |
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 
