@@ -1,5 +1,9 @@
 # Semantic Workbench Helm Chart Changelog
 
+## Version 1.0.1
+
+- Avoid rendering an empty `initContainers` section in the StatefulSet manifest
+
 ## Version 1.0.0
 
 > [!CAUTION]

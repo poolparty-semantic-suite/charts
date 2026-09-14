@@ -1,11 +1,15 @@
 # PoolParty Helm Chart Changelog
 
+## Version 1.0.1
+
+- Avoid rendering an empty `initContainers` section in the StatefulSet manifest
+
 ## Version 1.0.0
 
 ### Migration
 
 > [!CAUTION]
-> Graph Modeling (PoolParty) 10.3 now works with new Keycloak image, which contains automated migration.
+> Graph Modeling (PoolParty) 10.3 now works with a new Keycloak image, which contains automated migration.
 > For more information on available configurations and migration process, consult the [UPGRADE.md](UPGRADE.md) guide and
 > the official documentation at `<<todo: add reference>>`
 
