@@ -142,10 +142,10 @@ spec:
       imagePullSecrets:
         {{- include "poolparty.combinedImagePullSecrets" . | nindent 8 }}
       {{- end }}
+      {{- with .Values.extraInitContainers }}
       initContainers:
-        {{- with .Values.extraInitContainers }}
-          {{- tpl (toYaml .) $ | nindent 8 }}
-        {{- end }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: {{ include "poolparty.image" . }}

@@ -1,13 +1,17 @@
 # ADF Helm Chart Changelog
 
+## Version 1.0.1
+
+- Avoid rendering an empty `initContainers` section in the StatefulSet manifest
+
 ## Version 1.0.0
 
 > [!CAUTION]
 > This version requires configuration changes.
 
 - Bumped the version of the ADF application to `1.9.0`.
-- Introduced new properties for communication with Keycloak. Check the [Migration Guide](./UPGRADE.md) or the 
-  [examples](./examples/) for more details.
+- Introduced new properties for communication with Keycloak. Check the [Migration Guide](./UPGRADE.md) or the
+  [examples](./examples) for more details.
 
 ## Version 0.1.3
 
