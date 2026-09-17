@@ -106,9 +106,17 @@ image:
   #   - name: my-pull-secret
   pullSecrets: []
 
-############################
+##########################
+# Scaling Configurations #
+##########################
+
+# Number of ADF pods to be deployed as part of the StatefulSet.
+# Important: At the moment, the only supported values are 0 or 1.
+replicas: 1
+
+######################
 # ADF Configurations #
-############################
+######################
 
 # ADF runtime configuration settings.
 configuration:
