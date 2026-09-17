@@ -10,7 +10,7 @@ metadata:
     {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   serviceName: {{ include "adf.fullname" . }}
   updateStrategy: {{ .Values.updateStrategy | toYaml | nindent 4 }}
   podManagementPolicy: {{ .Values.podManagementPolicy }}
