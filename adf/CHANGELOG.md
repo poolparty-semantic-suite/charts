@@ -1,5 +1,11 @@
 # ADF Helm Chart Changelog
 
+## Version 1.1.0
+
+### New
+
+- Added `replicas` configuration to control the number of ADF pods in the StatefulSet.
+
 ## Version 1.0.1
 
 - Avoid rendering an empty `initContainers` section in the StatefulSet manifest
