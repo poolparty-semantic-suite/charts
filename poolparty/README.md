@@ -1,8 +1,8 @@
 # Helm Chart for PoolParty
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square)
-![AppVersion: 10.3.2](https://img.shields.io/badge/AppVersion-10.3.2-informational?style=flat-square)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square)
+![AppVersion: 10.3.3](https://img.shields.io/badge/AppVersion-10.3.3-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for [PoolParty](https://www.poolparty.biz/)!
 This Helm chart makes it easy to deploy and manage PoolParty on your [Kubernetes](https://kubernetes.io/) cluster.
@@ -28,7 +28,7 @@ The table bellow highlights the version mapping between the Helm chart and PoolP
 | 0.1.x              | 10.0.x            |                            |
 | 0.2.x              | 10.1.x            |                            |
 | 0.3.x              | 10.2.x            | ⚠️ Elasticsearch migration |
-| 1.0.x              | 10.3.x            | ⚠️ Keycloak migration      |
+| 1.0.x - 1.1.x      | 10.3.x            | ⚠️ Keycloak migration      |
 
 # Prerequisites
 

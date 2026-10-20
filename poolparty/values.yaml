@@ -186,7 +186,6 @@ configuration:
   # Default Java arguments with which PoolParty instances will be launched.
   # PoolParty configuration properties can also be passed here in the format -Dproperty=value
   # The value is processed as a Helm template.
-  # Ref: TODO is there a documentation about specific Java Arguments for optimization of PP
   defaultJavaArguments: -XX:MaxRAMPercentage=85
 
   # Java arguments to append after .Values.configuration.defaultJavaArguments
@@ -195,7 +194,6 @@ configuration:
   javaArguments: ""
 
   # Configurations for PoolParty's Logback
-  # Ref: TODO
   #
   # Example:
   # logback:
