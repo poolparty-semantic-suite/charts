@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: ontotext/poolparty-keycloak:2.6.1
+          image: ontotext/poolparty-keycloak:2.6.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: https

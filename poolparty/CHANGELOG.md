@@ -1,5 +1,16 @@
 # Graph Modeling (PoolParty) Helm Chart Changelog
 
+## Version 1.1.1
+
+- Updates Graph Modeling (PoolParty) to **10.3.3**. The dependencies are also updated, Keycloak to **2.6.2** and
+  Elasticsearch to **9.4.8**.
+
+  The new versions are providing security patches, improvements and other changes.
+
+  > [!CAUTION]
+  > It is highly recommended to update the Keycloak to **2.6.2**, before transitioning to the new Graph Modeling. There
+  > are fixes for the user migration processes introduced in previous versions.
+
 ## Version 1.1.0
 
 ### New
