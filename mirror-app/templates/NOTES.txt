@@ -16,7 +16,7 @@ Mirror App URL: {{ include "mirror-app.external-url" . }}
 ** Please be patient while the chart is being deployed and services are available **
 You can check their status with kubectl --namespace {{ include "mirror-app.namespace" . }} get pods
 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
 For more information on running Mirror App, visit                                                                                                                    
-https://help.poolparty.biz/en/administrator-guide/poolparty-administration/example-for-a-thesaurus-curation-workflow/how-to-mirror-a-project-with-the-mirror-app.html
----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+https://help.graphwise.ai/en/graph-automation/how-to-mirror-a-project-with-the-mirror-app.html
+----------------------------------------------------------------------------------------------

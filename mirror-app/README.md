@@ -1,8 +1,8 @@
 # Helm Chart for Mirror App
 
 [![CI - Pull Request](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml/badge.svg)](https://github.com/poolparty-semantic-suite/charts/actions/workflows/pull-request.yml)
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square)
-![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square)
+![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Welcome to the official [Helm](https://helm.sh/) chart repository for
 [Mirror App](https://help.poolparty.biz/en/administrator-guide/poolparty-administration/example-for-a-thesaurus-curation-workflow/how-to-mirror-a-project-with-the-mirror-app.html)!
@@ -26,15 +26,16 @@ the Helm chart.
 The chart has its own version, and it's not the same as the version of Mirror App.
 The table bellow highlights the version mapping between the Helm chart and Mirror App.
 
-| Helm chart version | Mirror App version |
-|--------------------|--------------------|
-| 0.1.x              | 2.4.x              |
-| 1.0.x              | 2.4.x              |
-| 1.1.x              | 2.5.x              |
+| Helm chart version | Mirror App version | Notes                           |
+|--------------------|--------------------|---------------------------------|
+| 0.1.x              | 2.4.x              |                                 |
+| 1.0.x              | 2.4.x              |                                 |
+| 1.1.x              | 2.5.x              |                                 |
+| 1.2.x              | 2.7.x              | ⚠️ New Server map config format |
 
 # Prerequisites
 
-* Kubernetes v1.32+
+* Kubernetes v1.34+
 * Helm v3.18+
 * kubectl
 

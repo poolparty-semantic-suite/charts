@@ -438,7 +438,6 @@ topologySpreadConstraints: []
 ##########################
 
 # Resource configurations for the Mirror App containers.
-# For resizing to your needs, refer to the Mirror App documentation TODO
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
 resources:
   requests:
