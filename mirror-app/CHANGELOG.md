@@ -1,5 +1,17 @@
 # Mirror App Helm Chart Changelog
 
+## Version 1.2.0
+
+- Updates the version of the Mirror App image to `2.7.0`.
+
+  It introduces couple of new functionalities, improvements and patches for security issues and bugs.
+
+  > [!NOTE]
+  > There is a new format of the `Server-map.json`. Please check the
+  > [examples/external-server-configuration](examples/external-server-configuration/) directory for more details.
+- Updated the required version of the Kubernetes to `1.34+`. Now the chart corresponds with the requirements of all
+  charts in the current repository.
+
 ## Version 1.1.0
 
 - Updates the version of the Mirror App image to `2.5.0`. It contains couple of functionality improvements. Additionally
