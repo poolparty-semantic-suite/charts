@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "rdf4j.fullname.configmap.logback" . }}
+  namespace: {{ include "rdf4j.namespace" . }}
+  labels:
+    {{- include "rdf4j.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  logback.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <configuration debug="false" scan="true" scanPeriod="30 seconds">
+      <appender name="MainLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${org.eclipse.rdf4j.common.logging.dir}/main.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+          <fileNamePattern>${org.eclipse.rdf4j.common.logging.dir}/main-%d{yyyy-MM-dd}.log{{ .Values.rdf4j.configuration.logback.logRotation.logCompressionType }}</fileNamePattern>
+          <maxHistory>{{ .Values.rdf4j.configuration.logback.logRotation.maxHistory }}</maxHistory>
+          <maxFileSize>{{ .Values.rdf4j.configuration.logback.logRotation.maxLogFileSize }}</maxFileSize>
+          <totalSizeCap>{{ .Values.rdf4j.configuration.logback.logRotation.totalLogSizeCap }}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+          <layout class="org.eclipse.rdf4j.common.logging.file.logback.StackTracePatternLayout"/>
+          <charset>UTF-8</charset>
+        </encoder>
+        <logreader class="org.eclipse.rdf4j.common.logging.file.logback.FileLogReader" default="true"/>
+      </appender>
+    <root>
+      <level value="INFO"/>
+      <appender-ref ref="MainLog"/>
+    </root>
+    </configuration>

@@ -247,6 +247,8 @@ spec:
               value: {{ coalesce .Values.securityContext.runAsUser .Values.podSecurityContext.runAsUser | quote }}
             - name: GROUP_ID
               value: {{ coalesce .Values.securityContext.runAsGroup .Values.podSecurityContext.runAsGroup | quote }}
+            - name: MAX_LOG_HISTORY
+              value: {{ .Values.configuration.logging.tomcat.maxHistory | quote }}
             {{- if not ( empty .Values.configuration.rdf4j.passwordSecret.name ) }}
             - name: RDF4J_USER_PASSWORD
               valueFrom:
@@ -334,6 +336,13 @@ spec:
               echo "initializing tomcat volume"
               cp -rvf /usr/local/tomcat/* /tomcat
               chown -R ${USER_ID}:${GROUP_ID} /tomcat/
+              echo "Setting max log history to ${MAX_LOG_HISTORY} days for access logs"
+              grep "maxDays" /tomcat/conf/server.xml >/dev/null || sed -i "/pattern=/ s/\/>/ maxDays=\"${MAX_LOG_HISTORY}\" \/>/" /tomcat/conf/server.xml
+              if grep "maxDays" /tomcat/conf/logging.properties >/dev/null; then
+                sed -i "s/maxDays = .*/maxDays = ${MAX_LOG_HISTORY}/g" /tomcat/conf/logging.properties
+              else
+                sed -i -E "s/^(([0-9][a-zA-Z\-]+).+encoding.+)$/\1\n\2.org.apache.juli.AsyncFileHandler.maxDays = ${MAX_LOG_HISTORY}/" /tomcat/conf/logging.properties
+              fi
               echo "Done."
         {{- end }}
         {{- with .Values.extraInitContainers }}

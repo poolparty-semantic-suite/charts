@@ -1,5 +1,10 @@
 # UnifiedViews Helm Chart Changelog
 
+## Version 0.2.1
+- Updates the chart so that it allows the users to configure the log rotation in Tomcat Server and RDF4J Server for both UnifiedViews and RDF4J Workbench.
+
+  Users can configure the number of days (history) to keep logs for each process, the max file size and total log file size for the RDF4J server logs, and whether to compress the logs of the RDF4J server upon rotation.
+
 ## Version 0.2.0
 
 - Updates the chart so that it allows the users to configure the size of the Tomcat server directory for the
