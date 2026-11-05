@@ -79,6 +79,15 @@ spec:
         - name: {{ .Values.rdf4j.persistence.volumeClaimTemplate.name }}
           emptyDir: {{ .Values.rdf4j.persistence.emptyDir | toYaml | nindent 12 }}
         {{- end }}
+        {{- if .Values.rdf4j.configuration.logback.existingConfigmap }}
+        - name: rdf4j-logback-config
+          configMap:
+            name: {{ tpl .Values.rdf4j.configuration.logback.existingConfigmap . }}
+        {{- else }}
+        - name: rdf4j-logback-config
+          configMap:
+            name: default-rdf4j-logback
+        {{- end }}
         - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
       {{- with .Values.rdf4j.nodeSelector }}
       nodeSelector: {{- tpl (toYaml .) $ | nindent 8 }}
@@ -129,6 +138,8 @@ spec:
               value: {{ coalesce .Values.rdf4j.securityContext.runAsUser .Values.rdf4j.podSecurityContext.runAsUser | quote }}
             - name: GROUP_ID
               value: {{ coalesce .Values.rdf4j.securityContext.runAsGroup .Values.rdf4j.podSecurityContext.runAsGroup | quote }}
+            - name: MAX_LOG_HISTORY
+              value: {{ .Values.rdf4j.configuration.logging.tomcat.maxHistory | quote }}
           volumeMounts:
             - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
               mountPath: /tomcat
@@ -146,6 +157,13 @@ spec:
                 cp -rvf /usr/local/tomcat/* /tomcat
                 touch /tomcat/.initialized
                 chown -R ${USER_ID}:${GROUP_ID} /tomcat/
+                echo "Setting max log history to ${MAX_LOG_HISTORY} days for access logs"
+                sed -i "/pattern=/ s/\/>/ maxDays=\"${MAX_LOG_HISTORY}\" \/>/" /tomcat/conf/server.xml
+                if grep "maxDays" /tomcat/conf/logging.properties >/dev/null; then
+                  sed -i "s/maxDays = .*/maxDays = ${MAX_LOG_HISTORY}/g" /tomcat/conf/logging.properties
+                else
+                  sed -i -E "s/^(([0-9][a-zA-Z\-]+).+encoding.+)$/\1\n\2.org.apache.juli.AsyncFileHandler.maxDays = ${MAX_LOG_HISTORY}/" /tomcat/conf/logging.properties
+                fi
                 echo "Done."
               else
                 echo "Volume already initialized"
@@ -187,6 +205,15 @@ spec:
             {{- end }}
             - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
               mountPath: /usr/local/tomcat
+            {{- if .Values.rdf4j.configuration.logback.existingConfigmap }}
+            - name: rdf4j-logback-config
+              mountPath: /var/rdf4j/server/conf/logback.xml
+              subPath: {{ .Values.rdf4j.configuration.logback.configmapKey }}
+            {{- else }}
+            - name: rdf4j-logback-config
+              mountPath: /var/rdf4j/server/conf/logback.xml
+              subPath: logback.xml
+            {{- end }}
           {{- with .Values.rdf4j.resources }}
           resources: {{ toYaml . | nindent 12 }}
           {{- end }}

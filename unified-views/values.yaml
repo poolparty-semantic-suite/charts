@@ -243,6 +243,12 @@ configuration:
     # Key in the existing ConfigMap that maps to the Logback XML configuration.
     configmapKey: logback.xml
 
+  # Logging configuration for the UnifiedViews' Tomcat server
+  logging:
+    tomcat:
+      # Max number of days to keep logs
+      maxHistory : 5
+
 ##########################
 # Ingress Configurations #
 ##########################
@@ -839,6 +845,16 @@ rdf4j:
       existingConfigmap: ""
       # Key in the existing ConfigMap that maps to the Logback XML configuration.
       configmapKey: logback.xml
+      logRotation:
+        maxHistory: 5
+        logCompressionType: ".gz"
+        maxLogFileSize: "10MB"
+        totalLogSizeCap: "1GB"
+
+    # Logging configuration for RDF4J embedded Tomcat Server
+    logging:
+      tomcat:
+        maxHistory: 5
 
   # Persistence configurations for storing RDF4J Workbench data files
   persistence:
