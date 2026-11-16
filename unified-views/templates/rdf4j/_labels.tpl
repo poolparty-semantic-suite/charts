@@ -74,6 +74,6 @@ Creates a name for the ConfigMap with the UnifiedViews Java arguments.
 {{/*
 Creates a name for the ConfigMap with the RDF4J Logback XML file.
 */}}
-{{- define "rdf4j.fullname.configmap.logback" -}}
+{{- define "rdf4j.fullname.configmap.logback-default" -}}
   {{- printf "default-%s-%s" (include "rdf4j.fullname" .) "logback" -}}
 {{- end -}}
