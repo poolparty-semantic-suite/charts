@@ -847,7 +847,7 @@ rdf4j:
       configmapKey: logback.xml
       logRotation:
         maxHistory: 5
-        logCompressionType: ".gz"
+        useLogCompression: true
         maxLogFileSize: "10MB"
         totalLogSizeCap: "1GB"
 

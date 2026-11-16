@@ -80,13 +80,13 @@ spec:
           emptyDir: {{ .Values.rdf4j.persistence.emptyDir | toYaml | nindent 12 }}
         {{- end }}
         {{- if .Values.rdf4j.configuration.logback.existingConfigmap }}
-        - name: rdf4j-logback-config
+        - name: custom-rdf4j-logback-config
           configMap:
             name: {{ tpl .Values.rdf4j.configuration.logback.existingConfigmap . }}
         {{- else }}
-        - name: rdf4j-logback-config
+        - name: default-rdf4j-logback-config
           configMap:
-            name: default-rdf4j-logback
+            name: {{ include "rdf4j.fullname.configmap.logback-default" . }}
         {{- end }}
         - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
       {{- with .Values.rdf4j.nodeSelector }}
@@ -206,11 +206,11 @@ spec:
             - name: {{ .Values.rdf4j.tomcatVolume.volumeClaimTemplate.name }}
               mountPath: /usr/local/tomcat
             {{- if .Values.rdf4j.configuration.logback.existingConfigmap }}
-            - name: rdf4j-logback-config
+            - name: custom-rdf4j-logback-config
               mountPath: /var/rdf4j/server/conf/logback.xml
               subPath: {{ .Values.rdf4j.configuration.logback.configmapKey }}
             {{- else }}
-            - name: rdf4j-logback-config
+            - name: default-rdf4j-logback-config
               mountPath: /var/rdf4j/server/conf/logback.xml
               subPath: logback.xml
             {{- end }}
