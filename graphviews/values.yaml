@@ -168,7 +168,7 @@ configuration:
   # Default Java arguments with which GraphViews instances will be launched.
   # Graphviews configuration properties can also be passed here in the format -Dproperty=value
   # The value is processed as a Helm template.
-  defaultJavaArguments: -XX:MaxRAMPercentage=85
+  defaultJavaArguments: -XX:MaxRAMPercentage=85 -XX:-UseBASE64Intrinsics
 
   # Java arguments to append after .Values.configuration.defaultJavaArguments
   # Use this one in order to avoid overriding the default values.

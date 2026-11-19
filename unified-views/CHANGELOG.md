@@ -1,5 +1,15 @@
 # UnifiedViews Helm Chart Changelog
 
+## Version 0.3.0
+
+> [!WARNING]
+> The purpose of this patch release is to provide mitigation for the Java4Shell (CVE-2026-114938)!  
+> We recommend updating as soon as possible, if your underlying infrastructure is impacted.
+
+- Added `-XX:-UseBASE64Intrinsics` as default Java argument for the UnifiedViews container.
+- Added `-XX:-UseBASE64Intrinsics` as default Java argument for the RDF4J Workbench container.
+- Updated the required Kubernetes version from `1.32` to `1.34+`.
+
 ## Version 0.2.0
 
 - Updates the chart so that it allows the users to configure the size of the Tomcat server directory for the

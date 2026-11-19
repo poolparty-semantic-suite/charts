@@ -28,6 +28,8 @@ spec:
               value: single-node
             - name: "xpack.security.enabled"
               value: "false"
+            - name: "ES_JAVA_OPTS"
+              value: "-XX:-UseBASE64Intrinsics"
           resources:
             requests:
               memory: 2Gi

@@ -1,8 +1,14 @@
 # Semantic Workbench Helm Chart Changelog
 
-## Version 1.1.0
+## Version 1.1.1
 
-### New
+> [!WARNING]
+> The purpose of this patch release is to provide mitigation for the Java4Shell (CVE-2026-114938)!  
+> We recommend updating as soon as possible, if your underlying infrastructure is impacted.
+
+- Added `-XX:-UseBASE64Intrinsics` as default Java argument for the container.
+
+## Version 1.1.0
 
 - Added `replicas` configuration to control the number of Graph Modeling (PoolParty) pods in the StatefulSet.
 

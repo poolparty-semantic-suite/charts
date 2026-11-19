@@ -222,6 +222,7 @@ configuration:
   defaultJavaArguments: >-
     -XX:MaxRAMPercentage=85
     -Dcatalina.log.path=/tmp/tomcat
+    -XX:-UseBASE64Intrinsics
 
   # Java arguments to append after .Values.configuration.defaultJavaArguments
   # Use this one in order to avoid overriding the default values.
@@ -825,7 +826,7 @@ rdf4j:
     # Default Java arguments with which the RDF4J Workbench instances will be launched.
     # RDF4J Workbench configuration properties can also be passed here in the format -Dprop=value
     # The value is processed as a Helm template.
-    defaultJavaArguments: -XX:+UseContainerSupport -XX:MaxRAMPercentage=85
+    defaultJavaArguments: -XX:+UseContainerSupport -XX:MaxRAMPercentage=85 -XX:-UseBASE64Intrinsics
 
     # Java arguments to append after .Values.proxy.configuration.defaultJavaArguments
     # Use this one in order to avoid overriding the default values.

@@ -55,6 +55,8 @@ spec:
               value: "0BpHzFUP68dOSodTVsUjUuTSuP0AZjpa"
             - name: GRAPHDB_PUBLIC_URL
               value: "[GRAPHDB_URL]"
+            - name: JAVA_OPTS_APPEND
+              value: "-XX:-UseBASE64Intrinsics"
           resources:
             requests:
               memory: 2Gi

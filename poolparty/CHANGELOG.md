@@ -1,19 +1,27 @@
 # Graph Modeling (PoolParty) Helm Chart Changelog
 
+## Version 1.1.2
+
+> [!WARNING]
+> The purpose of this patch release is to provide mitigation for the Java4Shell (CVE-2026-114938)!  
+> We recommend updating as soon as possible, if your underlying infrastructure is impacted.
+
+- Added `-XX:-UseBASE64Intrinsics` as default Java argument for the container.
+- Updated the example for the Keycloak on how to pass the `-XX:-UseBASE64Intrinsics` as Java argument.
+- Updated the example for the Elasticsearch on how to pass the `-XX:-UseBASE64Intrinsics` as Java argument.
+
 ## Version 1.1.1
+
+> [!CAUTION]
+> It is highly recommended to update the Keycloak to **2.6.2**, before transitioning to the new Graph Modeling. There
+> are fixes for the user migration processes introduced in previous versions.
 
 - Updates Graph Modeling (PoolParty) to **10.3.3**. The dependencies are also updated, Keycloak to **2.6.2** and
   Elasticsearch to **9.4.8**.
 
   The new versions are providing security patches, improvements and other changes.
 
-  > [!CAUTION]
-  > It is highly recommended to update the Keycloak to **2.6.2**, before transitioning to the new Graph Modeling. There
-  > are fixes for the user migration processes introduced in previous versions.
-
 ## Version 1.1.0
-
-### New
 
 - Added `replicas` configuration to control the number of Graph Modeling (PoolParty) pods in the StatefulSet.
 
