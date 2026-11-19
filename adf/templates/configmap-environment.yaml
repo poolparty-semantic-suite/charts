@@ -10,6 +10,6 @@ metadata:
     {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
 data:
-  PP_JAVA_OPTS: >-
+  JAVA_TOOL_OPTIONS: >-
     {{ tpl .Values.configuration.defaultJavaArguments . }}
     {{ tpl .Values.configuration.javaArguments . }}

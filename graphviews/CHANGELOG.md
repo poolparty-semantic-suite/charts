@@ -1,5 +1,13 @@
 # GraphViews Helm Chart Changelog
 
+## Version 0.2.1
+
+> [!WARNING]
+> The purpose of this patch release is to provide mitigation for the Java4Shell (CVE-2026-114938)!  
+> We recommend updating as soon as possible, if your underlying infrastructure is impacted.
+
+- Added `-XX:-UseBASE64Intrinsics` as default Java argument for the container.
+
 ## Version 0.2.0
 
 - Updates the GraphViews application version to `1.0.1`. The new version mainly contains security patches.

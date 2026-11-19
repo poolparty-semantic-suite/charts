@@ -1,8 +1,16 @@
 # ADF Helm Chart Changelog
 
-## Version 1.1.0
+## Version 1.1.1
 
-### New
+> [!WARNING]
+> The purpose of this patch release is to provide mitigation for the Java4Shell (CVE-2026-114938)!  
+> We recommend updating as soon as possible, if your underlying infrastructure is impacted.
+
+- Fixed the name of the argument, used to provide the Java Options to the container.
+- Added `-XX:-UseBASE64Intrinsics` as default Java argument for the container.
+- Adjusted the value for the `-XX:MaxRAMPercentage` from `95` to `85`.
+
+## Version 1.1.0
 
 - Added `replicas` configuration to control the number of ADF pods in the StatefulSet.
 
