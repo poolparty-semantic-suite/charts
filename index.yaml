@@ -3,6 +3,32 @@ entries:
   adf:
   - apiVersion: v2
     appVersion: 1.9.0
+    created: "2026-11-20T11:27:13.24868847Z"
+    description: 'The PoolParty Application Development Framework (ADF) is a low-code
+      development framework for the PoolParty Semantic Suite. The framework works
+      on top of the PoolParty API and allows you to easily create and train semantic
+      AI applications. '
+    digest: c3ccecee4b4f2a03ec69f5fd734ebbba0500239d7559de27bdf3ece6b2f415c5
+    home: https://help.poolparty.biz/application-development-framework/index.html?lang=en
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: adf
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/adf-1.1.1/adf-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
+    appVersion: 1.9.0
     created: "2026-09-24T07:52:50.945734021Z"
     description: 'The PoolParty Application Development Framework (ADF) is a low-code
       development framework for the PoolParty Semantic Suite. The framework works
@@ -184,6 +210,29 @@ entries:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/adf-0.1.0/adf-0.1.0.tgz
     version: 0.1.0
   graphviews:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2026-11-20T11:27:13.423962311Z"
+    description: With PoolParty GraphViews you can discover the many hidden connections,
+      develop a view of the big picture and view your data with the help of graph
+      visualizations.
+    digest: c851b892fccd1d0d11ef9677e5a1974f180bc877e87c3d5b68f24c5911da0dd5
+    home: https://help.poolparty.biz/pp2024r1/en/user-guide-for-knowledge-engineers/add-on/poolparty-graphviews.html
+    keywords:
+    - graphwise
+    - poolparty
+    - visualization
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: graphviews
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/graphviews-0.2.1/graphviews-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v2
     appVersion: 1.0.1
     created: "2026-09-09T10:27:52.946407636Z"
@@ -409,6 +458,30 @@ entries:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/mirror-app-0.1.0/mirror-app-0.1.0.tgz
     version: 0.1.0
   poolparty:
+  - apiVersion: v2
+    appVersion: 10.3.3
+    created: "2026-11-20T11:27:13.614010221Z"
+    description: 'PoolParty is a semantic middleware, it tackles the ever-growing
+      problems associated with unstructured data, language ambiguity, and data silos. '
+    digest: 84e4c9ac0b366e1b4c862d7d04de7c62f6de008008367901d8d944496bb27a54
+    home: https://www.poolparty.biz/
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: poolparty
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/poolparty-1.1.2/poolparty-1.1.2.tgz
+    version: 1.1.2
   - apiVersion: v2
     appVersion: 10.3.3
     created: "2026-10-20T12:16:21.449674856Z"
@@ -772,6 +845,30 @@ entries:
   semantic-workbench:
   - apiVersion: v2
     appVersion: 2.5.0
+    created: "2026-11-20T11:27:13.796631692Z"
+    description: 'The Workbench supports subject matter experts in finding the optimal
+      combination of parameters for inference tagging and semantic recommender features. '
+    digest: 1a5116938be1ec0900b38a3057c738ee9922caeaccb522a977a18d4e958b0097
+    home: https://help.poolparty.biz/en/poolparty-quick-start-guides/poolparty-workbench-at-a-glance.html
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - graphdb
+    - semantic
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: semantic-workbench
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-1.1.1/semantic-workbench-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
+    appVersion: 2.5.0
     created: "2026-09-24T07:52:51.205777611Z"
     description: 'The Workbench supports subject matter experts in finding the optimal
       combination of parameters for inference tagging and semantic recommender features. '
@@ -937,6 +1034,35 @@ entries:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/semantic-workbench-0.1.0/semantic-workbench-0.1.0.tgz
     version: 0.1.0
   unified-views:
+  - apiVersion: v2
+    appVersion: 10.2.3
+    created: "2026-11-20T11:27:13.984208094Z"
+    description: 'PoolParty''s UnifiedViews is an Extract-Transform-Load (ETL) framework
+      that natively supports RDF data and ontologies. It helps organizations to integrate
+      different data types and connect them in a knowledge graph so that enterprise
+      data and content can be searched for and used effectively. '
+    digest: bb2462553480d2f9dcc684e0a99aff910d368f05921dbf9bedb8dbd9980612fe
+    home: https://www.poolparty.biz/poolparty-unifiedviews
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - unified-views
+    - etl
+    - rdf
+    - graphdb
+    - semantic
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: unified-views
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/unified-views-0.3.0/unified-views-0.3.0.tgz
+    version: 0.3.0
   - apiVersion: v2
     appVersion: 10.2.3
     created: "2026-07-09T08:49:48.825185615Z"
@@ -1111,4 +1237,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/unified-views-0.1.0/unified-views-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-28T13:48:45.659805434Z"
+generated: "2026-11-20T11:27:13.984390497Z"
