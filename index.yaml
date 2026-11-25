@@ -1036,6 +1036,35 @@ entries:
   unified-views:
   - apiVersion: v2
     appVersion: 10.2.3
+    created: "2026-11-25T10:59:48.373080185Z"
+    description: 'PoolParty''s UnifiedViews is an Extract-Transform-Load (ETL) framework
+      that natively supports RDF data and ontologies. It helps organizations to integrate
+      different data types and connect them in a knowledge graph so that enterprise
+      data and content can be searched for and used effectively. '
+    digest: 74cf4d37ee7cebfaa0aebfa984b73bcac9d16684dcbb74d48af5d09c09230d0f
+    home: https://www.poolparty.biz/poolparty-unifiedviews
+    icon: https://www.poolparty.biz/wp-content/uploads/2017/04/pp_logo.svg
+    keywords:
+    - graphwise
+    - poolparty
+    - unified-views
+    - etl
+    - rdf
+    - graphdb
+    - semantic
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: dnd@graphwise.ai
+      name: Graphwise
+    name: unified-views
+    sources:
+    - https://github.com/poolparty-semantic-suite/charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/charts/releases/download/unified-views-0.3.1/unified-views-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: 10.2.3
     created: "2026-11-20T11:27:13.984208094Z"
     description: 'PoolParty''s UnifiedViews is an Extract-Transform-Load (ETL) framework
       that natively supports RDF data and ontologies. It helps organizations to integrate
@@ -1237,4 +1266,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/charts/releases/download/unified-views-0.1.0/unified-views-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-20T11:27:13.984390497Z"
+generated: "2026-11-25T10:59:48.373170589Z"
